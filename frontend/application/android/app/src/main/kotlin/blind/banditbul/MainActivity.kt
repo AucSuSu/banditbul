@@ -1,4 +1,4 @@
-package com.example.frontend
+package blind.banditbul
 
 import io.flutter.embedding.android.FlutterActivity
 
