@@ -7,16 +7,14 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Color.fromARGB(255, 0, 0, 0),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '반딧불',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ],
+      centerTitle: true, // 제목이 가운데 오도록 함
+      iconTheme: IconThemeData(color: Colors.white), // 뒤로가기 버튼 하얀색
+      title: Text(
+        // 제목
+        '반딧불',
+        style: TextStyle(
+          color: Colors.white,
+        ),
       ),
     );
   }
