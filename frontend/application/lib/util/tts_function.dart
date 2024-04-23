@@ -2,25 +2,6 @@ import 'package:flutter/material.dart';
 // tts package import
 import 'package:flutter_tts/flutter_tts.dart';
 
-// 추가했숑 real real real 마지막
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Home(),
-    );
-  }
-}
-
 class TTSManager {
   // tts사용을 위해 FlutterTts 인스턴스 생성
   final FlutterTts tts = FlutterTts();
@@ -35,12 +16,14 @@ class TTSManager {
   }
 }
 
-class Home extends StatelessWidget {
+class TTSFunction extends StatelessWidget {
   // 갖다쓸때 이거 갖다 쓰면됨
   final TTSManager ttsManager = TTSManager();
   // TextEditingController 인스턴스 -> 사용자의 입력을 받음
   final TextEditingController controller =
       TextEditingController(text: 'Hello world');
+
+  TTSFunction({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +41,7 @@ class Home extends StatelessWidget {
                 // 읽기 호출시 이렇게
                 ttsManager.speak(controller.text);
               },
-              child: Text('Speak'))
+              child: const Text('Speak'))
         ],
       ),
     );
