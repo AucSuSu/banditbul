@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 // tts package import
 import 'package:flutter_tts/flutter_tts.dart';
 
-// 추가했숑
-// 추가했숑// 추가했숑// 추가했숑// 추가했숑// 추가했숑
+// 추가했숑 real
 void main() {
   runApp(MyApp());
 }
