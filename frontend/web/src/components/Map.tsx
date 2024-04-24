@@ -3,6 +3,7 @@ import React from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import testBg from "../assets/testBg.png";
 
+// test
 type Coord = {
     x: number;
     y: number;
