@@ -1,10 +1,7 @@
 package org.banditbul.bandi.toilet.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.point.entity.Point;
@@ -12,6 +9,7 @@ import org.banditbul.bandi.point.entity.Point;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Toilet {
 
     @Id

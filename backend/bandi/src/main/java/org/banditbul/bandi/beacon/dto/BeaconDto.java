@@ -8,6 +8,7 @@ import lombok.Getter;
 public class BeaconDto {
 
     private String macAddress;
+    private int stationId;
     private Double latitude;
     private Double longitude;
     private int range;
