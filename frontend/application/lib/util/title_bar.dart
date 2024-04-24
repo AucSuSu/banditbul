@@ -14,8 +14,10 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
         '반딧불',
         style: TextStyle(
           color: Colors.white,
+          fontSize: 30,
         ),
       ),
+      automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
     );
   }
 

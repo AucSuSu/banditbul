@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:frontend/screens/search_page/widgets/search_nav_bar.dart';
 import 'package:frontend/util/dotted_border_text.dart';
 import 'package:frontend/util/title_bar.dart';
+import 'package:get/get.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -29,9 +31,6 @@ class MainPage extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.fromLTRB(40, 45, 40, 50),
                 width: double.infinity,
-                // decoration: BoxDecoration(
-                //   border: Border.all(color: Colors.white, width: 2),
-                // ),
                 child: Stack(
                   children: [
                     Column(
@@ -67,14 +66,22 @@ class MainPage extends StatelessWidget {
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 20),
                 child: Column(
                   children: [
+                    // 버튼의 가장 큰 부분을 GestureDetector로 감싸서 클릭 이벤트를 추가
                     GestureDetector(
                       onTap: () {
+                        // 버튼을 클릭했을 때 수행하는 동작
                         print('음성으로 검색하기 버튼 클릭');
+                        Get.to(
+                          () => SearchNavBar(
+                            initialIndex: 0,
+                          ),
+                        );
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Color(0xffF1FFCA),
-                          borderRadius: BorderRadius.circular(35),
+                          borderRadius:
+                              BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                         ),
                         width: double.infinity,
                         height: 250,
@@ -101,14 +108,20 @@ class MainPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 30),
+                    // 버튼의 가장 큰 부분을 GestureDetector로 감싸서 클릭 이벤트를 추가
                     GestureDetector(
                       onTap: () {
+                        // 버튼을 클릭했을 때 수행하는 동작
                         print('문자로 검색하기 버튼 클릭');
+                        Get.to(
+                          () => SearchNavBar(initialIndex: 1),
+                        );
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           color: Color(0xffF1FFCA),
-                          borderRadius: BorderRadius.circular(35),
+                          borderRadius:
+                              BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                         ),
                         width: double.infinity,
                         height: 250,
