@@ -21,8 +21,14 @@ class _SearchTextPageState extends State<SearchTextPage> {
               color: Colors.black,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('텍스트 검색 페이지'),
+                children: [
+                  Text(
+                    '텍스트 검색 페이지',
+                    style: TextStyle(
+                      color: Colors.yellow[200],
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               ),
             ),
