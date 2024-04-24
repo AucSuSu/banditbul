@@ -21,8 +21,14 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
               color: Colors.black,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('음성 검색 페이지'),
+                children: [
+                  Text(
+                    '음성 검색 페이지',
+                    style: TextStyle(
+                      color: Colors.yellow[200],
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               ),
             ),
