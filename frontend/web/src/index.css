@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+}
+
+.beacon-list {
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+    padding-left: 5%;
+    overflow-y: auto;
+}
+
+.beacon-scroll {
+    overflow-y: auto;
+    height: 90%;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: navajowhite;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: navy;
+}
+/* 가로 스크롤 바 */
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.beacon-list-item {
+    width: 100%;
+    height: 100px;
+    margin-left: 10%;
+    border: 1px solid #ccc;
+}
+
+.beacon-list-item:hover {
+    background-color: gray;
+}
+
+.content_container {
+    height: 80%;
+    width: 100%;
+    display: flex;
+    padding-left: 30px;
+}
+
+.des_container {
+    height: 20%;
+}
+
+.model {
+    border: 1px solid black;
+    z-index: 999;
+    object-fit: fill;
+}
+
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: azure;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.floating-button:hover {
+    transition: 0.3s;
+    background-color: navy;
+    color: white;
+}
+
+.add-content-container {
+    width: 80%;
+    height: 90%;
+    border: 1px solid black;
+}
+
+.locate-button {
+    background-color: azure;
+    display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.locate-button:hover {
+    transition: 0.3s;
+    background-color: grey;
+    color: white;
+    display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.dropdown-container {
+    position: absolute;
+    top: 100%;
+    left: 0%;
+    background-color: white;
+    z-index: 999;
+    border-radius: 20px;
+}
+
+.dropdown-container li {
+    background-color: #ccc;
+    border-radius: 1px solid black;
+    padding: 10px;
+}
+
+.input-container input {
+    background-color: antiquewhite;
+    appearance: none;
+    padding: 10px;
+    outline: none;
+    border-radius: 10px;
+}
+
+.add-content-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.type-title {
+    font-size: 30px;
+}
+
+.dropdown-in-box {
+    position: relative;
+    border-radius: 10px;
+}
+
+.beacon-modify-button {
+    background-color: azure;
+    display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
