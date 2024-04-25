@@ -1,4 +1,4 @@
-package org.banditbul.bandi.elevator;
+package org.banditbul.bandi.elevator.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

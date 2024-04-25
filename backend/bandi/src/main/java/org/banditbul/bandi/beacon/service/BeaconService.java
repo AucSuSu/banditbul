@@ -10,6 +10,7 @@ import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.point.dto.PointDto;
 import org.banditbul.bandi.point.entity.Point;
 import org.banditbul.bandi.point.service.PointService;
+import org.banditbul.bandi.screendoor.entity.Screendoor;
 import org.banditbul.bandi.station.entity.Station;
 import org.banditbul.bandi.station.repository.StationRepository;
 import org.banditbul.bandi.toilet.entity.Toilet;
@@ -25,6 +26,30 @@ public class BeaconService {
     private final StationRepository stationRepository;
     private final PointService pointService;
     private final BeaconcoorService beaconcoorService;
+
+
+//    public dto giveInfo(String beaconId){
+//
+//        Beacon beacon = beaconRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
+//
+//        // 우선 비콘ID로 해당 비콘의 시설물을 찾자
+//        // 해당하는 시설물: 개찰구 gate, 화장실 toilet, 출구 exit, 계단 stair, 엘리베이터 elevator, 스크린도어 screendoor
+//        String beaconType = beacon.getBeacon_type(); // toilet, gate, exit, stair, elevator, screendoor
+//
+//        if (beaconType.equals("toilet")){
+//
+//        } else if (beaconType.equals("gate")){
+//
+//        } else if (beaconType.equals("exit")){
+//
+//        } else if (beaconType.equals("stair")){
+//
+//        } else if (beaconType.equals("elevator")){
+//
+//        } else if (beaconType.equals("screendoor")){
+//
+//        }
+//    }
 
     public String createBeacon(BeaconDto beaconDto){
         String beaconType = beaconDto.getBeaconType();
