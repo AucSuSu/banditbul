@@ -1,9 +1,10 @@
 package org.banditbul.bandi.gate.dto;
 
 import lombok.Data;
+import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
 
 @Data
-public class GateDto {
+public class GateDto implements BeaconInfoDto {
 
     private boolean isUp;
 
