@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-class NavigationButton extends StatefulWidget {
-  const NavigationButton(
+class NeonBorderButton extends StatefulWidget {
+  NeonBorderButton(
       {super.key,
       required this.buttonText,
       required this.buttonColor,
-      required this.borderColor});
+      required this.borderColor,
+      this.onPressed});
 
   final String buttonText; // 버튼텍스트 내용과 색상을 prop으로 받음
   final Color buttonColor;
   final Color borderColor;
+  final VoidCallback? onPressed; // VoidCallback?으로 명시
 
   @override
-  _NavigationButtonState createState() => _NavigationButtonState();
+  _NeonBorderButtonState createState() => _NeonBorderButtonState();
 }
 
-class _NavigationButtonState extends State<NavigationButton> {
+class _NeonBorderButtonState extends State<NeonBorderButton> {
   @override
   Widget build(BuildContext context) {
     Color buttonColor = widget.buttonColor; // prop 받은 색상을 buttonColor 설정
@@ -45,9 +47,7 @@ class _NavigationButtonState extends State<NavigationButton> {
           ),
           backgroundColor: buttonColor,
         ),
-        onPressed: () {
-          // 차후에 버튼을 눌렀을때 해야 할 일 함수를 prop 받아서 실행하면 됨
-        },
+        onPressed: widget.onPressed, // onPressed prop으로 받은 함수 실행
         child: Text(
           // 텍스트 설정
           widget.buttonText,

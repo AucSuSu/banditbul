@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/navigation_page/widgets/navigation_button.dart';
+import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _NavigationPageState extends State<NavigationPage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 27,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
@@ -53,19 +53,19 @@ class _NavigationPageState extends State<NavigationPage> {
             Column(
               // 고정값 버튼 3개를 담은 column
               children: [
-                NavigationButton(
+                NeonBorderButton(
                   buttonText: '다시 듣기',
                   buttonColor: Color(0xffEEFFBD),
                   borderColor: Color(0xff33e9e9),
                 ),
                 SizedBox(height: 40),
-                NavigationButton(
+                NeonBorderButton(
                   buttonText: '안내 종료',
                   buttonColor: Color(0xff9DCAFF),
                   borderColor: Color(0xff838fff),
                 ),
                 SizedBox(height: 40),
-                NavigationButton(
+                NeonBorderButton(
                   buttonText: '도움 요청',
                   buttonColor: Color(0xffFF9F9F),
                   borderColor: Color(0xffFF1C45),

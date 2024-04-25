@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
-import 'package:frontend/screens/search_page/search_text_page.dart';
-import 'package:frontend/screens/search_page/search_voice_page.dart';
+import 'package:frontend/screens/search_page/widgets/search_text_page.dart';
+import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
 import 'package:get/get.dart';
 
-class SearchNavBar extends StatefulWidget {
-  const SearchNavBar({super.key, this.initialIndex = 0});
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key, this.initialIndex = 0});
 
   final int initialIndex;
 
   @override
-  _SearchNavBarState createState() => _SearchNavBarState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchNavBarState extends State<SearchNavBar> {
+class _SearchPageState extends State<SearchPage> {
   late int _selectedIndex;
   static List<Widget> _pages = <Widget>[
     SearchVoicePage(), // Voice Search 페이지

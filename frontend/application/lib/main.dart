@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/arrive_page/arrive_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/screens/navigation_page/navigagion_page.dart';
-import 'package:frontend/screens/search_page/search_text_page.dart';
-import 'package:frontend/screens/search_page/search_voice_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_nav_bar.dart';
+import 'package:frontend/screens/search_page/widgets/search_text_page.dart';
+import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
+import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
@@ -24,7 +25,7 @@ void main() {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => MainPage());
+                  Get.offAll(() => MainPage());
                 },
                 child: const Text('Main Page'),
               ),
@@ -42,7 +43,7 @@ void main() {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => SearchNavBar());
+                  Get.to(() => SearchPage());
                 },
                 child: const Text('Search Nav Bar'),
               ),
@@ -51,6 +52,12 @@ void main() {
                   Get.to(() => NavigationPage());
                 },
                 child: const Text('Navigation Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => ArrivePage());
+                },
+                child: const Text('Arrive Page'),
               ),
             ],
           ),
