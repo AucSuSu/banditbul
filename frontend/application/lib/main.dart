@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
+import 'package:frontend/screens/navigation_page/navigagion_page.dart';
 import 'package:frontend/screens/search_page/search_text_page.dart';
 import 'package:frontend/screens/search_page/search_voice_page.dart';
 import 'package:frontend/screens/search_page/widgets/search_nav_bar.dart';
@@ -44,6 +45,12 @@ void main() {
                   Get.to(() => SearchNavBar());
                 },
                 child: const Text('Search Nav Bar'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => NavigationPage());
+                },
+                child: const Text('Navigation Page'),
               ),
             ],
           ),
