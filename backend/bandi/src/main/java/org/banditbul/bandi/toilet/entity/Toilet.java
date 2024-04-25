@@ -8,7 +8,7 @@ import org.banditbul.bandi.point.entity.Point;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Toilet {
 

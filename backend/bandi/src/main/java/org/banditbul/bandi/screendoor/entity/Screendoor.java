@@ -28,4 +28,9 @@ public class Screendoor {
 
     private String direction;
 
+    public Screendoor(Beacon beacon, Point point, String direction) {
+        this.beacon = beacon;
+        this.point = point;
+        this.direction = direction;
+    }
 }
