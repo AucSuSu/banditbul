@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@types/react-dnd": "^3.0.2",
+    "axios": "^1.6.8",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
-    "react-rnd": "^10.4.10"
+    "react-rnd": "^10.4.10",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
