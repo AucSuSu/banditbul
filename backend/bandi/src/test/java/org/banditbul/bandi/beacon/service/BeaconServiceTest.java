@@ -45,21 +45,18 @@ class BeaconServiceTest {
     private StationRepository stationRepository;
 
     private BeaconDto beaconDto;
-    @BeforeEach
-    void setUp() {
-        Station save = stationRepository.save(new Station("하단역", "ice98", "123123", 1));
-    }
-
 
     @Test
     @Transactional
     @DisplayName("beacon 생성 테스트(toilet)")
     void testCreateBeaconToiletType() {
         // Given
+        Station save = stationRepository.save(new Station("하단역", "ice98", "123123", 1));
+        System.out.println(save.getId());
         // BeaconDto 설정
         beaconDto = BeaconDto.builder()
                 .macAddress("00:11:22:33:44:54")
-                .stationId(18)
+                .stationId(save.getId())
                 .latitude(37.5665)
                 .longitude(126.9780)
                 .range(100)
@@ -78,10 +75,10 @@ class BeaconServiceTest {
                 .floor(2)
                 .build();
         // When
-        String result = beaconService.createBeacon(beaconDto);
+        String beaconId = beaconService.createBeacon(beaconDto);
 
         // Then
-        assertEquals(beaconDto.getMacAddress(), result);
+        assertEquals(beaconDto.getMacAddress(), beaconId);
     }
 
 }
