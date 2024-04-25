@@ -20,6 +20,7 @@ public class BeaconcoorService {
         beaconcoor.setX(dto.getX());
         beaconcoor.setY(dto.getY());
         beaconcoor.setFloor(dto.getFloor());
+        beaconcoor.setBeaconId(dto.getBeaconId());
         beaconcoorRepository.save(beaconcoor);
         return beaconcoor;
     }

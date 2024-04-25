@@ -56,6 +56,7 @@ public class BeaconService {
         beaconcoorDto.setY(beaconDto.getY());
         beaconcoorDto.setFloor(beaconDto.getFloor());
         beaconcoorDto.setStationId(beaconDto.getStationId());
+        beaconcoorDto.setBeaconId(beaconDto.getMacAddress());
         Beaconcoor coor = beaconcoorService.createCoor(beaconcoorDto);
 
         // 비콘 타입이 뭔지에 따라 다른 테이블에 저장하기.
