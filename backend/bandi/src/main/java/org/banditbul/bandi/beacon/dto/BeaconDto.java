@@ -1,9 +1,11 @@
 package org.banditbul.bandi.beacon.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
+import org.banditbul.bandi.common.Dir;
 
-@Getter
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class BeaconDto {
 
@@ -14,13 +16,14 @@ public class BeaconDto {
     private int range;
     private String beaconType;
     private boolean isUp;
-    private String manDir;
-    private String womanDir;
+    private Dir manDir;
+    private Dir womanDir;
     private int number;
     private String landmark;
-    private String elevator;
-    private String escalator;
-    private String stair;
+    private Dir elevator;
+    private Dir escalator;
+    private Dir stair;
+    private String direction;
     private int x;
     private int y;
     private int floor;

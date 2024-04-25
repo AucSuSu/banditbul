@@ -26,4 +26,10 @@ public class Stair {
     private Point point;
 
     private boolean isUp;
+
+    public Stair(Beacon beacon, Point point, boolean isUp) {
+        this.beacon = beacon;
+        this.point = point;
+        this.isUp = isUp;
+    }
 }

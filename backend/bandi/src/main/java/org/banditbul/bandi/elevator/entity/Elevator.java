@@ -1,4 +1,4 @@
-package org.banditbul.bandi.elevator;
+package org.banditbul.bandi.elevator.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,4 +28,9 @@ public class Elevator {
 
     private boolean isUp;
 
+    public Elevator(Beacon beacon, Point point, boolean isUp) {
+        this.beacon = beacon;
+        this.point = point;
+        this.isUp = isUp;
+    }
 }

@@ -37,4 +37,14 @@ public class Exit {
 
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir stair;
+
+    public Exit(Beacon beacon, Point point, Integer number, String landmark, Dir elevator, Dir escalator, Dir stair) {
+        this.beacon = beacon;
+        this.point = point;
+        this.number = number;
+        this.landmark = landmark;
+        this.elevator = elevator;
+        this.escalator = escalator;
+        this.stair = stair;
+    }
 }

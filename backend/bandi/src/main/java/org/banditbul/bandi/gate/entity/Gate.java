@@ -1,10 +1,7 @@
 package org.banditbul.bandi.gate.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.point.entity.Point;
 
@@ -28,4 +25,10 @@ public class Gate {
 
     @Column(name = "is_up")
     private boolean isUp;
+
+    public Gate(Beacon beacon, Point point, boolean isUp) {
+        this.beacon = beacon;
+        this.point = point;
+        this.isUp = isUp;
+    }
 }
