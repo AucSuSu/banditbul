@@ -1,14 +1,12 @@
 package org.banditbul.bandi.station.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Station {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +24,11 @@ public class Station {
 
     @Column(name = "line")
     private int line;
+
+    public Station(String name, String loginID, String password, int line) {
+        this.name = name;
+        this.loginID = loginID;
+        this.password = password;
+        this.line = line;
+    }
 }
