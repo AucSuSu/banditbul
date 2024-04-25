@@ -6,7 +6,7 @@ import org.banditbul.bandi.station.entity.Station;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Point {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +25,4 @@ public class Point {
 
     @Column(name = "range")
     private int range;
-
 }

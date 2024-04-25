@@ -21,5 +21,8 @@ public class BeaconDto {
     private String elevator;
     private String escalator;
     private String stair;
+    private int x;
+    private int y;
+    private int floor;
 
 }

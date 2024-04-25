@@ -6,7 +6,7 @@ import org.banditbul.bandi.station.entity.Station;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class Beaconcoor {
 
