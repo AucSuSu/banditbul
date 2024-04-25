@@ -1,19 +1,19 @@
-spring:
-  application:
-    name: bandi
-
-  datasource:
-    url: jdbc:postgresql://db-bandi.cpc4uswu8hst.ap-northeast-2.rds.amazonaws.com:5432/test
-    username: postgres
-    password: byeoljalie102
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    show-sql: true
-    database: POSTGRESQL
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
+#spring:
+#  application:
+#    name: bandi
+#
+#  datasource:
+#    url: jdbc:postgresql://db-bandi.cpc4uswu8hst.ap-northeast-2.rds.amazonaws.com:5432/test
+#    username: postgres
+#    password: byeoljalie102
+#    driver-class-name: org.postgresql.Driver
+#
+#  jpa:
+#    show-sql: true
+#    database: POSTGRESQL
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate:
+#      ddl-auto: update
