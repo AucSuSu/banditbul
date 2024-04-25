@@ -80,7 +80,7 @@ class BeaconServiceTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("beacon 생성 테스트(toilet)")
     void testCreateBeaconToiletType() {
         // Given
         when(toiletRepository.save(any(Toilet.class))).thenReturn(new Toilet());

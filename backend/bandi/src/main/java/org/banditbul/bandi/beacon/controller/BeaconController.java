@@ -19,14 +19,14 @@ public class BeaconController {
 
     private final BeaconService beaconService;
 
-    @GetMapping("/sos")
+    @GetMapping("/sos/{beaconId}")
     public ResponseEntity<Message> sendSos(@PathVariable(value = "beaconId") String beaconId){
 
         Message message = new Message(HttpStatusEnum.OK, "sos 전달 완료", beaconId);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @GetMapping("/beacon/info")
+    @GetMapping("/beacon/info/{beaconId}")
     public ResponseEntity<Message> getBeaconInfo(@PathVariable(value = "beaconId") String beaconId){
 
         // 어떤 시설물인지에 따라서 각자의 dto 만들어서 해당 dto를 보내줘야; 하는듯? -> 근데 이걸 어캐하지용 ??????

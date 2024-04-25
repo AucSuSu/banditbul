@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScreendoorController {
 
     private final ScreendoorService screendoorService;
-    @GetMapping("/stationinfo")
+    @GetMapping("/stationinfo/{beaconId}")
     public ResponseEntity<Message> getStationName(@PathVariable(value = "beaconId") String beaconId){
 
         String stationName = screendoorService.getStationName(beaconId);
