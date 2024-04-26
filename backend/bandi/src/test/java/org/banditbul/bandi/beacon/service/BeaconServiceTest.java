@@ -67,7 +67,13 @@ class BeaconServiceTest {
         Beacon beacon = beaconRepository.save(new Beacon("하단역 3번출구 비콘","exit"));
         Point point = pointRepository.save(new Point(station, 37.5665, 126.9780, 50));
         Exit exit = exitRepository.save(new Exit(beacon, point, 3, "제나우스", null, Dir.L, Dir.R));
-        ExitDto exitDto = new ExitDto(exit.getNumber(), exit.getLandmark(), exit.getElevator(), exit.getEscalator(), exit.getStair());
+        ExitDto exitDto = ExitDto.builder()
+                        .exitNum(exit.getNumber())
+                        .landmark(exit.getLandmark())
+                        .elevator(exit.getElevator())
+                        .escalator(exit.getEscalator())
+                        .stair(exit.getStair())
+                        .build();
 
         // When
         BeaconInfoDto beaconInfoDto = beaconService.giveInfo(beacon.getId());

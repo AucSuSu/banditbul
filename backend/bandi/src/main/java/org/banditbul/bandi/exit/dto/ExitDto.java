@@ -1,10 +1,12 @@
 package org.banditbul.bandi.exit.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
 import org.banditbul.bandi.common.Dir;
 
 @Data
+@Builder
 public class ExitDto implements BeaconInfoDto {
 
     private Integer exitNum; // 출구 번호
