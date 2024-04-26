@@ -8,6 +8,13 @@ spring:
     password: byeoljalie102
     driver-class-name: org.postgresql.Driver
 
+  data:
+    redis:
+      host: 3.35.115.111
+      port: 6379
+      password: 'strongPassword'
+
+
   jpa:
     show-sql: true
     database: POSTGRESQL
