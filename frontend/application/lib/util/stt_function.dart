@@ -75,7 +75,7 @@ class _VoiceToTextPageState extends State<VoiceToTextPage> {
       if (response.statusCode == 200) {
         setState(() {
           _text = response.data['text'];
-          print(response.data);
+          print(response);
         });
       } else {
         setState(() {
