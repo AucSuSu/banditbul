@@ -5,6 +5,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 
+// 제발 되게 해주세요
 class ClovaStt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
