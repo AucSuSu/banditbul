@@ -25,4 +25,11 @@ public class Point {
 
     @Column(name = "range")
     private int range;
+
+    public Point(Station station, Double latitude, Double longitude, int range) {
+        this.station = station;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.range = range;
+    }
 }
