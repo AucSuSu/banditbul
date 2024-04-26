@@ -102,7 +102,7 @@ class _VoiceToTextPageState extends State<VoiceToTextPage> {
             Text(_text),
             ElevatedButton(
               onPressed: _isRecording ? _stopRecording : _startRecording,
-              child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
+              child: Text(_isRecording ? '대화 중지' : '대화 시작'),
             ),
           ],
         ),
