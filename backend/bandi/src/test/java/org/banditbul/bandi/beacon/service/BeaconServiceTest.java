@@ -62,7 +62,7 @@ class BeaconServiceTest {
     @Transactional
     @DisplayName("시설물 안내 테스트")
     void testGetBeaconInfo(){
-        // Given
+        // Given: 데이터 저장
         Station station = stationRepository.save(new Station("하단역", "ice98", "123123", 1));
         Beacon beacon = beaconRepository.save(new Beacon("하단역 3번출구 비콘","exit"));
         Point point = pointRepository.save(new Point(station, 37.5665, 126.9780, 50));
