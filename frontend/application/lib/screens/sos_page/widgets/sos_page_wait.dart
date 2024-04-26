@@ -4,14 +4,14 @@ import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
 
-class ArrivePage extends StatefulWidget {
-  const ArrivePage({super.key});
+class SosPageWait extends StatefulWidget {
+  const SosPageWait({super.key});
 
   @override
-  _ArrivePageState createState() => _ArrivePageState();
+  _SosPageWaitState createState() => _SosPageWaitState();
 }
 
-class _ArrivePageState extends State<ArrivePage> {
+class _SosPageWaitState extends State<SosPageWait> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +38,7 @@ class _ArrivePageState extends State<ArrivePage> {
                 child: Column(
                   children: [
                     Text(
-                      'ㅇㅇㅇ 역', // 여기 부분이 개찰구 비콘에 따라 다르게 바뀔듯
+                      '도움을',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
@@ -46,7 +46,7 @@ class _ArrivePageState extends State<ArrivePage> {
                       ),
                     ),
                     Text(
-                      '도착하였습니다',
+                      '요청중입니다',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
@@ -68,7 +68,7 @@ class _ArrivePageState extends State<ArrivePage> {
                   ),
                   const SizedBox(height: 20),
                   Image.asset(
-                    'assets/images/bandi_bug_light.png',
+                    'assets/images/bandi_bug_light_red.png',
                     width: 150,
                   )
                 ],
@@ -76,9 +76,9 @@ class _ArrivePageState extends State<ArrivePage> {
             ),
             const SizedBox(height: 50),
             NeonBorderButton(
-              buttonText: '메인으로',
-              buttonColor: const Color(0xffFFEF9D),
-              borderColor: const Color.fromARGB(255, 241, 245, 17),
+              buttonText: '도움요청 취소하기',
+              buttonColor: const Color(0xffEEFFBD),
+              borderColor: const Color(0xff33E9E9),
               textColor: Colors.black,
               onPressed: () {
                 Get.offAll(() => const MainPage());

@@ -5,8 +5,9 @@ import 'package:frontend/screens/navigation_page/navigagion_page.dart';
 import 'package:frontend/screens/search_page/widgets/search_text_page.dart';
 import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
+import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
+import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 
 void main() {
   runApp(
@@ -25,39 +26,51 @@ void main() {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Get.offAll(() => MainPage());
+                  Get.offAll(() => const MainPage());
                 },
                 child: const Text('Main Page'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => SearchTextPage());
+                  Get.to(() => const SearchTextPage());
                 },
                 child: const Text('Search Text'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => SearchVoicePage());
+                  Get.to(() => const SearchVoicePage());
                 },
                 child: const Text('Search Voice'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => SearchPage());
+                  Get.to(() => const SearchPage());
                 },
                 child: const Text('Search Nav Bar'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => NavigationPage());
+                  Get.to(() => const NavigationPage());
                 },
                 child: const Text('Navigation Page'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => ArrivePage());
+                  Get.to(() => const ArrivePage());
                 },
                 child: const Text('Arrive Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const SosPageWait());
+                },
+                child: const Text('SosWait Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const SosPageAccept());
+                },
+                child: const Text('SosAccept Page'),
               ),
             ],
           ),

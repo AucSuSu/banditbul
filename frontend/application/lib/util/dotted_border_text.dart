@@ -10,14 +10,14 @@ class DottedBorderText extends StatelessWidget {
   final BorderRadius borderRadius; // 추가된 BorderRadius
 
   const DottedBorderText({
-    Key? key,
+    super.key,
     required this.text,
     required this.textStyle,
     this.strokeWidth = 2.0,
     this.color = Colors.black,
     this.padding = const EdgeInsets.all(8.0),
     this.borderRadius = BorderRadius.zero, // 기본값을 BorderRadius.zero로 설정
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

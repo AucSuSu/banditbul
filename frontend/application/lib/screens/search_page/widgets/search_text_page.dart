@@ -14,7 +14,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
     return Scaffold(
       body: Column(
         children: [
-          TitleBar(),
+          const TitleBar(),
           Expanded(
             child: Container(
               width: double.infinity,

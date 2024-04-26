@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class NeonBorderButton extends StatefulWidget {
-  NeonBorderButton(
+  const NeonBorderButton(
       {super.key,
       required this.buttonText,
       required this.buttonColor,
       required this.borderColor,
+      required this.textColor,
       this.onPressed});
 
   final String buttonText; // 버튼텍스트 내용과 색상을 prop으로 받음
   final Color buttonColor;
   final Color borderColor;
+  final Color textColor;
   final VoidCallback? onPressed; // VoidCallback?으로 명시
 
   @override
@@ -22,6 +24,7 @@ class _NeonBorderButtonState extends State<NeonBorderButton> {
   Widget build(BuildContext context) {
     Color buttonColor = widget.buttonColor; // prop 받은 색상을 buttonColor 설정
     Color borderColor = widget.borderColor; // prop 받은 색상을 borderColor로 설정
+    Color textColor = widget.textColor; // prop 받은 색상을 textColor로 설정
 
     return Container(
       // 텍스트 버튼을 감싸는 container
@@ -52,7 +55,7 @@ class _NeonBorderButtonState extends State<NeonBorderButton> {
           // 텍스트 설정
           widget.buttonText,
           style: TextStyle(
-              fontSize: 24, color: Colors.black, fontWeight: FontWeight.w700),
+              fontSize: 24, color: textColor, fontWeight: FontWeight.w700),
         ),
       ),
     );

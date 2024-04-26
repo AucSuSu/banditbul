@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/screens/main_page/widgets/main_search_page.dart';
 import 'package:frontend/screens/navigation_page/navigagion_page.dart';
@@ -51,7 +50,7 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             // 배경 이미지
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/star_background.png'),
                   fit: BoxFit.fill,
@@ -70,15 +69,15 @@ class _MainPageState extends State<MainPage> {
                     children: [
                       Column(
                         children: [
-                          SizedBox(height: 50),
+                          const SizedBox(height: 50),
                           DottedBorderText(
                             text: '메뉴를 선택해주세요',
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 25,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.white,
                           )
@@ -107,11 +106,11 @@ class _MainPageState extends State<MainPage> {
                         onTap: () {
                           // 버튼을 클릭했을 때 수행하는 동작
                           print('도착역 안내받기 버튼 클릭');
-                          Get.to(() => MainSearchPage());
+                          Get.to(() => const MainSearchPage());
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Color(0xffF1FFCA),
+                            color: const Color(0xffF1FFCA),
                             borderRadius:
                                 BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                           ),
@@ -127,7 +126,7 @@ class _MainPageState extends State<MainPage> {
                                   width: 200,
                                   height: 150,
                                 ),
-                                Text(
+                                const Text(
                                   '도착역 안내받기',
                                   style: TextStyle(
                                     fontSize: 35,
@@ -139,19 +138,19 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       // 버튼의 가장 큰 부분을 GestureDetector로 감싸서 클릭 이벤트를 추가
                       GestureDetector(
                         onTap: () {
                           // 버튼을 클릭했을 때 수행하는 동작
                           print('화장실 안내받기 버튼 클릭');
                           Get.to(
-                            () => NavigationPage(),
+                            () => const NavigationPage(),
                           );
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Color(0xffF1FFCA),
+                            color: const Color(0xffF1FFCA),
                             borderRadius:
                                 BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                           ),
@@ -167,7 +166,7 @@ class _MainPageState extends State<MainPage> {
                                   width: 150,
                                   height: 100,
                                 ),
-                                Text(
+                                const Text(
                                   '화장실 안내받기',
                                   style: TextStyle(
                                     fontSize: 35,

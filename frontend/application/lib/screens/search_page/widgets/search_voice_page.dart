@@ -14,7 +14,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
     return Scaffold(
       body: Column(
         children: [
-          TitleBar(),
+          const TitleBar(),
           Expanded(
             child: Container(
               width: double.infinity,

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
-import 'package:get/get.dart';
 
-class ArrivePage extends StatefulWidget {
-  const ArrivePage({super.key});
+class SosPageAccept extends StatefulWidget {
+  const SosPageAccept({super.key});
 
   @override
-  _ArrivePageState createState() => _ArrivePageState();
+  _SosPageAcceptState createState() => _SosPageAcceptState();
 }
 
-class _ArrivePageState extends State<ArrivePage> {
+class _SosPageAcceptState extends State<SosPageAccept> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +36,7 @@ class _ArrivePageState extends State<ArrivePage> {
                 child: Column(
                   children: [
                     Text(
-                      'ㅇㅇㅇ 역', // 여기 부분이 개찰구 비콘에 따라 다르게 바뀔듯
+                      '관리자가',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
@@ -46,7 +44,7 @@ class _ArrivePageState extends State<ArrivePage> {
                       ),
                     ),
                     Text(
-                      '도착하였습니다',
+                      '접수하였습니다',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
@@ -68,21 +66,18 @@ class _ArrivePageState extends State<ArrivePage> {
                   ),
                   const SizedBox(height: 20),
                   Image.asset(
-                    'assets/images/bandi_bug_light.png',
+                    'assets/images/bandi_bug_light_red.png',
                     width: 150,
                   )
                 ],
               ),
             ),
             const SizedBox(height: 50),
-            NeonBorderButton(
-              buttonText: '메인으로',
-              buttonColor: const Color(0xffFFEF9D),
-              borderColor: const Color.fromARGB(255, 241, 245, 17),
-              textColor: Colors.black,
-              onPressed: () {
-                Get.offAll(() => const MainPage());
-              },
+            const NeonBorderButton(
+              buttonText: '현재 위치에서\n대기해 주세요',
+              buttonColor: Colors.black,
+              borderColor: Color(0xff33E9E9),
+              textColor: Colors.white,
             )
           ],
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/util/dotted_border_text.dart';
 import 'package:frontend/util/title_bar.dart';
@@ -16,7 +15,7 @@ class MainSearchPage extends StatelessWidget {
         children: <Widget>[
           // 배경 이미지
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/star_background.png'),
                 fit: BoxFit.fill,
@@ -35,15 +34,15 @@ class MainSearchPage extends StatelessWidget {
                   children: [
                     Column(
                       children: [
-                        SizedBox(height: 50),
+                        const SizedBox(height: 50),
                         DottedBorderText(
                           text: '검색방식을 선택해주세요',
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                             fontSize: 25,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white,
                         )
@@ -73,14 +72,14 @@ class MainSearchPage extends StatelessWidget {
                         // 버튼을 클릭했을 때 수행하는 동작
                         print('음성으로 검색하기 버튼 클릭');
                         Get.to(
-                          () => SearchPage(
+                          () => const SearchPage(
                             initialIndex: 0,
                           ),
                         );
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color(0xffF1FFCA),
+                          color: const Color(0xffF1FFCA),
                           borderRadius:
                               BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                         ),
@@ -96,7 +95,7 @@ class MainSearchPage extends StatelessWidget {
                                 width: 200,
                                 height: 150,
                               ),
-                              Text(
+                              const Text(
                                 '음성으로 검색하기',
                                 style: TextStyle(
                                   fontSize: 35,
@@ -108,19 +107,19 @@ class MainSearchPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     // 버튼의 가장 큰 부분을 GestureDetector로 감싸서 클릭 이벤트를 추가
                     GestureDetector(
                       onTap: () {
                         // 버튼을 클릭했을 때 수행하는 동작
                         print('문자로 검색하기 버튼 클릭');
                         Get.to(
-                          () => SearchPage(initialIndex: 1),
+                          () => const SearchPage(initialIndex: 1),
                         );
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color(0xffF1FFCA),
+                          color: const Color(0xffF1FFCA),
                           borderRadius:
                               BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                         ),
@@ -136,7 +135,7 @@ class MainSearchPage extends StatelessWidget {
                                 width: 200,
                                 height: 150,
                               ),
-                              Text(
+                              const Text(
                                 '문자로 검색하기',
                                 style: TextStyle(
                                   fontSize: 35,
