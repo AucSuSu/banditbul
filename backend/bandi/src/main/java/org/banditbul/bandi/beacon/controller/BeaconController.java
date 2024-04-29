@@ -22,7 +22,6 @@ public class BeaconController {
 
     @GetMapping("/sos/{beaconId}")
     public ResponseEntity<Message> sendSos(@PathVariable(value = "beaconId") String beaconId){
-
         Message message = new Message(HttpStatusEnum.OK, "sos 전달 완료", beaconId);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
