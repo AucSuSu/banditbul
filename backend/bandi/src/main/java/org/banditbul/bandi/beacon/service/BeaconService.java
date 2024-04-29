@@ -60,7 +60,7 @@ public class BeaconService {
             return new ToiletDto(toilet.getManDir(), toilet.getWomanDir());
         } else if (beaconType.equals("gate")){
             Gate gate = gateRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
-            return new GateDto(gate.isUp());
+            return new GateDto(gate.getIsUp(), gate.getElevator(), gate.getEscalator(), gate.getStair());
         } else if (beaconType.equals("exit")){
             Exit exit = exitRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
             return new ExitDto(exit.getNumber(), exit.getLandmark(), exit.getElevator(), exit.getEscalator(), exit.getStair());
@@ -106,7 +106,7 @@ public class BeaconService {
             toilet.setWomanDir(beaconDto.getWomanDir());
             toiletRepository.save(toilet);
         }else if(beaconType.equals("gate")){
-            gateRepository.save(new Gate(beacon, point, beaconDto.isUp()));
+            gateRepository.save(new Gate(beacon, point, beaconDto.isUp(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
         }else if(beaconType.equals("exit")){
             exitRepository.save(new Exit(beacon, point, beaconDto.getNumber(), beaconDto.getLandmark(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
         }else if(beaconType.equals("stair")){
