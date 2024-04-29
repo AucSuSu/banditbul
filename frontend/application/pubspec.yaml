@@ -31,6 +31,7 @@ dependencies:
     flutter:
         sdk: flutter
     audioplayers: ^6.0.0 # mp3 소리 재생을 위한 추가
+    flutter_dotenv: ^5.0.2
     # The following adds the Cupertino Icons font to your application.
     # Use with the CupertinoIcons class for iOS style icons.
     cupertino_icons: ^1.0.6
@@ -79,6 +80,7 @@ flutter:
         - assets/images/navigation/straight.png
         - assets/images/bandi_bug_light.png
         - assets/images/bandi_bug_light_red.png
+        - .env
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
