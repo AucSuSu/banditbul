@@ -4,37 +4,30 @@ package org.banditbul.bandi.edge.service;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
-import org.banditbul.bandi.beaconcoor.entity.Beaconcoor;
 import org.banditbul.bandi.beaconcoor.repository.BeaconcoorRepository;
-import org.banditbul.bandi.beaconcoor.service.BeaconcoorService;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
-import org.banditbul.bandi.elevator.dto.ElevatorDto;
+import org.banditbul.bandi.edge.dto.EdgeDto;
+import org.banditbul.bandi.edge.entity.Edge;
+import org.banditbul.bandi.edge.repository.EdgeRepository;
 import org.banditbul.bandi.elevator.entity.Elevator;
 import org.banditbul.bandi.elevator.repository.ElevatorRepository;
-import org.banditbul.bandi.exit.dto.ExitDto;
 import org.banditbul.bandi.exit.entity.Exit;
 import org.banditbul.bandi.exit.repository.ExitRepository;
-import org.banditbul.bandi.gate.dto.GateDto;
 import org.banditbul.bandi.gate.entity.Gate;
 import org.banditbul.bandi.gate.repository.GateRepository;
 import org.banditbul.bandi.point.entity.Point;
 import org.banditbul.bandi.point.repository.PointRepository;
-import org.banditbul.bandi.screendoor.dto.ScreendoorDto;
 import org.banditbul.bandi.screendoor.entity.Screendoor;
 import org.banditbul.bandi.screendoor.repository.ScreendoorRepository;
-import org.banditbul.bandi.stair.dto.StairDto;
 import org.banditbul.bandi.stair.entity.Stair;
 import org.banditbul.bandi.stair.repository.StairRepository;
 import org.banditbul.bandi.station.entity.Station;
 import org.banditbul.bandi.station.repository.StationRepository;
-import org.banditbul.bandi.toilet.dto.ToiletDto;
 import org.banditbul.bandi.toilet.entity.Toilet;
 import org.banditbul.bandi.toilet.repository.ToiletRepository;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +44,7 @@ public class EdgeService {
     private final StairRepository stairRepository;
     private final ElevatorRepository elevatorRepository;
     private final ScreendoorRepository screendoorRepository;
+    private final EdgeRepository edgeRepository;
 
     public void navCurStation(String beaconId, String destStationName, int destExitNum){
 
@@ -101,7 +95,7 @@ public class EdgeService {
         List<Gate> gates = points.stream()
                 .map(point -> gateRepository.findByPointId(point.getId())
                         .orElseThrow(() -> new EntityNotFoundException("해당하는 gate가 없습니다.")))
-                .collect(Collectors.toList());
+                .toList();
 
         // 찾아진 Gate들에 대한 처리 로직 - 상행/하행 골라주기
         Point destGatePoint = null; // 내 목적지가 되는 gate!
@@ -135,7 +129,17 @@ public class EdgeService {
         int check=1;
     }
 
-    public void dij(Point startPoint, Point destPoint){
+    public Integer addEdge(EdgeDto dto){
+        System.out.println(dto.getPoint1());
+        System.out.println(dto.getPoint2());
+        Point point1 = pointRepository.findById(dto.getPoint1()).orElseThrow(() -> new EntityNotFoundException("해당하는 Point가 없습니다."));
+        Point point2 = pointRepository.findById(dto.getPoint2()).orElseThrow(() -> new EntityNotFoundException("해당하는 Point가 없습니다."));
+        Edge edge = new Edge(point1, point2, dto.getDistance(), dto.getStationId());
+        Edge save = edgeRepository.save(edge);
+        return save.getId();
+    }
+
+    private void dij(Point startPoint, Point destPoint){
 
     }
 

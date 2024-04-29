@@ -26,4 +26,14 @@ public class Edge {
 
     @Column(name = "distance")
     private int distance;
+
+    @Column(name = "station_id")
+    private Integer stationId;
+
+    public Edge(Point point1, Point point2, int distance, Integer stationId) {
+        this.point1 = point1;
+        this.point2 = point2;
+        this.distance = distance;
+        this.stationId = stationId;
+    }
 }

@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.common.HttpStatusEnum;
 import org.banditbul.bandi.common.Message;
+import org.banditbul.bandi.edge.dto.EdgeDto;
+import org.banditbul.bandi.edge.service.EdgeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,8 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class EdgeController {
+
+    private final EdgeService edgeService;
 
     @GetMapping("/navigation")
     public ResponseEntity<Message> getNavigation(@RequestParam("beacon_id") String beacon_id,
@@ -29,6 +30,13 @@ public class EdgeController {
 
         List<Dir> nav = new ArrayList<>();
         Message message = new Message(HttpStatusEnum.OK, "까지 길 찾기 완료", nav);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PostMapping("/edge")
+    public ResponseEntity<Message> addEdge(@RequestBody EdgeDto dto){
+        Integer edgeId = edgeService.addEdge(dto);
+        Message message = new Message(HttpStatusEnum.OK, "간선 생성 완료", edgeId);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
