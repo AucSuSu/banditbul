@@ -24,6 +24,4 @@ public class StationController {
         return stationService.login(dto, session);
     }
 
-    @PostMapping("/logout")
-    public String logout
 }
