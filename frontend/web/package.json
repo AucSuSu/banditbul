@@ -17,6 +17,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
     "react-rnd": "^10.4.10",
+    "react-router-dom": "^6.23.0",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

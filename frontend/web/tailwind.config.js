@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        jamsil: ['TheJamsil5Bold', 'sans-serif'],
+        jamsilLight: ['TheJamsil3Regular'],
+        jamsilMedium: ['TheJamsil4Medium'],
+    },
+  }
   },
   plugins: [    function ({ addUtilities }) {
     const newUtilities = {
