@@ -7,6 +7,7 @@ import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
 import org.banditbul.bandi.beaconcoor.dto.BeaconcoorDto;
 import org.banditbul.bandi.beaconcoor.entity.Beaconcoor;
+import org.banditbul.bandi.beaconcoor.repository.BeaconcoorRepository;
 import org.banditbul.bandi.beaconcoor.service.BeaconcoorService;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.elevator.dto.ElevatorDto;
@@ -46,6 +47,12 @@ public class BeaconService {
     private final ScreendoorRepository screendoorRepository;
     private final PointService pointService;
     private final BeaconcoorService beaconcoorService;
+    private final BeaconcoorRepository beaconcoorRepository;
+
+    public int getStationId(String beaconId){
+        Beaconcoor beaconcoor = beaconcoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beaconcoor이 없습니다."));
+        return beaconcoor.getStation().getId();
+    }
 
     public BeaconInfoDto giveInfo(String beaconId) throws EntityNotFoundException{
 
