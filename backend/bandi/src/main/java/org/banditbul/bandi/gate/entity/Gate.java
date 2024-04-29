@@ -25,7 +25,7 @@ public class Gate {
     private Point point;
 
     @Column(name = "is_up")
-    private boolean isUp;
+    private Boolean isUp;
 
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir elevator;
@@ -36,7 +36,7 @@ public class Gate {
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir stair;
 
-    public Gate(Beacon beacon, Point point, boolean isUp,  Dir elevator, Dir escalator, Dir stair) {
+    public Gate(Beacon beacon, Point point, Boolean isUp,  Dir elevator, Dir escalator, Dir stair) {
         this.beacon = beacon;
         this.point = point;
         this.isUp = isUp;
