@@ -1,0 +1,269 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: "NeoDunggeunmo", sans-serif;
+}
+
+.beaconList {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.horizontalLine {
+    border-top: 1px solid black; /* 가로선 스타일 지정 */
+    margin: 20px 0; /* 위아래 여백 추가 */
+}
+
+.beaconScroll {
+    width: 80%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    height: 90%;
+    padding-top: 20px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: navajowhite;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: navy;
+}
+/* 가로 스크롤 바 */
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.beaconListItem {
+    width: 80%;
+    height: 100px;
+    display: flex;
+    margin-left: 10%;
+    padding: 20px;
+    text-align: center;
+}
+
+.beaconListItem:hover {
+    transition: 0.3s;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.model {
+    position: relative;
+    width: 70vw;
+    height: 80vh;
+}
+
+.newBeaconItem {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    z-index: 999;
+}
+
+.beaconItem {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    /* background-color: black; */
+    border-radius: 100%;
+}
+
+.contentContainer {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    padding-left: 30px;
+}
+
+.desContainer {
+    height: 20%;
+}
+
+.floatingButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: azure;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.floatingButton:hover {
+    transition: 0.3s;
+    background-color: navy;
+    color: white;
+}
+
+.locateButton {
+    background-color: azure;
+    display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.locateButton:hover {
+    transition: 0.3s;
+    background-color: grey;
+    color: white;
+    display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.dropdownContainer {
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0%;
+    z-index: 999;
+    border-radius: 20px;
+}
+
+.inputContainer input {
+    background-color: antiquewhite;
+    appearance: none;
+    padding: 10px;
+    outline: none;
+    border-radius: 10px;
+}
+
+.addContentContainer {
+    display: flex;
+    width: 80%;
+    padding-top: 20px;
+    align-items: center;
+    /* justify-content: center; */
+    flex-direction: column;
+}
+
+.typeTitle {
+    font-size: 30px;
+}
+
+.inputTextBox {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropdownInBox {
+    margin: 20px;
+    width: 40%;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    display: block;
+    text-align: left;
+    border-radius: 20px;
+    box-sizing: border-box;
+    background-color: #00498c;
+    color: white;
+}
+
+.selectedItem {
+    display: flex;
+    height: 30px;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.beaconId {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.dropdownItem {
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #ccc;
+    color: black;
+    margin: 5px;
+}
+
+.dropdownItem:hover {
+    transition: 0.3s;
+    background-color: antiquewhite;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    animation: vibration 0.5s infinite;
+}
+
+.beaconDeleteButton {
+    cursor: pointer;
+    width: 40%;
+    display: flex;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    z-index: 999;
+    background-color: white;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.beaconDeleteButton:hover {
+    transition: 0.3s;
+    border: solid 1px black;
+}
+
+.ModaldeleteButton {
+    cursor: pointer;
+}
+
+.deleteModalCloseButton {
+    cursor: pointer;
+}
+
+.deleteModalContent {
+    width: 100%;
+    height: 100%;
+}
+
+.yesNoContainer {
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ModaldeleteButton,
+.deleteModalCloseButton {
+    width: 50%;
+}
+
+.ModaldeleteButton:hover {
+    color: red;
+}
+
+.deleteModalCloseButton:hover {
+    color: blue;
+}
+
+.deleteDes {
+    height: 40%;
+}

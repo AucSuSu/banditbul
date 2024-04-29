@@ -1,75 +1,134 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
+// import redBeacon from "../assets/redBeacon.gif";
+import blueBeacon from "../assets/blueBeacon.gif";
+import defaultBeacon from "../assets/defaultBeacon.gif";
+import yellowBeacon from "../assets/yellowBeacon.gif";
 import testBg from "../assets/testBg.png";
+import { Beacon } from "../util/type.tsx";
+import {
+    ScreenDoor,
+    BathRoom,
+    Exit,
+    Gate,
+    Stair,
+    Elevator,
+} from "./addBeacon/beaconTypeComponent.tsx";
+import styles from "./map.module.css";
 
-// test
-type Coord = {
-    x: number;
-    y: number;
-};
+const types = [
+    "미선택",
+    "화장실",
+    "개찰구",
+    "출구",
+    "계단",
+    "엘리베이터",
+    "스크린도어",
+];
 
-type Beacon = {
-    type: string;
-    beaconId: number;
-    coord: Coord;
-    name: string;
-};
-
-const types = ["미선택", "화장실", "하행개찰구", "상행개찰구", "스크린도어"];
+const floorType = ["대합실", "승강장"];
 
 const Map: React.FC = () => {
+    const [floor, setFloor] = useState<number>(0);
+    const [x, setX] = useState<number>(0);
+    const [y, setY] = useState<number>(0);
     const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
-    const [clickedId, setClickedId] = useState<number>(-1);
+    const [clickedId, setClickedId] = useState<string>("-1");
     const [selectType, setSelectType] = useState<number>(0);
     const [locateIng, setLocateIng] = useState<boolean>(false);
     const [modalshow, setModalshow] = useState<boolean>(false);
     const [newBeacon, setNewBeacon] = useState<Beacon | null>(null);
-    const [page, setPage] = useState(0);
-    const floor = ["지상", "지하1층", "지하2층"];
+    const [_, setModalOpen] = useState(false);
+    const [deleteSelectBeacon, setDeleteSelectBeacon] = useState<String | null>(
+        null
+    );
 
-    const beacons: Beacon[] = [
+    // 이후에 backend로 받아오기
+    const [beacons, setBeacons] = useState<Beacon[]>([
         {
             type: "화장실",
-            beaconId: 1,
-            coord: { x: 10, y: 20 },
+            beaconId: "1",
+            coord: { x: 40, y: 30 },
             name: "Beacon 1",
         },
         {
-            type: "상행개찰구",
-            beaconId: 2,
-            coord: { x: 30, y: 40 },
+            type: "개찰구",
+            beaconId: "2",
+            coord: { x: 300, y: 1000 },
             name: "Beacon 2",
         },
         {
             type: "화장실",
-            beaconId: 3,
-            coord: { x: 587, y: 2 },
+            beaconId: "3",
+            coord: { x: 40, y: 1000 },
             name: "Beacon 3",
         },
-    ];
+    ]);
+
+    const [page] = useState(0);
+
+    useEffect(() => {
+        const resizeBeacon = () => {
+            console.log("resize");
+            const parentTarget = document.querySelector(
+                "#model"
+            ) as HTMLElement;
+            const parentElement = parentTarget.parentElement;
+            if (!parentElement) return;
+            // 부모 요소의 너비와 높이 가져오삼
+            const parentWidth = parentElement.offsetWidth;
+            const parentHeight = parentElement.offsetHeight;
+            // 백분율 계산
+            const newX = (x / parentWidth) * parentWidth;
+            const newY = (y / parentHeight) * parentHeight;
+            // 상대적인 위치를 상태로 업데이트
+            setX(newX);
+            setY(newY);
+            // 비콘의 위치 업데이트
+            const updatedBeacons = beacons.map((beacon) => ({
+                ...beacon,
+                coord: {
+                    // 기존 parentWidth로 바꿔주기
+                    x: (beacon.coord.x / parentWidth) * 100,
+                    y: (beacon.coord.y / parentHeight) * 100,
+                },
+            }));
+            console.log(updatedBeacons);
+            setBeacons(updatedBeacons);
+        };
+        resizeBeacon();
+        window.addEventListener("resize", resizeBeacon);
+        return () => {
+            setNewBeacon(null);
+            window.removeEventListener("resize", resizeBeacon);
+        };
+    }, []);
 
     const addBeaconModal = () => {
         setModalshow(true);
+
+        const locate = () => {
+            setLocateIng(true);
+            setNewBeacon({
+                type: types[0],
+                beaconId: "1",
+                coord: { x: 0, y: 0 },
+                name: "beacon",
+            });
+            setX(0);
+            setY(0);
+        };
+
+        locate(); // 비콘 새로 놓기
     };
 
-    const closeModal = () => {
-        setNewBeacon(null);
+    // 저장이 완료 되었거나 완료하지 않고 닫은 경우
+    const closeAddModal = () => {
+        // 리스트 새로 받아오기 ===
+        setNewBeacon(null); // 없애야함
         setModalshow(false);
-    };
-
-    const locate = () => {
-        setLocateIng(true);
-        setNewBeacon({
-            type: types[0],
-            beaconId: 1,
-            coord: { x: 0, y: 0 },
-            name: "beacon",
-        });
-    };
-
-    const saveLocate = () => {
-        setLocateIng(false);
+        setSelectType(0);
     };
 
     const clickType = (i: number) => {
@@ -77,115 +136,177 @@ const Map: React.FC = () => {
     };
 
     const handleDrag = (e: DraggableEvent, ui: DraggableData) => {
-        console.log(e);
-        console.log(ui);
+        if (!e.target) return;
+
+        // 상대 위치 계산
+        // const parentTarget = document.querySelector(".model") as HTMLElement;
+        // const parentElement = parentTarget.parentElement;
+        // if (!parentElement) return; // 예외 처리: 부모 요소가 없는 경우
+        // // 부모 요소의 너비와 높이 가져오기
+        // const parentWidth = parentElement.offsetWidth;
+        // const parentHeight = parentElement.offsetHeight;
+        // // 드래그된 요소의 위치 계산
+        // const relativeX = (ui.x / parentWidth) * 100;
+        // const relativeY = (ui.y / parentHeight) * 100;
+
+        setX(ui.x);
+        setY(ui.y);
     };
 
-    const deleteBeacon = (beaconId: number) => {
+    const deleteBeacon = (beaconId: String) => {
         console.log("delete beacon : " + beaconId);
-        // 리스트 새로 받아오기
     };
 
-    const handleMouseOver = (beaconId: number) => {
+    const handleMouseOver = (beaconId: string) => {
         console.log(beaconId);
         setClickedId(beaconId);
     };
+
     const handleMouseOut = () => {
-        setClickedId(-1);
+        setClickedId("-1");
     };
 
-    useEffect(() => {}, [newBeacon, locateIng, clickedId]);
+    // 삭제 컴포넌트 열기
+    const openModal = () => {
+        setModalOpen(true);
+    };
+
+    // 삭제 컴포넌트 닫긷
+    const closeModal = () => {
+        setModalOpen(false);
+        setDeleteSelectBeacon(null);
+    };
+
+    // 예 버튼 클릭 시 실행 함수
+    const handleConfirm = () => {
+        // 여기에 예 버튼을 눌렀을 때 실행할 함수를 호출하거나 코드를 작성하세요.
+        alert("삭제 함수 실행"); // 예시로 경고창을 띄움
+        closeModal(); // 모달 닫기
+        if (deleteSelectBeacon) {
+            alert("삭제 완료");
+            deleteBeacon(deleteSelectBeacon);
+        } else {
+            console.log("삭제 오류");
+        }
+        setDeleteSelectBeacon(null);
+    };
 
     return (
         <>
-            <div className="main_container">
+            <div className={styles.mainContainer}>
                 {page}
-                <div className="des_container">
-                    {floor.map((e, index) => (
-                        <button key={index} onClick={() => setPage(index)}>
+                <div className={styles.des_container}>
+                    {floorType.map((e, index) => (
+                        <div
+                            key={index}
+                            onClick={() => setFloor(index)}
+                            style={{
+                                cursor: "pointer",
+                                backgroundColor:
+                                    floor == index ? "navy" : "ivory",
+                            }}
+                        >
                             {e}
-                        </button>
+                        </div>
                     ))}
                 </div>
-                <div className="content_container">
+                <div className={styles.contentContainer}>
                     <div
-                        className="model relative h-[80vh] w-[70vw]"
+                        className={styles.model}
                         id="model"
                         style={{
-                            backgroundImage: `url(${testBg})`, // import한 이미지 사용
-                            backgroundSize: "cover", // 배경 이미지를 컨테이너에 맞게 조정
-                            backgroundPosition: "center", // 배경 이미지를 가운데 정렬
+                            backgroundImage: `url(${testBg})`,
+                            backgroundSize: "contain",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
                         }}
                     >
-                        {beacons.map((point, index) => (
-                            <div
-                                key={index}
-                                className="beacon-item absolute h-[20px] w-[20px] bg-red-500 rounded-full"
-                                style={{
-                                    left: `${point.coord.x}px`,
-                                    top: `${point.coord.y}px`,
-                                    backgroundColor:
-                                        point.beaconId == clickedId
-                                            ? "red"
-                                            : "black",
-                                }}
-                            />
-                        ))}
                         {newBeacon && (
                             <Draggable
                                 onStop={(e, ui) => handleDrag(e, ui)}
                                 key={newBeacon.beaconId}
-                                defaultPosition={{
-                                    x: newBeacon.coord.x,
-                                    y: newBeacon.coord.y,
+                                position={{
+                                    x: x,
+                                    y: y,
                                 }}
                                 bounds="parent" // 부모 내에서만 이동할 수 있게 하기 !
                                 disabled={!locateIng}
                             >
-                                <div
+                                <img
                                     key={newBeacon.beaconId}
-                                    className="new-beacon-item absolute h-[20px] w-[20px] bg-blue-500 rounded-full"
+                                    src={yellowBeacon}
+                                    className={styles.newBeaconItem}
                                     style={{
-                                        left: `${newBeacon.coord.x}`,
-                                        top: `${newBeacon.coord.y}`,
                                         cursor: locateIng ? "grab" : "default",
                                     }}
                                 />
                             </Draggable>
                         )}
+
+                        {beacons.map((point, index) => (
+                            <div>
+                                {/* {deleteSelectBeacon &&
+                                    point.beaconId == deleteSelectBeacon && (
+                                        <Modal
+                                            isOpen={modalOpen}
+                                            onClose={closeModal}
+                                            onConfirm={handleConfirm}
+                                        />
+                                    )} */}
+                                <img
+                                    key={index}
+                                    src={
+                                        point.beaconId == clickedId
+                                            ? blueBeacon
+                                            : defaultBeacon
+                                    }
+                                    className={styles.beaconItem}
+                                    style={{
+                                        left: `${point.coord.x}px`,
+                                        top: `${point.coord.y}px`,
+                                    }}
+                                />
+                            </div>
+                        ))}
                     </div>
 
-                    <div className="beacon-list">
+                    <div className={styles.beaconList}>
                         {modalshow ? (
-                            <div>
-                                <div className="add-content-container">
-                                    <div className="InputTextBox">
-                                        <div className="type-title">
-                                            타입을 <br /> 결정해주세요
-                                        </div>
+                            <>
+                                <div className={styles.addContentContainer}>
+                                    <div className={styles.inputTextBox}>
                                         <ul
-                                            className="dropdown-in-box"
+                                            className={styles.dropdownInBox}
                                             onClick={() => {
                                                 setDropDownOpen(!dropDownOpen);
+                                                console.log("clicked");
                                             }}
                                         >
-                                            {types[selectType]}
+                                            <div
+                                                className={styles.selectedItem}
+                                            >
+                                                {types[selectType]}
+                                                {/* {dropDownOpen ? "▼" : "▲"} */}
+                                                <div
+                                                    className={
+                                                        styles.horizontalLine
+                                                    }
+                                                ></div>
+                                            </div>
                                             {dropDownOpen && (
                                                 <ul
-                                                    className="dropdown-container"
-                                                    style={{
-                                                        position: "absolute",
-                                                        top: "100%",
-                                                        left: 0,
-                                                        backgroundColor:
-                                                            "white",
-                                                        zIndex: 999,
-                                                    }}
+                                                    className={
+                                                        styles.dropdownContainer
+                                                    }
+                                                    style={{}}
                                                 >
                                                     {types
                                                         .slice(1)
                                                         .map((data, index) => (
                                                             <li
+                                                                className={
+                                                                    styles.dropdownItem
+                                                                }
                                                                 key={index}
                                                                 onClick={() =>
                                                                     clickType(
@@ -199,52 +320,111 @@ const Map: React.FC = () => {
                                                 </ul>
                                             )}
                                         </ul>
+                                        <div className={styles.typeTitle}>
+                                            등록하기
+                                        </div>
                                     </div>
-                                    {Options(selectType)}
-                                    {!locateIng ? (
-                                        <div
-                                            className="locate-button"
-                                            onClick={locate}
-                                        >
-                                            위치 지정하기
-                                        </div>
-                                    ) : (
-                                        <div
-                                            className="locate-button"
-                                            onClick={saveLocate}
-                                        >
-                                            위치 저장하기
-                                        </div>
+                                    {Options(
+                                        selectType,
+                                        x,
+                                        y,
+                                        floor,
+                                        closeAddModal
                                     )}
                                 </div>
-                                <div className="floating-button">
-                                    <div onClick={closeModal}>저장하기</div>
-                                </div>
-                            </div>
+                            </>
                         ) : (
-                            <div className="beacon-scroll">
-                                {beacons.map((item, index) => (
-                                    <div
-                                        className="beacon-list-item"
-                                        key={index}
-                                    >
-                                        <div> {item.name}</div>
+                            <div className={styles.beaconScroll}>
+                                {beacons.map((item, index) =>
+                                    deleteSelectBeacon == item.beaconId ? (
+                                        <>
+                                            <div
+                                                className={
+                                                    styles.beaconListItem
+                                                }
+                                                key={index}
+                                                onMouseOver={() =>
+                                                    handleMouseOver(
+                                                        item.beaconId
+                                                    )
+                                                }
+                                                onMouseOut={handleMouseOut}
+                                            >
+                                                {" "}
+                                                <div
+                                                    className={
+                                                        styles.deleteModalContent
+                                                    }
+                                                >
+                                                    <p
+                                                        className={
+                                                            styles.deleteDes
+                                                        }
+                                                    >
+                                                        삭제하시겠습니까?
+                                                    </p>
+                                                    <div
+                                                        className={
+                                                            styles.yesNoContainer
+                                                        }
+                                                    >
+                                                        <span
+                                                            onClick={
+                                                                handleConfirm
+                                                            }
+                                                            className={
+                                                                styles.ModaldeleteButton
+                                                            }
+                                                        >
+                                                            예
+                                                        </span>
+                                                        <span
+                                                            className={
+                                                                styles.deleteModalCloseButton
+                                                            }
+                                                            onClick={closeModal}
+                                                        >
+                                                            아니오
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
                                         <div
-                                            className="beacon-modify-button"
-                                            onClick={() => {
-                                                deleteBeacon(item.beaconId);
-                                            }}
+                                            className={styles.beaconListItem}
+                                            key={index}
                                             onMouseOver={() =>
                                                 handleMouseOver(item.beaconId)
                                             }
                                             onMouseOut={handleMouseOut}
                                         >
-                                            삭제하기
+                                            <div className={styles.beaconId}>
+                                                {" "}
+                                                {item.name}
+                                            </div>
+
+                                            <div
+                                                className={
+                                                    styles.beaconDeleteButton
+                                                }
+                                                onClick={() => {
+                                                    openModal();
+                                                    setDeleteSelectBeacon(
+                                                        item.beaconId
+                                                    );
+                                                }}
+                                            >
+                                                삭제하기
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                                <div className="floating-button">
-                                    <div onClick={addBeaconModal}>
+                                    )
+                                )}
+                                <div className={styles.floatingButton}>
+                                    <div
+                                        onClick={addBeaconModal}
+                                        style={{ cursor: "pointer" }}
+                                    >
                                         비콘 추가 하기
                                     </div>
                                 </div>
@@ -257,148 +437,52 @@ const Map: React.FC = () => {
     );
 };
 
-function Options(type: number) {
+function Options(
+    type: number,
+    x: number,
+    y: number,
+    floor: number,
+    closeAddModal: Function
+) {
     switch (type) {
         case 1:
             return (
-                <>
-                    <div className="input-container">
-                        <div className="input-mac">
-                            <div>비콘의 주소를 입력해주세요</div>
-                            <input type="text" />
-                        </div>
-                        <div className="input-name">
-                            <div>비콘의 이름을 입력해주세요</div>
-                            <input type="text" />
-                        </div>
-                    </div>
-                </>
+                <BathRoom
+                    x={x}
+                    y={y}
+                    floor={floor}
+                    closeModal={closeAddModal}
+                />
             );
         case 2:
             return (
-                <>
-                    <div>
-                        <div className="input-container">
-                            <div className="input-mac">
-                                <div className="question">
-                                    비콘의 주소를 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 영숫자 총 8자리"
-                                />
-                            </div>
-                            <div className="input-name">
-                                <div className="question">
-                                    비콘의 이름을 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 4-2스크린도어 비콘"
-                                />
-                            </div>
-                            <div className="input-togo">
-                                <div className="question">
-                                    어느역 방면인지 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 다대포해수욕장"
-                                />
-                            </div>
-                            <div className="input-mac">
-                                <div className="question">
-                                    위도를 입력해주세요
-                                </div>
-                                <input type="number" placeholder="ex) 000" />
-                            </div>
-                            <div className="input-mac">
-                                <div className="question">
-                                    경도를 입력해주세요
-                                </div>
-                                <input type="text" placeholder="ex) 000" />
-                            </div>
-                        </div>
-                    </div>
-                </>
+                <Gate x={x} y={y} floor={floor} closeModal={closeAddModal} />
             );
         case 3:
             return (
-                <>
-                    <div>
-                        <div className="input-container">
-                            <div className="input-mac">
-                                <div className="question">
-                                    비콘의 주소를 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 영숫자 총 8자리"
-                                />
-                            </div>
-                            <div className="input-name">
-                                <div className="question">
-                                    비콘의 이름을 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 4-2스크린도어 비콘"
-                                />
-                            </div>
-                            <div className="input-togo">
-                                <div className="question">
-                                    어느역 방면인지 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 다대포해수욕장"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </>
+                <Exit x={x} y={y} floor={floor} closeModal={closeAddModal} />
             );
         case 4:
             return (
-                <>
-                    <div>
-                        <div className="input-container">
-                            <div className="input-mac">
-                                <div className="question">
-                                    비콘의 주소를 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 영숫자 총 8자리"
-                                />
-                            </div>
-                            <div className="input-name">
-                                <div className="question">
-                                    비콘의 이름을 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 4-2스크린도어 비콘"
-                                />
-                            </div>
-                            <div className="input-togo">
-                                <div className="question">
-                                    어느역 방면인지 입력해주세요
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="ex) 다대포해수욕장"
-                                />
-                            </div>
-                            <div className="input-screenNumber">
-                                <div className="question">
-                                    몇번 스크린도어인지 입력해주세요
-                                </div>
-                                <input type="text" placeholder="ex) 4-2" />
-                            </div>
-                        </div>
-                    </div>
-                </>
+                <Stair x={x} y={y} floor={floor} closeModal={closeAddModal} />
+            );
+        case 5:
+            return (
+                <Elevator
+                    x={x}
+                    y={y}
+                    floor={floor}
+                    closeModal={closeAddModal}
+                />
+            );
+        case 6:
+            return (
+                <ScreenDoor
+                    x={x}
+                    y={y}
+                    floor={floor}
+                    closeModal={closeAddModal}
+                />
             );
     }
 }
