@@ -132,6 +132,7 @@ public class EdgeService {
 
         dij(startGatePoint, destExitPoint);
 
+        int check=1;
     }
 
     public void dij(Point startPoint, Point destPoint){
