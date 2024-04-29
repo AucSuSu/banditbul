@@ -21,7 +21,7 @@ const Login = () => {
             console.error(error);
             alert('실패');
         }
-        navigate(`/Map`);
+        navigate(`/map`);
     };
 
     return (
