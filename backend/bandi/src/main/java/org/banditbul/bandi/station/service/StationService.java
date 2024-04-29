@@ -32,7 +32,7 @@ public class StationService {
         if( byLoginId == null){
             Station station = new Station(dto.getName(), dto.getLoginId(), pwd, dto.getLine());
             Station save = stationRepository.save(station);
-            return "회원가입 완료 ID : " + save.getLoginId();
+            return save.getLoginId();
         }else{
             throw new ExistException("이미 등록된 아이디입니다.");
         }
@@ -48,6 +48,13 @@ public class StationService {
         }
         session.setAttribute("user", user);
         return session.getId();
+    }
+
+    public String logout(HttpSession session){
+        session.removeAttribute("user");
+        // 세션 무효화
+        session.invalidate();
+        return "Logout successful";
     }
 
 }

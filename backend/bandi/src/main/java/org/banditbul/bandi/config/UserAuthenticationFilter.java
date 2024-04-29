@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.banditbul.bandi.station.entity.Station;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,11 +22,14 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Station user = (Station) request.getSession().getAttribute("user");
-        if(!isNull(user)) {
-            GrantedAuthority authority = new SimpleGrantedAuthority("USER"); // 사용자 권한
-            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.singleton(authority)); // 현재 사용자의 인증 정보
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        HttpSession session = request.getSession(false); // 세션을 새로 생성하지 않음
+        if (session != null) {
+            Station user = (Station) session.getAttribute("user");
+            if (user != null) {
+                GrantedAuthority authority = new SimpleGrantedAuthority("USER");
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, Collections.singleton(authority));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request,response);
     }
