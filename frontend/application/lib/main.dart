@@ -7,6 +7,8 @@ import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
+import 'package:frontend/util/tts_function.dart';
+
 import 'package:get/get.dart';
 
 void main() {
@@ -71,6 +73,12 @@ void main() {
                   Get.to(() => const SosPageAccept());
                 },
                 child: const Text('SosAccept Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => TTSFunction());
+                },
+                child: const Text('TTSFunction Page'),
               ),
             ],
           ),
