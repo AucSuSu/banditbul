@@ -106,7 +106,7 @@ public class BeaconService {
             toilet.setWomanDir(beaconDto.getWomanDir());
             toiletRepository.save(toilet);
         }else if(beaconType.equals("gate")){
-            gateRepository.save(new Gate(beacon, point, beaconDto.isUp()));
+            gateRepository.save(new Gate(beacon, point, beaconDto.isUp(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
         }else if(beaconType.equals("exit")){
             exitRepository.save(new Exit(beacon, point, beaconDto.getNumber(), beaconDto.getLandmark(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
         }else if(beaconType.equals("stair")){
