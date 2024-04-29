@@ -85,53 +85,52 @@ public class EdgeService {
             Screendoor screendoor = screendoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
             startPoint = screendoor.getPoint();
         }
-        throw new EntityNotFoundException("알 수 없는 비콘 타입입니다.");
 
 
         // 2. 도착 역 찾기
-//        Station station = stationRepository.findByName(destStationName).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
-//        int destStationId = station.getId();
+        Station destStation = stationRepository.findByName(destStationName).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+        int destStationId = destStation.getId();
 
         // 2-1. 상행/하행 개찰구 찾기
         // 상행(다대포 95번) ~ 하행(노포 135번)
         // 역 안에 있는 모든 point 찾아주기
-//        List<Point> points = pointRepository.findAllByStationId(destStationId).orElseThrow(() -> new EntityNotFoundException("해당하는 point가 없습니다."));
-//
-//        // 해당 역에 있는 모든 개찰구 찾기
-//        // Stream을 사용하여 각 Point의 ID로 Gate를 찾고, 결과를 리스트로 수집
-//        List<Gate> gates = points.stream()
-//                .map(point -> gateRepository.findByPointId(point.getId())
-//                        .orElseThrow(() -> new EntityNotFoundException("해당하는 gate가 없습니다.")))
-//                .collect(Collectors.toList());
-//
-//        // 찾아진 Gate들에 대한 처리 로직 - 상행/하행 골라주기
-//        Point destGatePoint = null; // 내 목적지가 되는 gate!
-//        for (Gate gate : gates) {
-//            if (gate.getIsUp() == null) {
-//                destGatePoint = gate.getPoint();
-//                break;
-//            } else if (destStationId > curStationId && !gate.getIsUp()) { // 하행
-//                destGatePoint = gate.getPoint();
-//                break;
-//            } else if (destStationId < curStationId && gate.getIsUp()) { // 상행
-//                destGatePoint = gate.getPoint();
-//                break;
-//            }
-//        }
-//
-//
-//        // 2-2. 현재 비콘에서 개찰구 비콘까지의 경로 구하기
-//        // 개찰구까지 알려주면 그 이후에는 계단, 에스컬레이터, 엘레베이터 알아서 선택해서 스크린도어로 이동하면 되기 때매
-//        // 현재 포인트: startPoint
-//        // 도착 포인트: destGatePoint
-//        dij(startPoint, destGatePoint); // 다익스트라로 최단 경로 구하기
-//
-//
-//        // 3. 목적지 역에서 개찰구에서 출구까지
-//        Point startGatePoint = null; // 목적지 역의 상행 개찰구 point
-//        Point destExitPoint = null; // 목적지 역의 출구 point
-//
-//        dij(startGatePoint, destExitPoint);
+        List<Point> points = pointRepository.findAllByStationId(destStationId).orElseThrow(() -> new EntityNotFoundException("해당하는 point가 없습니다."));
+
+        // 해당 역에 있는 모든 개찰구 찾기
+        // Stream을 사용하여 각 Point의 ID로 Gate를 찾고, 결과를 리스트로 수집
+        List<Gate> gates = points.stream()
+                .map(point -> gateRepository.findByPointId(point.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("해당하는 gate가 없습니다.")))
+                .collect(Collectors.toList());
+
+        // 찾아진 Gate들에 대한 처리 로직 - 상행/하행 골라주기
+        Point destGatePoint = null; // 내 목적지가 되는 gate!
+        for (Gate gate : gates) {
+            if (gate.getIsUp() == null) {
+                destGatePoint = gate.getPoint();
+                break;
+            } else if (destStationId > curStationId && !gate.getIsUp()) { // 하행
+                destGatePoint = gate.getPoint();
+                break;
+            } else if (destStationId < curStationId && gate.getIsUp()) { // 상행
+                destGatePoint = gate.getPoint();
+                break;
+            }
+        }
+
+
+        // 2-2. 현재 비콘에서 개찰구 비콘까지의 경로 구하기
+        // 개찰구까지 알려주면 그 이후에는 계단, 에스컬레이터, 엘레베이터 알아서 선택해서 스크린도어로 이동하면 되기 때매
+        // 현재 포인트: startPoint
+        // 도착 포인트: destGatePoint
+        dij(startPoint, destGatePoint); // 다익스트라로 최단 경로 구하기
+
+
+        // 3. 목적지 역에서 개찰구에서 출구까지
+        Point startGatePoint = null; // 목적지 역의 상행 개찰구 point
+        Point destExitPoint = null; // 목적지 역의 출구 point
+
+        dij(startGatePoint, destExitPoint);
 
     }
 
