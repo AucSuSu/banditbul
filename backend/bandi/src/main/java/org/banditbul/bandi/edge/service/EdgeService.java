@@ -4,7 +4,6 @@ package org.banditbul.bandi.edge.service;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
-import org.banditbul.bandi.beaconcoor.repository.BeaconcoorRepository;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.edge.dto.EdgeDto;
 import org.banditbul.bandi.edge.entity.Edge;
@@ -34,7 +33,6 @@ import java.util.*;
 public class EdgeService {
 
 
-    private final BeaconcoorRepository beaconcoorRepository;
     private final StationRepository stationRepository;
     private final PointRepository pointRepository;
     private final GateRepository gateRepository;

@@ -1,7 +1,9 @@
 package org.banditbul.bandi.beaconcoor.service;
 
 import jakarta.transaction.Transactional;
-import org.banditbul.bandi.beaconcoor.repository.BeaconcoorRepository;
+import org.banditbul.bandi.beacon.entity.Beacon;
+import org.banditbul.bandi.beacon.entity.BeaconTYPE;
+import org.banditbul.bandi.beacon.repository.BeaconRepository;
 import org.banditbul.bandi.station.entity.Station;
 import org.banditbul.bandi.station.repository.StationRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +22,7 @@ public class BeaconcoorServiceTest {
     private BeaconcoorService beaconcoorService;
 
     @Autowired
-    private BeaconcoorRepository beaconcoorRepository;
+    private BeaconRepository beaconRepository;
 
     @Autowired
     private StationRepository stationRepository;
@@ -32,12 +34,12 @@ public class BeaconcoorServiceTest {
         // Given
         // 필요한 데이터 저장
         Station station = stationRepository.save(new Station("하단역", "loginId", "123123", 1));
-        Beaconcoor beaconcoor = beaconcoorRepository.save(new Beaconcoor(1,station,"역이름알려주는beaconId",1,1,-1));
+        Beacon beacon = beaconRepository.save(new Beacon(station, 1,1,1,23.423423, 23.23423, 30, BeaconTYPE.POINT));
         System.out.println("station: "+station.getId());
-        System.out.println("beaconcoor: "+station.getId()+"의 이름은 "+station.getName());
+        System.out.println("beacon: "+station.getId()+"의 이름은 "+station.getName());
 
         // When
-        String stationName = beaconcoorService.getStationName(beaconcoor.getBeaconId());
+        String stationName = beaconcoorService.getStationName(beacon.getId());
 
         // Then
         assertEquals(stationName, station.getName());

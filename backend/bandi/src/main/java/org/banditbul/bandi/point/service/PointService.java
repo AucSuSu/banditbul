@@ -14,13 +14,4 @@ public class PointService {
 
     private final PointRepository pointRepository;
     private final StationService stationService;
-    public Point createPoint(PointDto pointDto){
-        Point point = new Point();
-        point.setLatitude(pointDto.getLatitude());
-        point.setLongitude(pointDto.getLongitude());
-        point.setStation(stationService.findById(pointDto.getStationId()));
-        point.setRange(pointDto.getRange());
-        pointRepository.save(point);
-        return point;
-    }
 }

@@ -1,6 +1,8 @@
 package org.banditbul.bandi.beacon.dto;
 
 import lombok.*;
+import org.banditbul.bandi.beacon.entity.Beacon;
+import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 import org.banditbul.bandi.common.Dir;
 
 @Getter @Setter
@@ -14,7 +16,7 @@ public class BeaconDto {
     private Double latitude;
     private Double longitude;
     private int range;
-    private String beaconType;
+    private BeaconTYPE beaconType;
     private boolean isUp;
     private Dir manDir;
     private Dir womanDir;
