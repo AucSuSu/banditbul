@@ -6,9 +6,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 
 class ClovaStt extends StatelessWidget {
+  const ClovaStt({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Voice to Text',
       home: VoiceToTextPage(),
     );
@@ -16,12 +18,14 @@ class ClovaStt extends StatelessWidget {
 }
 
 class VoiceToTextPage extends StatefulWidget {
+  const VoiceToTextPage({super.key});
+
   @override
   _VoiceToTextPageState createState() => _VoiceToTextPageState();
 }
 
 class _VoiceToTextPageState extends State<VoiceToTextPage> {
-  FlutterSoundRecorder _recorder = FlutterSoundRecorder();
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   bool _isRecording = false;
   String _text = '';
   String? _filePath;
@@ -93,7 +97,7 @@ class _VoiceToTextPageState extends State<VoiceToTextPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('음성을 텍스트로 변환'),
+        title: const Text('음성을 텍스트로 변환'),
       ),
       body: Center(
         child: Column(

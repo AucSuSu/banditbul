@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_text_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
+import 'package:frontend/screens/search_page/search_text_page.dart';
+import 'package:frontend/screens/search_page/search_voice_page.dart';
 import 'package:get/get.dart';
 
 class SearchPage extends StatefulWidget {
@@ -87,7 +87,8 @@ class _SearchPageState extends State<SearchPage> {
             children: List.generate(_pages.length + 1, (index) {
               if (index == 1) {
                 // 중앙 홈 버튼 위치에는 공간을 만들어둡니다.
-                return const SizedBox(width: 100); // FloatingActionButton의 공간을 만듭니다.
+                return const SizedBox(
+                    width: 100); // FloatingActionButton의 공간을 만듭니다.
               }
               int tabIndex = index > 1 ? index - 1 : index; // 홈 버튼으로 인한 인덱스 조정
               return InkWell(
