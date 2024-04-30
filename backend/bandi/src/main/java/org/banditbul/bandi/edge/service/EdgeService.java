@@ -27,7 +27,7 @@ import org.banditbul.bandi.toilet.entity.Toilet;
 import org.banditbul.bandi.toilet.repository.ToiletRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -126,7 +126,51 @@ public class EdgeService {
 
         dij(startGatePoint, destExitPoint);
 
+        // 4. 완성된 경로를 바탕으로 CCW 알고리즘으로 방향 정보 추가 후 리턴
+
+
         int check=1;
+    }
+
+    public void navToilet(String beaconId){
+        // 1. 현재 역 찾기
+        // 가장 최근 접근한 비콘 id로 현재 역 id를 가지고 온다.
+        int curStationId = beaconcoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beaconcoor이 없습니다."))
+                .getStation().getId();
+        // 시작하는 point 찾기
+        Point startPoint = null;
+        Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
+        // 우선 비콘ID로 해당 비콘의 시설물을 찾자
+        // 해당하는 시설물: 개찰구 gate, 화장실 toilet, 출구 exit, 계단 stair, 엘리베이터 elevator, 스크린도어 screendoor
+        String beaconType = beacon.getBeacon_type(); // toilet, gate, exit, stair, elevator, screendoor
+
+        if (beaconType.equals("toilet")){
+            Toilet toilet = toiletRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
+            startPoint = toilet.getPoint();
+        } else if (beaconType.equals("gate")){
+            Gate gate = gateRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
+            startPoint = gate.getPoint();
+        } else if (beaconType.equals("exit")){
+            Exit exit = exitRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
+            startPoint = exit.getPoint();
+        } else if (beaconType.equals("stair")){
+            Stair stair = stairRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 계단이 없습니다."));
+            startPoint = stair.getPoint();
+        } else if (beaconType.equals("elevator")){
+            Elevator elevator = elevatorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
+            startPoint = elevator.getPoint();
+        } else if (beaconType.equals("screendoor")){
+            Screendoor screendoor = screendoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
+            startPoint = screendoor.getPoint();
+        }
+
+
+        // 2. 현재 역에 있는 화장실 찾기
+
+
+        // 3. 화장실로의 길찾기 구하기
+
+
     }
 
     public Integer addEdge(EdgeDto dto){
@@ -139,8 +183,71 @@ public class EdgeService {
         return save.getId();
     }
 
-    private void dij(Point startPoint, Point destPoint){
+    static HashMap<String, ArrayList<Node>> graph = new HashMap<>();
+    public List<String> dij(Point startPoint, Point destPoint){
+        HashMap<String, Boolean> check = new HashMap<>(); // 방문 확인 용
+        HashMap<String, Integer> dist = new HashMap<>(); // 거리 체크 용
+        HashMap<String, String> road = new HashMap<>(); // 길 저장 용
+        final int INF = Integer.MAX_VALUE;
 
+        // 모든 비콘의 거리들을 무한대로 초기화
+        for (String node : graph.keySet()){
+            dist.put(node, INF);
+            check.put(node, false);
+            road.put(node, null);
+        }
+
+
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        dist.put(startPoint.getId().toString(), 0);
+        pq.offer(new Node(startPoint.getId().toString(),0));
+
+        while(!pq.isEmpty()){
+            Node nowBeacon = pq.poll();
+            String nowBeaconId = nowBeacon.beaconId;
+
+            // 현재 비콘 id가 최종 목적지와 동일하다면 그만!
+            if(nowBeaconId.equals(destPoint.getId().toString())) break;
+
+            for (Node next : graph.get(nowBeacon)){ // 현재 비콘과 이어진 노드
+                int newDist = dist.get(nowBeacon) + next.dis; // nowBeacon을 거쳐서 다음 비콘으로 가는 경우
+                if (dist.get(next.beaconId) > newDist){ // 현재보다 더 짧은 거리로 도달 가능한 경우
+                    dist.put(next.beaconId, newDist);
+                    pq.offer(new Node(next.beaconId, newDist));
+                    road.put(next.beaconId, nowBeaconId);
+                }
+            }
+
+        }
+
+        return reconstructPath(road, startPoint.getId().toString(), destPoint.getId().toString());
+
+
+    }
+
+    private static List<String> reconstructPath(HashMap<String, String> road, String startBeacon, String destBeacon){
+        List<String> path = new ArrayList<>();
+        for(String at=destBeacon; at!=null; at=road.get(at)){
+            path.add(at);
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
+    class Node implements Comparable<Node>{
+        String beaconId;
+        int dis; // 거리
+
+        public Node(String beaconId, int dis){
+            this.beaconId = beaconId;
+            this.dis = dis;
+        }
+
+        // priority queue에서 dis 거리 정보를 기준으로 오름차순 정렬할 것이기 때문에
+        @Override
+        public int compareTo(Node o){
+            return Integer.compare(this.dis, o.dis);
+        }
     }
 
 }
