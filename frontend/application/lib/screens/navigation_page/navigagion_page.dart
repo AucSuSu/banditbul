@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/main_page/main_page.dart';
+import 'package:frontend/store/BeaconController.dart';
+import 'package:frontend/store/SessionController.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
+import 'package:frontend/util/tts_function.dart';
+import 'package:get/get.dart';
+import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
+import 'package:dio/dio.dart';
+import 'package:frontend/util/websocket.dart';
+
+class Object {
+  final sessionId;
+  Object({required this.sessionId});
+}
+
+class ResponseSOS {
+  ResponseSOS(
+      {required this.status, required this.message, required this.object});
+  final String status;
+  final String message;
+  final Object object;
+}
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -10,6 +31,35 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
+  final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
+
+  void rePlay() {
+    clovaTTSManager.replayAudio();
+  }
+
+  void sos() async {
+    postSOS("");
+    Get.to(() => const SosPageWait());
+  }
+
+  void postSOS(String beaconId) async {
+    try {
+      Dio dio = Dio();
+      final response = await dio.get(
+        "https://k10e102.k.ssafy.io:8080/api/sos/${beaconId}",
+      );
+      var sessionId = response.data['object']['sessionId'];
+      Get.find<SessionController>().setSessionId(sessionId);
+      WebsocketManager().connect("https://k10e102.k.ssafy.io:8080/socket");
+      WebsocketManager().sendMessage(MessageDto(
+          type: "ENTER",
+          beaconId: Get.find<BeaconController>().beaconId.value,
+          sessionId: sessionId));
+    } catch (error) {
+      print("전송 실패 ${error}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,28 +102,37 @@ class _NavigationPageState extends State<NavigationPage> {
               'assets/images/navigation/straight.png', // 이것도 api 통신에 따라서 직,좌,우로 바꿔여함
               width: MediaQuery.of(context).size.width * 0.6,
             ),
-            const Column(
+            Column(
               // 고정값 버튼 3개를 담은 column
               children: [
                 NeonBorderButton(
                   buttonText: '다시 듣기',
-                  buttonColor: Color(0xffEEFFBD),
-                  borderColor: Color(0xff33e9e9),
+                  buttonColor: const Color(0xffEEFFBD),
+                  borderColor: const Color(0xff33e9e9),
                   textColor: Colors.black,
+                  onPressed: () {
+                    rePlay();
+                  },
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 NeonBorderButton(
                   buttonText: '안내 종료',
-                  buttonColor: Color(0xff9DCAFF),
-                  borderColor: Color(0xff838fff),
+                  buttonColor: const Color(0xff9DCAFF),
+                  borderColor: const Color(0xff838fff),
                   textColor: Colors.black,
+                  onPressed: () {
+                    Get.to(() => const MainPage());
+                  },
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 NeonBorderButton(
                   buttonText: '도움 요청',
-                  buttonColor: Color(0xffFF9F9F),
-                  borderColor: Color(0xffFF1C45),
+                  buttonColor: const Color(0xffFF9F9F),
+                  borderColor: const Color(0xffFF1C45),
                   textColor: Colors.black,
+                  onPressed: () {
+                    sos();
+                  },
                 ),
               ],
             ),

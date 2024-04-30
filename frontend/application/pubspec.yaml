@@ -45,6 +45,7 @@ dependencies:
     fluttertoast: ^8.2.5
     path_provider: ^2.1.3
     flutter_sound: ^9.2.13
+    web_socket_channel: ^2.4.5
 
 dev_dependencies:
     flutter_test:
@@ -80,6 +81,7 @@ flutter:
         - assets/images/navigation/straight.png
         - assets/images/bandi_bug_light.png
         - assets/images/bandi_bug_light_red.png
+        - assets/voice/accept.mp3
         - .env
 
     # An image asset can refer to one or more resolution-specific "variants", see

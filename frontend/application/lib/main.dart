@@ -9,8 +9,9 @@ import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
 import 'package:frontend/util/tts_function.dart';
+import 'package:frontend/util/websocket.dart';
+
 import 'package:get/get.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
@@ -81,6 +82,12 @@ void main() async {
                   Get.to(() => TTSFunction());
                 },
                 child: const Text('TTSFunction Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => SOSClient());
+                },
+                child: const Text('SOSClient Page'),
               ),
             ],
           ),

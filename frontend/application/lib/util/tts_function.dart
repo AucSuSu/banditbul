@@ -113,7 +113,7 @@ class ClovaTTSManager {
     }
   }
 
-  void prePlayAudio() {
+  void replayAudio() {
     try {
       if (prePath != "") {
         _playAudio(prePath);
@@ -158,7 +158,11 @@ class TTSFunction extends StatelessWidget {
               onPressed: () => {clovaTTSManager.getTTS(controller.text)},
               child: const Text("tts")),
           ElevatedButton(
-              onPressed: () => {clovaTTSManager.prePlayAudio()},
+              onPressed: () => {
+                    clovaTTSManager.replayAudio()
+                    // test 용
+                    // clovaTTSManager.sosCheck()
+                  },
               child: const Text("tts 다시듣기"))
         ],
       ),

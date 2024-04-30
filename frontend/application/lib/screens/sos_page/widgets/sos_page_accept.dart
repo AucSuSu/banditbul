@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:get/get.dart';
 
 class SosPageAccept extends StatefulWidget {
   const SosPageAccept({super.key});
@@ -10,6 +13,29 @@ class SosPageAccept extends StatefulWidget {
 }
 
 class _SosPageAcceptState extends State<SosPageAccept> {
+  @override
+  void initState() {
+    _playManagerAcceptVoice();
+  }
+
+  void _playManagerAcceptVoice() async {
+    print("재생하기");
+    AudioPlayer audioPlayer = AudioPlayer();
+    try {
+      // await audioPlayer.setSourceUrl(AssetSource(path))
+      await audioPlayer.play(AssetSource('voice/accept.mp3'));
+      print("재생 완료");
+    } catch (error) {
+      print(error);
+    }
+
+    // Future 비동기 작동 ! -> 넘어가기
+    Future.delayed(Duration(seconds: 20), () {
+      print("메인으로 돌아가기");
+      Get.off(() => MainPage()); // Get 패키지를 사용하여 화면 전환
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

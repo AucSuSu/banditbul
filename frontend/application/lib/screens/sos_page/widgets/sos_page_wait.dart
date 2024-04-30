@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/main_page/main_page.dart';
+import 'package:frontend/store/BeaconController.dart';
+// import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
+import 'package:frontend/util/websocket.dart';
+import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
+
+// dio
 
 class SosPageWait extends StatefulWidget {
   const SosPageWait({super.key});
@@ -12,6 +17,26 @@ class SosPageWait extends StatefulWidget {
 }
 
 class _SosPageWaitState extends State<SosPageWait> {
+  // 페이지 들어오자마자 데이터 계속 받으면서
+  @override
+  void initState() {
+    super.initState();
+    WebsocketManager manager = WebsocketManager();
+    manager.listenToMessage((onData));
+  }
+
+  // data 받기
+  void onData(dynamic data) {
+    print('${data}');
+    MessageDto messageDto = MessageDto.fromJson(data);
+    // 만약 SOS_ACCEPT
+    if (messageDto.type == "SOS_ACCEPT" &&
+        messageDto.beaconId == Get.find<BeaconController>().beaconId.value) {
+      // 관리자가 승인했음 -> 승인완료로 돌아가기
+      Get.to(() => SosPageAccept());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +106,10 @@ class _SosPageWaitState extends State<SosPageWait> {
               borderColor: const Color(0xff33E9E9),
               textColor: Colors.black,
               onPressed: () {
-                Get.offAll(() => const MainPage());
+                // Get.back();
+
+                // test mode ---
+                Get.to(() => const SosPageAccept());
               },
             )
           ],
