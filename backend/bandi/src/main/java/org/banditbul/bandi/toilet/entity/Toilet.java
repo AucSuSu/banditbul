@@ -27,5 +27,9 @@ public class Toilet {
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir womanDir;
 
-
+    public Toilet(Beacon beacon, Dir manDir, Dir womanDir) {
+        this.beacon = beacon;
+        this.manDir = manDir;
+        this.womanDir = womanDir;
+    }
 }

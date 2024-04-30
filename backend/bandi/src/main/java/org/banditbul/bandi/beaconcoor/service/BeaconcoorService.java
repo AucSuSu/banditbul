@@ -2,7 +2,6 @@ package org.banditbul.bandi.beaconcoor.service;
 
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beaconcoor.dto.BeaconcoorDto;
-import org.banditbul.bandi.beaconcoor.entity.Beaconcoor;
 import org.banditbul.bandi.beaconcoor.repository.BeaconcoorRepository;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.station.service.StationService;

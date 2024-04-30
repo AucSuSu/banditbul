@@ -1,44 +1,27 @@
 package org.banditbul.bandi.beacon.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.banditbul.bandi.beacon.dto.BeaconDto;
 import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
-import org.banditbul.bandi.beaconcoor.dto.BeaconcoorDto;
-import org.banditbul.bandi.beaconcoor.entity.Beaconcoor;
-import org.banditbul.bandi.beaconcoor.service.BeaconcoorService;
 import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.exit.dto.ExitDto;
 import org.banditbul.bandi.exit.entity.Exit;
 import org.banditbul.bandi.exit.repository.ExitRepository;
-import org.banditbul.bandi.point.dto.PointDto;
 import org.banditbul.bandi.point.entity.Point;
 import org.banditbul.bandi.point.repository.PointRepository;
-import org.banditbul.bandi.point.service.PointService;
 
 import org.banditbul.bandi.station.entity.Station;
 import org.banditbul.bandi.station.repository.StationRepository;
-import org.banditbul.bandi.station.service.StationService;
-import org.banditbul.bandi.toilet.entity.Toilet;
-import org.banditbul.bandi.toilet.repository.ToiletRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 //test
 @SpringBootTest
