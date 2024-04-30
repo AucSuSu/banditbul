@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import React from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 // import redBeacon from "../assets/redBeacon.gif";
@@ -44,6 +44,11 @@ const Map: React.FC = () => {
         null
     );
 
+    // websocket
+    const ws = useRef<WebSocket | null>(null); // ws 객체
+    // sos 하는 beaconId를 담아둘거임 !
+    const [sosBeaconIdList, setSosBeaconIdList] = useState<string[]>([]);
+
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
         {
@@ -69,6 +74,33 @@ const Map: React.FC = () => {
     const [page] = useState(0);
 
     useEffect(() => {
+        // websocket 객체 연결
+        ws.current = new WebSocket("https://k10e102.k.ssafy.io:8080/socket");
+
+        // listner
+        ws.current.onopen = () => {
+            console.log("web socket 연결");
+        };
+
+        ws.current.onclose = () => {
+            console.log("web socket 연결 끊어짐");
+        };
+
+        ws.current.onerror = () => {
+            console.log("web socket 에러 발생");
+        };
+
+        ws.current.onmessage = (event: MessageEvent) => {
+            console.log(event.data); // 메세지 출력하기
+
+            // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
+            // sosBeaconList에 추가하기
+            setSosBeaconIdList((prev) => [...prev, event.data.beaconId]);
+        };
+
+        // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
+
+        // websocket ==
         const resizeBeacon = () => {
             console.log("resize");
             const parentTarget = document.querySelector(
@@ -121,6 +153,27 @@ const Map: React.FC = () => {
         };
 
         locate(); // 비콘 새로 놓기
+    };
+
+    const sendAcceptMessage = (beaconId: string) => {
+        if (ws.current?.OPEN) {
+            var data = {
+                type: "SOS_ACCEPT",
+                beaconId: beaconId,
+            };
+            ws.current.send(JSON.stringify(data));
+        }
+    };
+
+    const sendNoMessage = (beaconId: string) => {
+        if (ws.current?.OPEN) {
+            var data = {
+                type: "SOS_ACCEPT",
+                beaconId: beaconId,
+            };
+
+            ws.current.send(JSON.stringify(data));
+        }
     };
 
     // 저장이 완료 되었거나 완료하지 않고 닫은 경우
