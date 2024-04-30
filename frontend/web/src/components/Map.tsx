@@ -39,8 +39,8 @@ const Map: React.FC = () => {
     const [locateIng, setLocateIng] = useState<boolean>(false);
     const [modalshow, setModalshow] = useState<boolean>(false);
     const [newBeacon, setNewBeacon] = useState<Beacon | null>(null);
-    const [_, setModalOpen] = useState(false);
-    const [deleteSelectBeacon, setDeleteSelectBeacon] = useState<String | null>(
+    const [, setModalOpen] = useState(false);
+    const [deleteSelectBeacon, setDeleteSelectBeacon] = useState<string | null>(
         null
     );
 
@@ -153,7 +153,7 @@ const Map: React.FC = () => {
         setY(ui.y);
     };
 
-    const deleteBeacon = (beaconId: String) => {
+    const deleteBeacon = (beaconId: string) => {
         console.log("delete beacon : " + beaconId);
     };
 
@@ -442,7 +442,7 @@ function Options(
     x: number,
     y: number,
     floor: number,
-    closeAddModal: Function
+    closeAddModal: () => void
 ) {
     switch (type) {
         case 1:
