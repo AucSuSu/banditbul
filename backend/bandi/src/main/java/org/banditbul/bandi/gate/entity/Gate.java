@@ -20,10 +20,6 @@ public class Gate {
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
-
     @Column(name = "is_up")
     private Boolean isUp;
 
@@ -36,9 +32,8 @@ public class Gate {
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir stair;
 
-    public Gate(Beacon beacon, Point point, Boolean isUp,  Dir elevator, Dir escalator, Dir stair) {
+    public Gate(Beacon beacon, Boolean isUp,  Dir elevator, Dir escalator, Dir stair) {
         this.beacon = beacon;
-        this.point = point;
         this.isUp = isUp;
         this.elevator = elevator;
         this.escalator = escalator;

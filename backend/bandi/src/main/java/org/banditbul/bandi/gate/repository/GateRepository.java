@@ -10,5 +10,5 @@ public interface GateRepository extends JpaRepository<Gate, Integer> {
     public Optional<Gate> findByBeaconId(String beaconId);
 
 
-    public Optional<Gate> findByPointId(int pointId);
+//    public Optional<Gate> findBy(int pointId);
 }

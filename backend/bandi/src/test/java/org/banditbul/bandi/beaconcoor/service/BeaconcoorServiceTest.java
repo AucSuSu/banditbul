@@ -1,7 +1,6 @@
 package org.banditbul.bandi.beaconcoor.service;
 
 import jakarta.transaction.Transactional;
-import org.banditbul.bandi.beaconcoor.entity.Beaconcoor;
 import org.banditbul.bandi.beaconcoor.repository.BeaconcoorRepository;
 import org.banditbul.bandi.station.entity.Station;
 import org.banditbul.bandi.station.repository.StationRepository;

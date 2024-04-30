@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.point.entity.Point;
 
 @Entity
@@ -17,12 +18,12 @@ public class Edge {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point1_id")
-    private Point point1;
+    @JoinColumn(name = "beacon_id1")
+    private Beacon beacon1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point2_id")
-    private Point point2;
+    @JoinColumn(name = "beacon_id2")
+    private Beacon beacon2;
 
     @Column(name = "distance")
     private int distance;
@@ -30,9 +31,9 @@ public class Edge {
     @Column(name = "station_id")
     private Integer stationId;
 
-    public Edge(Point point1, Point point2, int distance, Integer stationId) {
-        this.point1 = point1;
-        this.point2 = point2;
+    public Edge(Beacon beacon1, Beacon beacon2, int distance, Integer stationId) {
+        this.beacon1 = beacon1;
+        this.beacon2 = beacon2;
         this.distance = distance;
         this.stationId = stationId;
     }

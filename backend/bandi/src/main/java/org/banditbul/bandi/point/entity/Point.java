@@ -2,6 +2,7 @@ package org.banditbul.bandi.point.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.station.entity.Station;
 
 @Entity
@@ -13,23 +14,7 @@ public class Point {
     @Column(name = "point_id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "station_id")
-    private Station station;
-
-    @Column(name = "latitude")
-    private Double latitude;
-
-    @Column(name = "longitude")
-    private Double longitude;
-
-    @Column(name = "range")
-    private int range;
-
-    public Point(Station station, Double latitude, Double longitude, int range) {
-        this.station = station;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.range = range;
-    }
+    @OneToOne
+    @JoinColumn(name = "beacon_id")
+    private Beacon beacon;
 }

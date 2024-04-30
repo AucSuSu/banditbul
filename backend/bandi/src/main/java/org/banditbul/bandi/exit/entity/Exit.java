@@ -22,9 +22,6 @@ public class Exit {
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
 
     private Integer number;
     private String landmark;
@@ -38,9 +35,8 @@ public class Exit {
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir stair;
 
-    public Exit(Beacon beacon, Point point, Integer number, String landmark, Dir elevator, Dir escalator, Dir stair) {
+    public Exit(Beacon beacon, Integer number, String landmark, Dir elevator, Dir escalator, Dir stair) {
         this.beacon = beacon;
-        this.point = point;
         this.number = number;
         this.landmark = landmark;
         this.elevator = elevator;

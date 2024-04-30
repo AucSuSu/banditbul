@@ -1,9 +1,8 @@
 package org.banditbul.bandi.beacon.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import org.banditbul.bandi.station.entity.Station;
 
 @Entity
 @Getter @Setter
@@ -14,6 +13,14 @@ public class Beacon {
     @Column(name = "beacon_id")
     private String id;
 
-    @Column(name = "beacon_type")
-    private String beacon_type;
+    @ManyToOne
+    @JoinColumn(name = "station_id")
+    private Station station;
+
+    private int x;
+    private int y;
+    private int floor;
+    private Double latitude;
+    private Double longitude;
+    private int range;
 }

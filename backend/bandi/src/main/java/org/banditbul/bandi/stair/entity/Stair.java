@@ -21,15 +21,10 @@ public class Stair {
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
-
     private boolean isUp;
 
-    public Stair(Beacon beacon, Point point, boolean isUp) {
+    public Stair(Beacon beacon, boolean isUp) {
         this.beacon = beacon;
-        this.point = point;
         this.isUp = isUp;
     }
 }

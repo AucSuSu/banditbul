@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface PointRepository extends JpaRepository<Point, Integer> {
 
-    public Optional<List<Point>> findAllByStationId(int stationId);
+//    public Optional<List<Point>> findAllByStationId(int stationId);
 }

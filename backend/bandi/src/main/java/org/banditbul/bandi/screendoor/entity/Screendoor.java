@@ -22,15 +22,10 @@ public class Screendoor {
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
-
     private String direction;
 
-    public Screendoor(Beacon beacon, Point point, String direction) {
+    public Screendoor(Beacon beacon, String direction) {
         this.beacon = beacon;
-        this.point = point;
         this.direction = direction;
     }
 }

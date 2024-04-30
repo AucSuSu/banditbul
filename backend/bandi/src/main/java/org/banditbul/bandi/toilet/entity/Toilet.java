@@ -21,10 +21,6 @@ public class Toilet {
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
-
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
     private Dir manDir;
 
