@@ -174,11 +174,9 @@ public class EdgeService {
     }
 
     public Integer addEdge(EdgeDto dto){
-        System.out.println(dto.getPoint1());
-        System.out.println(dto.getPoint2());
-        Point point1 = pointRepository.findById(dto.getPoint1()).orElseThrow(() -> new EntityNotFoundException("해당하는 Point가 없습니다."));
-        Point point2 = pointRepository.findById(dto.getPoint2()).orElseThrow(() -> new EntityNotFoundException("해당하는 Point가 없습니다."));
-        Edge edge = new Edge(point1, point2, dto.getDistance(), dto.getStationId());
+        Beacon beacon1 = beaconRepository.findById(dto.getBeacon1()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
+        Beacon beacon2 = beaconRepository.findById(dto.getBeacon2()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
+        Edge edge = new Edge(beacon1, beacon2, dto.getDistance(), dto.getStationId());
         Edge save = edgeRepository.save(edge);
         return save.getId();
     }

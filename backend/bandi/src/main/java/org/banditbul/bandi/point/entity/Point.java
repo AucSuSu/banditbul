@@ -17,4 +17,8 @@ public class Point {
     @OneToOne
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
+
+    public Point(Beacon beacon) {
+        this.beacon = beacon;
+    }
 }

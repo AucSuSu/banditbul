@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EdgeDto {
-    private int point1;
-    private int point2;
+    private String beacon1;
+    private String beacon2;
     private int stationId;
     private int distance;
 }
