@@ -3,8 +3,7 @@ package org.banditbul.bandi.beacon.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.dto.BeaconDto;
-import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
-import org.banditbul.bandi.beacon.entity.Beacon;
+import org.banditbul.bandi.beacon.dto.FloorInfoDto;
 import org.banditbul.bandi.beacon.service.BeaconService;
 import org.banditbul.bandi.common.HttpStatusEnum;
 import org.banditbul.bandi.station.dto.StationSessionDto;
@@ -12,11 +11,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.banditbul.bandi.common.Message;
 import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class BeaconController {
     private final BeaconService beaconService;
+
+    @GetMapping("/beaconlist")
+    public ResponseEntity<Message> getBeaconList(@PathVariable(value = "floor") int floor, HttpSession session){
+        StationSessionDto user = (StationSessionDto) session.getAttribute("user");
+        FloorInfoDto floorInfoDto = beaconService.getFloorInfoDto(floor, user.getId());
+        Message message = new Message(HttpStatusEnum.OK, "해당 역의 해당 층의 비콘 및 엣지 리스트 전달 완료", floorInfoDto);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
     @GetMapping("/sos/{beaconId}")
     public ResponseEntity<Message> sendSos(@PathVariable(value = "beaconId") String beaconId){
         int stationId = beaconService.getStationId(beaconId);

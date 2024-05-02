@@ -9,4 +9,6 @@ public interface StationRepository extends JpaRepository<Station, Integer> {
     public Station findByLoginId(String loginId);
 
     public Optional<Station> findByName(String stationName);
+
+    public Optional<Station> findById(String id);
 }

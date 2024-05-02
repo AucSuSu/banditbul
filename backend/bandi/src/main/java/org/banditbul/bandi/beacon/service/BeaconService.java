@@ -4,12 +4,17 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.dto.BeaconDto;
 import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
+import org.banditbul.bandi.beacon.dto.FloorInfoDto;
+import org.banditbul.bandi.beacon.dto.IndvBeacon;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
 import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.common.exception.ExistException;
+import org.banditbul.bandi.edge.dto.IndvEdge;
+import org.banditbul.bandi.edge.entity.Edge;
+import org.banditbul.bandi.edge.repository.EdgeRepository;
 import org.banditbul.bandi.elevator.dto.ElevatorDto;
 import org.banditbul.bandi.elevator.entity.Elevator;
 import org.banditbul.bandi.elevator.repository.ElevatorRepository;
@@ -34,9 +39,8 @@ import org.banditbul.bandi.toilet.entity.Toilet;
 import org.banditbul.bandi.toilet.repository.ToiletRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 @Service
 @RequiredArgsConstructor
 public class BeaconService {
@@ -49,10 +53,39 @@ public class BeaconService {
     private final ScreendoorRepository screendoorRepository;
     private final PointRepository pointRepository;
     private final StationRepository stationRepository;
+    private final EdgeRepository edgeRepository;
     public int getStationId(String beaconId){
         Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
         return beacon.getStation().getId();
     }
+
+    public FloorInfoDto getFloorInfoDto(int floor, int stationId){
+        // 역(station) 조회
+        Station station = stationRepository.findById(stationId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 역을 찾을 수 없습니다. ID: " + stationId));
+
+        // 역의 비콘 조회
+        List<Beacon> beacons = beaconRepository.findAllByStationAndFloor(station, floor);
+        List<Edge> edges = edgeRepository.findAllByStation(station);
+
+        // 해당 층의 비콘
+        List<IndvBeacon> indvBeacons = new ArrayList<>();
+        for(Beacon beacon:beacons){
+            indvBeacons.add(new IndvBeacon(beacon.getId(), beacon.getX(), beacon.getY()));
+        }
+
+        // 해당 층의 엣지
+        List<IndvEdge> indvEdges = new ArrayList<>();
+        for(Edge edge:edges){
+            if (indvBeacons.contains(edge.getBeacon1()) && indvBeacons.contains(edge.getBeacon2())){
+                indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId()));
+            }
+        }
+
+        return new FloorInfoDto(indvBeacons, indvEdges);
+
+    }
+
     public String giveInfo(String beaconId) throws EntityNotFoundException{
 
         Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
@@ -121,6 +154,8 @@ public class BeaconService {
         }
         throw new EntityNotFoundException("알 수 없는 비콘 타입입니다.");
     }
+
+
     public String createBeacon(BeaconDto beaconDto){
         Station station = stationRepository.findById(beaconDto.getStationId()).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
         BeaconTYPE beaconType = beaconDto.getBeaconType();
@@ -149,4 +184,6 @@ public class BeaconService {
         }
         return beacon.getId();
     }
+
+
 }
