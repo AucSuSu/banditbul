@@ -36,6 +36,16 @@ class _SearchTextPageState extends State<SearchTextPage> {
     super.dispose();
   }
 
+  // 메시지 개수를 3개이하로 유지
+  void manageMessageList(Map<String, dynamic> newMessage) {
+    setState(() {
+      if (messages.length >= 3) {
+        messages.removeAt(0); // Remove the oldest message
+      }
+      messages.add(newMessage); // Add the new message
+    });
+  }
+
   // API 요청 함수, Dio를 사용하여 역 이름을 가져오고 메시지 형식으로 가공
   Future<void> fetchStationNames() async {
     // Dio dio = Dio(); // Dio 인스턴스 생성
@@ -70,7 +80,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
     var newMessage = {'text': '현재 역은 하단역입니다 \n도착역을 말씀해주세요', 'isUser': false};
 
     setState(() {
-      messages.add(newMessage);
+      manageMessageList(newMessage);
     });
   }
 
@@ -93,7 +103,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
     };
 
     setState(() {
-      messages.add(newMessage);
+      manageMessageList(newMessage);
     });
   }
 
@@ -167,7 +177,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
                                   'isUser': true
                                 };
                                 setState(() {
-                                  messages.add(newMessage);
+                                  manageMessageList(newMessage);
                                   findRoute(textController.text); // 길찾기 요청
                                   textController.clear(); // 입력 필드 초기화
                                 });
