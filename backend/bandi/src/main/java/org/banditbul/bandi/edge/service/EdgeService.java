@@ -39,13 +39,14 @@ public class EdgeService {
     private final ElevatorRepository elevatorRepository;
     private final ScreendoorRepository screendoorRepository;
     private final EdgeRepository edgeRepository;
-    public void navCurStation(String beaconId, String dest, int destExitNum){
+    public void navCurStation(String beaconId, String dest){
         // 0. dest에서 역, 출구로 두개 쪼개기 아마 split 쓸듯?  substring?
+
         // 1. beaconId로 시작 비콘 찾기
         Beacon startBeacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다"));
         // 2. 현재 역과 도착역 찾기
         Station startStation = startBeacon.getStation();
-        Station destStation = stationRepository.findByName(dest).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+        Station destStation = stationRepository.findByName("서면역").orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
         int curStationId = startStation.getId();
         int destStationId = destStation.getId();
         // 2-1. 상행/하행 개찰구(첫번째 도착점) 찾기
@@ -125,45 +126,42 @@ public class EdgeService {
         // 2. 현재 역에 있는 화장실 찾기
         // 3. 화장실로의 길찾기 구하기
     }
-    public Integer addEdge(EdgeDto dto){
-        Beacon beacon1 = beaconRepository.findById(dto.getBeacon1()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
-        Beacon beacon2 = beaconRepository.findById(dto.getBeacon2()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
-        Station station = stationRepository.findById(dto.getStationId()).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
-        Edge edge = new Edge(beacon1, beacon2, dto.getDistance(), station);
-        Edge save = edgeRepository.save(edge);
-        return save.getId();
-    }
     //    static HashMap<String, ArrayList<Node>> graph = new HashMap<>();
     public List<String> dij(Beacon start, Beacon dest, List<Beacon> beaconList, List<Edge> edgeList){
-        HashMap<String, Boolean> check = new HashMap<>(); // 방문 확인 용
-        HashMap<String, Integer> dist = new HashMap<>(); // 거리 체크 용
-        HashMap<String, String> road = new HashMap<>(); // 길 저장 용
-        final int INF = Integer.MAX_VALUE;
-        HashMap<String, ArrayList<Node>> graph = new HashMap<>();
-        // 모든 비콘의 거리들을 무한대로 초기화
-        for (String node : graph.keySet()){
-            dist.put(node, INF);
-            check.put(node, false);
-            road.put(node, null);
-        }
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        dist.put(start.getId(), 0);
-        pq.offer(new Node(start.getId(),0));
-        while(!pq.isEmpty()){
-            Node nowBeacon = pq.poll();
-            String nowBeaconId = nowBeacon.beaconId;
-            // 현재 비콘 id가 최종 목적지와 동일하다면 그만!
-            if(nowBeaconId.equals(dest.getId())) break;
-            for (Node next : graph.get(nowBeacon)){ // 현재 비콘과 이어진 노드
-                int newDist = dist.get(nowBeacon) + next.dis; // nowBeacon을 거쳐서 다음 비콘으로 가는 경우
-                if (dist.get(next.beaconId) > newDist){ // 현재보다 더 짧은 거리로 도달 가능한 경우
-                    dist.put(next.beaconId, newDist);
-                    pq.offer(new Node(next.beaconId, newDist));
-                    road.put(next.beaconId, nowBeaconId);
-                }
-            }
-        }
-        return reconstructPath(road, start.getId(), dest.getId());
+//        HashMap<String, Boolean> check = new HashMap<>(); // 방문 확인 용
+//        HashMap<String, Integer> dist = new HashMap<>(); // 거리 체크 용
+//        HashMap<String, String> road = new HashMap<>(); // 길 저장 용
+//        final int INF = Integer.MAX_VALUE;
+//
+//
+//        HashMap<String, ArrayList<Node>> graph = new HashMap<>(); // 하나의 비콘에 대응하는 다른비콘을
+//        // 출발점으로부터 모든 비콘의 거리들을 무한대로 초기화
+//        // 비콘의 개수만큼 초기화
+//        for (Beacon beacon : beaconList){
+//            dist.put(beacon.getId(), INF);
+//            check.put(beacon.getId(), false);
+//        }
+//
+//        for ()
+//        PriorityQueue<Node> pq = new PriorityQueue<>();
+//        dist.put(start.getId(), 0);
+//        pq.offer(new Node(start.getId(),0));
+//        while(!pq.isEmpty()){
+//            Node nowBeacon = pq.poll();
+//            String nowBeaconId = nowBeacon.beaconId;
+//            // 현재 비콘 id가 최종 목적지와 동일하다면 그만!
+//            if(nowBeaconId.equals(dest.getId())) break;
+//            for (Node next : graph.get(nowBeacon)){ // 현재 비콘과 이어진 노드
+//                int newDist = dist.get(nowBeacon) + next.dis; // nowBeacon을 거쳐서 다음 비콘으로 가는 경우
+//                if (dist.get(next.beaconId) > newDist){ // 현재보다 더 짧은 거리로 도달 가능한 경우
+//                    dist.put(next.beaconId, newDist);
+//                    pq.offer(new Node(next.beaconId, newDist));
+//                    road.put(next.beaconId, nowBeaconId);
+//                }
+//            }
+//        }
+//        return reconstructPath(road, start.getId(), dest.getId());
+        return null;
     }
     private static List<String> reconstructPath(HashMap<String, String> road, String startBeacon, String destBeacon){
         List<String> path = new ArrayList<>();
@@ -173,7 +171,7 @@ public class EdgeService {
         Collections.reverse(path);
         return path;
     }
-    class Node implements Comparable<Node>{
+    static class Node implements Comparable<Node>{
         String beaconId;
         int dis; // 거리
         public Node(String beaconId, int dis){
@@ -185,5 +183,45 @@ public class EdgeService {
         public int compareTo(Node o){
             return Integer.compare(this.dis, o.dis);
         }
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+
+        if (unit == "kilometer") {
+            dist = dist * 1.609344;
+        } else if(unit == "meter"){
+            dist = dist * 1609.344;
+        }
+
+        return (dist);
+    }
+
+
+    // This function converts decimal degrees to radians
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    // This function converts radians to decimal degrees
+    private double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
+    public Integer addEdge(EdgeDto dto){
+        Beacon beacon1 = beaconRepository.findById(dto.getBeacon1()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
+        Beacon beacon2 = beaconRepository.findById(dto.getBeacon2()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
+        Station station = stationRepository.findById(dto.getStationId()).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+
+        int meter = (int) distance(beacon1.getLatitude(), beacon1.getLongitude(), beacon2.getLatitude(), beacon2.getLongitude(), "meter");
+        Edge edge = new Edge(beacon1, beacon2, meter, station);
+        Edge save = edgeRepository.save(edge);
+        return save.getDistance();
     }
 }

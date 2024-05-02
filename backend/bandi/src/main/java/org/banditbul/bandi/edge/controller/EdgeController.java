@@ -1,11 +1,13 @@
 
 package org.banditbul.bandi.edge.controller;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.common.HttpStatusEnum;
 import org.banditbul.bandi.common.Message;
 import org.banditbul.bandi.edge.dto.EdgeDto;
 import org.banditbul.bandi.edge.service.EdgeService;
+import org.banditbul.bandi.station.dto.StationSessionDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,10 @@ import java.util.List;
 public class EdgeController {
     private final EdgeService edgeService;
     @GetMapping("/navigation")
-    public ResponseEntity<Message> getNavigation(@RequestParam("beacon_id") String beacon_id,
+    public ResponseEntity<Message> getNavigation(@RequestParam("beaconId") String beaconId,
                                                  @RequestParam("destStation") String destStation){
-        // 1. 현재 역 파악 - 비콘 id로 들어옴
-        // 2. 해당 역에서 개찰구까지 경로 추천
+        // 1. 해당 역에서 개찰구까지 경로 추천
+        edgeService.navCurStation(beaconId, destStation);
         // 3. 목적지 역에서 개찰구에서 출구까지
         // destStation에서 몇번역 몇번출구가 들어옴
         List<Dir> nav = new ArrayList<>();
@@ -34,9 +36,11 @@ public class EdgeController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
     @PostMapping("/edge")
-    public ResponseEntity<Message> addEdge(@RequestBody EdgeDto dto){
+    public ResponseEntity<Message> addEdge(@RequestBody EdgeDto dto, HttpSession session){
+        StationSessionDto user = (StationSessionDto) session.getAttribute("user");
+        dto.setStationId(user.getId());
         Integer edgeId = edgeService.addEdge(dto);
-        Message message = new Message(HttpStatusEnum.OK, "간선 생성 완료", edgeId);
+        Message message = new Message(HttpStatusEnum.OK, "간선 생성 완료", edgeId + "meter");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }

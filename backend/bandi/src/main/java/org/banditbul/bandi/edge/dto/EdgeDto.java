@@ -9,5 +9,4 @@ public class EdgeDto {
     private String beacon1;
     private String beacon2;
     private int stationId;
-    private int distance;
 }

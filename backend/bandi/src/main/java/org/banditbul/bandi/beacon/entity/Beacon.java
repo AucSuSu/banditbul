@@ -23,6 +23,8 @@ public class Beacon {
     private Double latitude;
     private Double longitude;
     private int range;
+
+    @Enumerated(EnumType.STRING)
     private BeaconTYPE beaconType;
 
 }
