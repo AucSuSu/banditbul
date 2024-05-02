@@ -6,7 +6,7 @@ import blueBeacon from "../assets/blueBeacon.gif";
 import defaultBeacon from "../assets/defaultBeacon.gif";
 import yellowBeacon from "../assets/yellowBeacon.gif";
 import testBg from "../assets/testBg.png";
-import { Beacon } from "../util/type.tsx";
+import { Beacon, Edge } from "../util/type.tsx";
 import {
     ScreenDoor,
     BathRoom,
@@ -17,6 +17,8 @@ import {
     Escalator,
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
+// import { Fetch } from "../util/axios.ts";
+import axios from "axios";
 
 const types = [
     "미선택",
@@ -33,6 +35,13 @@ const floorType = ["대합실", "승강장"];
 
 const Map: React.FC = () => {
     const [floor, setFloor] = useState<number>(0);
+    const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
+    // const [edgeList, setEdgeList] = useState<Edge[]>([
+    //     // { beacon1: "1", beacon2: "2" },
+    //     // { beacon1: "2", beacon2: "3" },
+    //     // { beacon1: "3", beacon2: "1" },
+    // ]);
+    const [edgeList, _] = useState<Edge[]>([]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
     const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
@@ -45,6 +54,7 @@ const Map: React.FC = () => {
     const [deleteSelectBeacon, setDeleteSelectBeacon] = useState<string | null>(
         null
     );
+    const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
 
     // websocket
     const ws = useRef<WebSocket | null>(null); // ws 객체
@@ -66,23 +76,23 @@ const Map: React.FC = () => {
         },
         {
             type: "개찰구",
-            beaconId: "2",
+            beaconId: "11:22:33:44:60",
             coord: { x: 300, y: 1000 },
-            name: "Beacon 2",
+            name: "11:22:33:44:60",
         },
         {
             type: "화장실",
-            beaconId: "3",
+            beaconId: "11:22:33:44:55",
             coord: { x: 40, y: 1000 },
-            name: "Beacon 3",
+            name: "11:22:33:44:55",
         },
     ]);
 
     const [page] = useState(0);
 
     useEffect(() => {
-        // websocket 객체 연결
-        // ws.current = new WebSocket("https://k10e102.k.ssafy.io:8080/socket");
+        //websocket 객체 연결
+        // ws.current = new WebSocket("wss://banditbul.co.kr/socket");
 
         // // listner
         // ws.current.onopen = () => {
@@ -102,7 +112,8 @@ const Map: React.FC = () => {
 
         //     // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
         //     // sosBeaconList에 추가하기
-        //     setSosBeaconIdList((prev) => [...prev, event.data.beaconId]);
+        //     const newSosBeaconIdList = sosBeaconIdList.add(event.data.beaconId);
+        //     setSosBeaconIdList(newSosBeaconIdList);
         // };
 
         // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
@@ -144,7 +155,28 @@ const Map: React.FC = () => {
         };
     }, []);
 
+    // 간선 연결하기
+    const handleRadioChange = (beaconId: string) => {
+        // 이미 연결되어 있는 거면 취소
+        if (selectedEdges.includes(beaconId)) {
+            console.log("지우기");
+            const updatedItems = selectedEdges.filter(
+                (item) => item !== beaconId
+            );
+            setSelectedEdges(updatedItems);
+            // 연결 안되어 있는 거면 넣어주기
+        } else {
+            if (selectedEdges.length == 2) {
+                alert("두개의 포인트만 연결할 수 있습니다.");
+                return;
+            }
+            console.log("추가하기");
+            setSelectedEdges((prev) => [...prev, beaconId]);
+        }
+    };
+
     const addBeaconModal = () => {
+        setAddEdgeState(false);
         setModalshow(true);
 
         const locate = () => {
@@ -160,6 +192,50 @@ const Map: React.FC = () => {
         };
 
         locate(); // 비콘 새로 놓기
+    };
+
+    const addEdgeModal = async () => {
+        if (addEdgeState) {
+            console.log(selectedEdges.length);
+            if (selectedEdges.length == 2) {
+                // 간선 axios
+
+                try {
+                    const response = await axios.post(
+                        `https://banditbul.co.kr/api/edge`,
+                        {
+                            beacon1: selectedEdges[0],
+                            beacon2: selectedEdges[1],
+                        }
+                    );
+                    console.log(response);
+                    alert("성공");
+                } catch (error) {
+                    console.error(error);
+                    alert("실패");
+                }
+
+                // async () => {
+                //     try {
+                //         console.log("전송할거야22");
+                //         const res = await Fetch("/api/edge", "POST", {
+                //             beacon1: selectedEdges[0],
+                //             beacon2: selectedEdges[1],
+                //         });
+                //         console.log(res.status);
+                //         console.log(res.data);
+                //     } catch (error) {
+                //         console.log(error);
+                //     }
+                // };
+            } else {
+                alert("간선을 두개 선택해주세요");
+            }
+        }
+        // 각 비콘 선택 가능하게 하기
+        setAddEdgeState(!addEdgeState);
+        // setSelectedEdges([]);
+        // 버튼은 저장하기로 바꾸기
     };
 
     const sendAcceptMessage = (beaconId: string) => {
@@ -311,16 +387,37 @@ const Map: React.FC = () => {
                             </Draggable>
                         )}
 
+                        {edgeList.map((edge, index) => {
+                            const beacon1 = edge.beacon1;
+                            const beacon2 = edge.beacon2;
+                            const startPoint = beacons.find(
+                                (point) => point.beaconId === beacon1
+                            )!.coord;
+                            const endPoint = beacons.find(
+                                (point) => point.beaconId === beacon2
+                            )!.coord;
+
+                            return (
+                                <svg
+                                    key={`line-${index}`}
+                                    className={styles.edge}
+                                >
+                                    <line
+                                        x1={startPoint.x + 15}
+                                        y1={startPoint.y + 15}
+                                        x2={endPoint.x + 15}
+                                        y2={endPoint.y + 15}
+                                        style={{
+                                            stroke: "black",
+                                            strokeWidth: 2,
+                                        }}
+                                    />
+                                </svg>
+                            );
+                        })}
+
                         {beacons.map((point, index) => (
-                            <div>
-                                {/* {deleteSelectBeacon &&
-                                    point.beaconId == deleteSelectBeacon && (
-                                        <Modal
-                                            isOpen={modalOpen}
-                                            onClose={closeModal}
-                                            onConfirm={handleConfirm}
-                                        />
-                                    )} */}
+                            <div key={index}>
                                 <img
                                     key={index}
                                     src={
@@ -522,6 +619,20 @@ const Map: React.FC = () => {
                                             }
                                             onMouseOut={handleMouseOut}
                                         >
+                                            {addEdgeState && (
+                                                <input
+                                                    type="radio"
+                                                    id={`option-${index}`}
+                                                    checked={selectedEdges.includes(
+                                                        item.beaconId
+                                                    )}
+                                                    onClick={() =>
+                                                        handleRadioChange(
+                                                            item.beaconId
+                                                        )
+                                                    }
+                                                />
+                                            )}
                                             <div className={styles.beaconId}>
                                                 {" "}
                                                 {item.name}
@@ -543,6 +654,16 @@ const Map: React.FC = () => {
                                         </div>
                                     )
                                 )}
+                                <div className={styles.addEdgeButton}>
+                                    <div
+                                        onClick={addEdgeModal}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        {addEdgeState
+                                            ? "저장하기"
+                                            : "경로 등록하기"}
+                                    </div>
+                                </div>
                                 <div className={styles.floatingButton}>
                                     <div
                                         onClick={addBeaconModal}
@@ -598,7 +719,7 @@ function Options(
                     closeModal={closeAddModal}
                 />
             );
-        case 5:
+        case 6:
             return (
                 <Escalator
                     x={x}

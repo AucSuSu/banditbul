@@ -53,8 +53,8 @@ export const BathRoom: React.FC<IScreenDoorProps> = (props) => {
 
     const [formData, setFormData] = useState({
         macAddress: "",
-        latitude: "",
-        longitude: "",
+        latitude: 0,
+        longitude: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -264,8 +264,8 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
 
     const [formData, setFormData] = useState({
         macAddress: "",
-        longitude: "",
-        latitude: "",
+        longitude: 0,
+        latitude: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -595,8 +595,8 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
 
     const [formData, setFormData] = useState({
         macAddress: "",
-        longitude: "",
-        latitude: "",
+        longitude: 0,
+        latitude: 0,
         landmark: "",
         number: 0,
     });
@@ -901,8 +901,8 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
 
     const [formData, setFormData] = useState({
         macAddress: "",
-        longitude: "",
-        latitude: "",
+        longitude: 0,
+        latitude: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1011,8 +1011,8 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
 
     const [formData, setFormData] = useState({
         macAddress: "",
-        longitude: "",
-        latitude: "",
+        longitude: 0,
+        latitude: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1122,8 +1122,8 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
 
     const [formData, setFormData] = useState({
         macAddress: "",
-        longitude: "",
-        latitude: "",
+        longitude: 0,
+        latitude: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1232,8 +1232,8 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
 export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
     const [formData, setFormData] = useState({
         macAddress: "",
-        longitude: "",
-        latitude: "",
+        longitude: 0,
+        latitude: 0,
         direction: "",
     });
 

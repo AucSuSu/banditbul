@@ -101,6 +101,10 @@ body {
     border-radius: 100%;
 }
 
+.edge {
+    position: absolute;
+}
+
 .contentContainer {
     height: 90%;
     width: 100%;
@@ -120,7 +124,24 @@ body {
     background-color: azure;
     border-radius: 30px;
     padding: 20px;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.addEdgeButton {
+    position: fixed;
+    bottom: 20px;
+    right: 200px;
+    z-index: 1000;
+    background-color: azure;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.addEdgeButton:hover {
+    transition: 0.3s;
+    background-color: ivory;
+    color: black;
 }
 
 .floatingButton:hover {

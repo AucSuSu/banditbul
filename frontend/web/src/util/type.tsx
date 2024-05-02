@@ -10,11 +10,16 @@ export type Beacon = {
     name: string;
 };
 
+export type Edge = {
+    beacon1: string;
+    beacon2: string;
+};
+
 export type RequestAddBeacon = {
     macAddress: string;
     stationId: string;
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
     range: number;
     beaconType: string;
     isUp?: boolean | null;
