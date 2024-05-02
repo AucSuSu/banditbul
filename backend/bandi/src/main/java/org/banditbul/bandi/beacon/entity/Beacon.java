@@ -25,14 +25,4 @@ public class Beacon {
     private int range;
     private BeaconTYPE beaconType;
 
-    public Beacon(Station station, int x, int y, int floor, Double latitude, Double longitude, int range, BeaconTYPE beaconType) {
-        this.station = station;
-        this.x = x;
-        this.y = y;
-        this.floor = floor;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.range = range;
-        this.beaconType = beaconType;
-    }
 }
