@@ -7,6 +7,7 @@ import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
+import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.common.exception.ExistException;
 import org.banditbul.bandi.elevator.dto.ElevatorDto;
@@ -32,6 +33,9 @@ import org.banditbul.bandi.toilet.dto.ToiletDto;
 import org.banditbul.bandi.toilet.entity.Toilet;
 import org.banditbul.bandi.toilet.repository.ToiletRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
@@ -49,29 +53,71 @@ public class BeaconService {
         Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
         return beacon.getStation().getId();
     }
-    public BeaconInfoDto giveInfo(String beaconId) throws EntityNotFoundException{
+    public String giveInfo(String beaconId) throws EntityNotFoundException{
+
         Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
+
         // 우선 비콘ID로 해당 비콘의 시설물을 찾자
         // 해당하는 시설물: 개찰구 gate, 화장실 toilet, 출구 exit, 계단 stair, 엘리베이터 elevator, 스크린도어 screendoor
         BeaconTYPE beaconType = beacon.getBeaconType(); // toilet, gate, exit, stair, elevator, screendoor
+
+        Map<Dir, String> directionMap = new HashMap<>();
+
+        directionMap.put(Dir.F, "정면");
+        directionMap.put(Dir.L, "왼쪽");
+        directionMap.put(Dir.R, "오른쪽");
+        directionMap.put(null, "다른 곳");
+
+        StringBuilder sb = new StringBuilder(); // 문장으로 보내줘야함
+
         if (beaconType == BeaconTYPE.TOILET){
             Toilet toilet = toiletRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
-            return new ToiletDto(toilet.getManDir(), toilet.getWomanDir());
+            sb.append("화장실입니다. 남자 화장실은 ").append(directionMap.get(toilet.getManDir())).append("에, 여자 화장실은 ").append(directionMap.get(toilet.getWomanDir())).append("에 있습니다");
+            return sb.toString();
         } else if (beaconType == BeaconTYPE.GATE){
             Gate gate = gateRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
-            return new GateDto(gate.getIsUp(), gate.getElevator(), gate.getEscalator(), gate.getStair());
+
+            sb.append(gate.getIsUp()?"상행":"하행").append("선 개찰구입니다. ");
+            if(gate.getElevator()!=null){
+                sb.append("엘레베이터는 ").append(directionMap.get(gate.getElevator())).append("에 ");
+            }
+            if(gate.getEscalator()!=null){
+                sb.append("에스컬레이터는 ").append(directionMap.get(gate.getEscalator())).append("에 ");
+            }
+            if(gate.getStair()!=null){
+                sb.append("계단은 ").append(directionMap.get(gate.getStair())).append("에 ");
+            }
+            sb.append("있습니다.");
+
+            return sb.toString();
         } else if (beaconType == BeaconTYPE.EXIT){
             Exit exit = exitRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
-            return new ExitDto(exit.getNumber(), exit.getLandmark(), exit.getElevator(), exit.getEscalator(), exit.getStair());
+
+            sb.append(exit.getNumber()).append("번 출구입니다. 출구로 나가시면 ").append(exit.getLandmark()).append("가 있습니다.");
+            if(exit.getElevator()!=null){
+                sb.append("엘레베이터는 ").append(directionMap.get(exit.getElevator())).append("에 ");
+            }
+            if(exit.getEscalator()!=null){
+                sb.append("에스컬레이터는 ").append(directionMap.get(exit.getEscalator())).append("에 ");
+            }
+            if(exit.getStair()!=null){
+                sb.append("계단은 ").append(directionMap.get(exit.getStair())).append("에 ");
+            }
+            sb.append("있습니다.");
+            return sb.toString();
         } else if (beaconType == BeaconTYPE.STAIR){
             Stair stair = stairRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 계단이 없습니다."));
-            return new StairDto(stair.isUp());
+            sb.append(stair.isUp()?"아래로 내려가는 ":"위로 올라가는 ").append("계단입니다.");
+            return sb.toString();
         } else if (beaconType == BeaconTYPE.ELEVATOR){
             Elevator elevator = elevatorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
-            return new ElevatorDto(elevator.isUp());
+            sb.append(elevator.isUp()?"아래로 내려가는 ":"위로 올라가는 ").append("엘레베이터입니다.");
+            return sb.toString();
         } else if (beaconType == BeaconTYPE.SCREENDOOR){
             Screendoor screendoor = screendoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
-            return new ScreendoorDto(screendoor.getDirection());
+            // ㅇㅇ방면 ㅇ-ㅇ 열차입니다.
+            sb.append(screendoor.getDirection()).append(" 앞 스크린도어입니다.");
+            return sb.toString();
         }
         throw new EntityNotFoundException("알 수 없는 비콘 타입입니다.");
     }
