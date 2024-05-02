@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.point.entity.Point;
+import org.banditbul.bandi.station.entity.Station;
 
 @Entity
 @Getter @Setter
@@ -28,13 +29,14 @@ public class Edge {
     @Column(name = "distance")
     private int distance;
 
-    @Column(name = "station_id")
-    private Integer stationId;
+    @ManyToOne
+    @JoinColumn(name = "station_id")
+    private Station station;
 
-    public Edge(Beacon beacon1, Beacon beacon2, int distance, Integer stationId) {
+    public Edge(Beacon beacon1, Beacon beacon2, int distance, Station station) {
         this.beacon1 = beacon1;
         this.beacon2 = beacon2;
         this.distance = distance;
-        this.stationId = stationId;
+        this.station = station;
     }
 }

@@ -2,8 +2,12 @@ package org.banditbul.bandi.station.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.banditbul.bandi.beacon.entity.Beacon;
+import org.banditbul.bandi.edge.entity.Edge;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -30,6 +34,11 @@ public class Station implements Serializable {
 
     private String role;
 
+    @OneToMany(mappedBy = "station")
+    List<Beacon> beaconList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "station")
+    List<Edge> edgeList = new ArrayList<>();
     public Station(String name, String loginID, String password, int line) {
         this.name = name;
         this.loginId = loginID;
