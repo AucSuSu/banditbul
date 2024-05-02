@@ -1,6 +1,8 @@
 import { useState } from "react";
 import React from "react";
 import styles from "./beaconTypeComponent.module.css";
+import { RequestAddBeacon } from "../../util/type";
+import axios from "axios";
 
 interface IScreenDoorProps {
     x: number;
@@ -29,6 +31,20 @@ const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
     );
 };
 
+const addBeaconRequest = async (data: RequestAddBeacon) => {
+    const api = "https://k10e102.k.ssafy.io:8080";
+
+    try {
+        const response = await axios.post(`${api}/api/beacon`, { data });
+        console.log(response);
+        alert("성공");
+    } catch (error) {
+        console.error(error);
+        alert("실패");
+    }
+};
+
+// 화장실
 export const BathRoom: React.FC<IScreenDoorProps> = (props) => {
     const [boySelectShow, setBoySelectShow] = useState<boolean>(false);
     const [girSelectShow, setGirlSelectShow] = useState<boolean>(false);
@@ -50,19 +66,22 @@ export const BathRoom: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
-        const data = {
+        const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
             beaconType: "BATHROOM",
             x: props.x,
             y: props.y,
             floor: props.floor,
-            mainDir: boy,
+            manDir: boy,
             womanDir: girl,
         };
 
         console.log(data);
+        addBeaconRequest(data);
         props.closeModal();
     };
 
@@ -229,9 +248,19 @@ export const BathRoom: React.FC<IScreenDoorProps> = (props) => {
     );
 };
 
+// 개찰구
 export const Gate: React.FC<IScreenDoorProps> = (props) => {
     const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
+    const [escalatorSelectShow, setEscalatorSelectShow] =
+        useState<boolean>(false);
+    const [elevatorSelectShow, setElevatorSelectShow] =
+        useState<boolean>(false);
+
     const [dir, setDir] = useState<string | null>(null);
+    const [stairSelectShow, setStairSelectShow] = useState<boolean>(false);
+    const [escalator, setEscalator] = useState<string | null>(null);
+    const [elevator, setElevator] = useState<string | null>(null);
+    const [stair, setStair] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         macAddress: "",
@@ -248,18 +277,24 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
-        const data = {
-            beaconId: formData.macAddress,
+        const data: RequestAddBeacon = {
+            macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
             x: props.x,
             y: props.y,
-            type: "GATE",
+            beaconType: "GATE",
             floor: props.floor,
             isUp: dir == null ? null : dir == "상행",
+            elevator: elevator,
+            escalator: escalator,
+            stair: stair,
         };
 
         console.log(data);
+        addBeaconRequest(data);
         props.closeModal();
     };
 
@@ -295,6 +330,209 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                         placeholder="ex) 000"
                         onChange={handleChange}
                     />
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>엘리베이터 </div>
+                    <ul
+                        className={styles.dropdownInBox}
+                        onClick={() => {
+                            setElevatorSelectShow(!elevatorSelectShow);
+                        }}
+                    >
+                        {elevator === null
+                            ? "없음"
+                            : (() => {
+                                  switch (elevator) {
+                                      case "R":
+                                          return "오른쪽";
+                                      case "L":
+                                          return "왼쪽";
+                                      default:
+                                          return "앞쪽";
+                                  }
+                              })()}
+
+                        {elevatorSelectShow && (
+                            <ul className={styles.dropdownContainer}>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setElevator(null);
+                                        setElevatorSelectShow(
+                                            !elevatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    없음
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setElevator("R");
+                                        setElevatorSelectShow(
+                                            !elevatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    오른쪽
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setElevator("L");
+                                        setElevatorSelectShow(
+                                            !elevatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    왼쪽
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setElevator("F");
+                                        setElevatorSelectShow(
+                                            !elevatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    앞쪽
+                                </li>
+                            </ul>
+                        )}
+                    </ul>
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>에스컬레이터 </div>
+                    <ul
+                        className={styles.dropdownInBox}
+                        onClick={() => {
+                            setEscalatorSelectShow(!escalatorSelectShow);
+                        }}
+                    >
+                        {escalator === null
+                            ? "없음"
+                            : (() => {
+                                  switch (escalator) {
+                                      case "R":
+                                          return "오른쪽";
+                                      case "L":
+                                          return "왼쪽";
+                                      default:
+                                          return "앞쪽";
+                                  }
+                              })()}
+                        {escalatorSelectShow && (
+                            <ul className={styles.dropdownContainer}>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setEscalator(null);
+                                        setEscalatorSelectShow(
+                                            !escalatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    없음
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setEscalator("R");
+                                        setEscalatorSelectShow(
+                                            !escalatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    오른쪽
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setEscalator("L");
+                                        setEscalatorSelectShow(
+                                            !escalatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    왼쪽
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setEscalator("F");
+                                        setEscalatorSelectShow(
+                                            !escalatorSelectShow
+                                        );
+                                    }}
+                                >
+                                    앞쪽
+                                </li>
+                            </ul>
+                        )}
+                    </ul>
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>계단 </div>
+                    <ul
+                        className={styles.dropdownInBox}
+                        onClick={() => {
+                            setStairSelectShow(!stairSelectShow);
+                        }}
+                    >
+                        {stair === null
+                            ? "없음"
+                            : (() => {
+                                  switch (stair) {
+                                      case "R":
+                                          return "오른쪽";
+                                      case "L":
+                                          return "왼쪽";
+                                      default:
+                                          return "앞쪽";
+                                  }
+                              })()}
+                        {stairSelectShow && (
+                            <ul className={styles.dropdownContainer}>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setStair("F");
+                                        setStairSelectShow(!stairSelectShow);
+                                    }}
+                                >
+                                    없음
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setStair("R");
+                                        setStairSelectShow(!stairSelectShow);
+                                    }}
+                                >
+                                    오른쪽
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setStair("L");
+                                        setStairSelectShow(!stairSelectShow);
+                                    }}
+                                >
+                                    왼쪽
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setStair("F");
+                                        setStairSelectShow(!stairSelectShow);
+                                    }}
+                                >
+                                    앞쪽
+                                </li>
+                            </ul>
+                        )}
+                    </ul>
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}> 방향 </div>
@@ -344,6 +582,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
     );
 };
 
+// 출구
 export const Exit: React.FC<IScreenDoorProps> = (props) => {
     const [escalatorSelectShow, setEscalatorSelectShow] =
         useState<boolean>(false);
@@ -359,7 +598,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
         longitude: "",
         latitude: "",
         landmark: "",
-        number: "",
+        number: 0,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -371,13 +610,15 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
-        const data = {
-            beaconId: formData.macAddress,
+        const data: RequestAddBeacon = {
+            macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
             x: props.x,
             y: props.y,
-            type: "EXIT",
+            beaconType: "EXIT",
             floor: props.floor,
             number: formData.number,
             landmark: formData.landmark,
@@ -387,6 +628,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
         };
 
         console.log(data);
+        addBeaconRequest(data);
         props.closeModal();
     };
 
@@ -652,6 +894,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
     );
 };
 
+// 엘리베이터
 export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
     const [dir, setDir] = useState<string>("내려가는");
@@ -671,18 +914,21 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
-        const data = {
-            beaconId: formData.macAddress,
+        const data: RequestAddBeacon = {
+            macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
             x: props.x,
             y: props.y,
-            type: "ELEVATOR",
+            beaconType: "ELEVATOR",
             floor: props.floor,
             isUp: dir == "내려가는",
         };
 
         console.log(data);
+        addBeaconRequest(data);
         props.closeModal();
     };
 
@@ -758,6 +1004,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     );
 };
 
+// 계단
 export const Stair: React.FC<IScreenDoorProps> = (props) => {
     const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
     const [dir, setDir] = useState<string>("내려가는");
@@ -778,17 +1025,20 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
 
     const saveBeacon = () => {
         const data = {
-            beaconId: formData.macAddress,
+            macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
             x: props.x,
             y: props.y,
+            beaconType: "STAIR",
             floor: props.floor,
-            type: "STAIR",
             isUp: dir == "내려가는",
         };
 
         console.log(data);
+        addBeaconRequest(data);
         props.closeModal();
     };
 
@@ -865,6 +1115,120 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
     );
 };
 
+// 에스컬레이터
+export const Escalator: React.FC<IScreenDoorProps> = (props) => {
+    const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
+    const [dir, setDir] = useState<string>("내려가는");
+
+    const [formData, setFormData] = useState({
+        macAddress: "",
+        longitude: "",
+        latitude: "",
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const saveBeacon = () => {
+        const data = {
+            macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
+            longitude: formData.longitude,
+            latitude: formData.latitude,
+            x: props.x,
+            y: props.y,
+            beaconType: "ESCALATOR",
+            floor: props.floor,
+            isUp: dir == "내려가는",
+        };
+
+        console.log(data);
+        addBeaconRequest(data);
+        props.closeModal();
+    };
+
+    const cancel = () => {
+        props.closeModal();
+    };
+
+    return (
+        <>
+            <div className={styles.inputContainer}>
+                <div className={styles.column}>
+                    <div className={styles.question}>비콘의 주소 </div>
+                    <input
+                        name="macAddress"
+                        type="text"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>위도 </div>
+                    <input
+                        name="latitude"
+                        type="number"
+                        placeholder="ex) 000"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>경도 </div>
+                    <input
+                        type="text"
+                        name="longitude"
+                        placeholder="ex) 000"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>계단 </div>
+                    <ul
+                        className={styles.dropdownInBox}
+                        onClick={() => {
+                            setDirSelectShow(!dirSelectShow);
+                        }}
+                    >
+                        <div className={styles.selected}>
+                            {dir} 에스컬레이터
+                        </div>
+
+                        {dirSelectShow && (
+                            <ul className={styles.dropdownContainer}>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setDir("내려가는");
+                                        setDirSelectShow(!dirSelectShow);
+                                    }}
+                                >
+                                    내려가는 에스컬레이터
+                                </li>
+                                <li
+                                    className={styles.dropdownItem}
+                                    onClick={() => {
+                                        setDir("올라가는");
+                                        setDirSelectShow(!dirSelectShow);
+                                    }}
+                                >
+                                    올라가는 에스컬레이터
+                                </li>
+                            </ul>
+                        )}
+                    </ul>
+                </div>
+            </div>
+            <ButtonContainer save={saveBeacon} cancel={cancel} />
+        </>
+    );
+};
+
+// 스크린도어
 export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
     const [formData, setFormData] = useState({
         macAddress: "",
@@ -883,17 +1247,20 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
 
     const saveBeacon = () => {
         const data = {
-            beaconId: formData.macAddress,
+            macAddress: formData.macAddress,
+            stationId: "",
+            range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
             x: props.x,
             y: props.y,
-            type: "SCREENDOOR",
+            beaconType: "SCREENDOOR",
             floor: props.floor,
             direction: formData.latitude,
         };
 
         console.log(data);
+        addBeaconRequest(data);
         props.closeModal();
     };
 

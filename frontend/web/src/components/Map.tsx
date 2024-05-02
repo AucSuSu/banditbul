@@ -14,6 +14,7 @@ import {
     Gate,
     Stair,
     Elevator,
+    Escalator,
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
 
@@ -24,6 +25,7 @@ const types = [
     "출구",
     "계단",
     "엘리베이터",
+    "에스컬레이터",
     "스크린도어",
 ];
 
@@ -46,8 +48,13 @@ const Map: React.FC = () => {
 
     // websocket
     const ws = useRef<WebSocket | null>(null); // ws 객체
-    // sos 하는 beaconId를 담아둘거임 !
-    const [sosBeaconIdList, setSosBeaconIdList] = useState<string[]>([]);
+    // test 용
+    const [sosBeaconIdList, setSosBeaconIdList] = useState<Set<string>>(
+        new Set(["1"])
+    );
+
+    // sos 하는 beaconId를 담아둘거임 ! -> 현재 빌드를 위해서 이거 죽이고
+    // const [sosBeaconIdList, _] = useState<Set<string>>(new Set());
 
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
@@ -75,28 +82,28 @@ const Map: React.FC = () => {
 
     useEffect(() => {
         // websocket 객체 연결
-        ws.current = new WebSocket("https://k10e102.k.ssafy.io:8080/socket");
+        // ws.current = new WebSocket("https://k10e102.k.ssafy.io:8080/socket");
 
-        // listner
-        ws.current.onopen = () => {
-            console.log("web socket 연결");
-        };
+        // // listner
+        // ws.current.onopen = () => {
+        //     console.log("web socket 연결");
+        // };
 
-        ws.current.onclose = () => {
-            console.log("web socket 연결 끊어짐");
-        };
+        // ws.current.onclose = () => {
+        //     console.log("web socket 연결 끊어짐");
+        // };
 
-        ws.current.onerror = () => {
-            console.log("web socket 에러 발생");
-        };
+        // ws.current.onerror = () => {
+        //     console.log("web socket 에러 발생");
+        // };
 
-        ws.current.onmessage = (event: MessageEvent) => {
-            console.log(event.data); // 메세지 출력하기
+        // ws.current.onmessage = (event: MessageEvent) => {
+        //     console.log(event.data); // 메세지 출력하기
 
-            // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
-            // sosBeaconList에 추가하기
-            setSosBeaconIdList((prev) => [...prev, event.data.beaconId]);
-        };
+        //     // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
+        //     // sosBeaconList에 추가하기
+        //     setSosBeaconIdList((prev) => [...prev, event.data.beaconId]);
+        // };
 
         // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
 
@@ -163,6 +170,10 @@ const Map: React.FC = () => {
             };
             ws.current.send(JSON.stringify(data));
         }
+        // sosList에서 비콘 지우기
+        sosBeaconIdList.delete(beaconId);
+        const updateSet = new Set(sosBeaconIdList);
+        setSosBeaconIdList(updateSet);
     };
 
     const sendNoMessage = (beaconId: string) => {
@@ -174,6 +185,10 @@ const Map: React.FC = () => {
 
             ws.current.send(JSON.stringify(data));
         }
+
+        sosBeaconIdList.delete(beaconId);
+        const updateSet = new Set(sosBeaconIdList);
+        setSosBeaconIdList(updateSet);
     };
 
     // 저장이 완료 되었거나 완료하지 않고 닫은 경우
@@ -389,7 +404,62 @@ const Map: React.FC = () => {
                         ) : (
                             <div className={styles.beaconScroll}>
                                 {beacons.map((item, index) =>
-                                    deleteSelectBeacon == item.beaconId ? (
+                                    sosBeaconIdList.has(item.beaconId) ? (
+                                        <div
+                                            className={styles.sosbeaconListItem}
+                                            key={index}
+                                            onMouseOver={() =>
+                                                handleMouseOver(item.beaconId)
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.sosBeaconContent
+                                                }
+                                            >
+                                                <p
+                                                    className={
+                                                        styles.sosBeaconTitle
+                                                    }
+                                                >
+                                                    SOS 신호가 발생되었습니다
+                                                    <br />
+                                                    {/* 위치를 확인하고 도움을
+                                                    주세요 */}
+                                                </p>
+                                            </div>
+                                            <div
+                                                className={
+                                                    styles.yesNoContainer
+                                                }
+                                            >
+                                                <span
+                                                    className={
+                                                        styles.sosAcceptButton
+                                                    }
+                                                    onClick={() => {
+                                                        sendAcceptMessage(
+                                                            item.beaconId
+                                                        );
+                                                    }}
+                                                >
+                                                    수락
+                                                </span>
+                                                <span
+                                                    className={
+                                                        styles.sosDenyButton
+                                                    }
+                                                    onClick={() => {
+                                                        sendNoMessage(
+                                                            item.beaconId
+                                                        );
+                                                    }}
+                                                >
+                                                    거부
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ) : deleteSelectBeacon == item.beaconId ? (
                                         <>
                                             <div
                                                 className={
@@ -528,7 +598,16 @@ function Options(
                     closeModal={closeAddModal}
                 />
             );
-        case 6:
+        case 5:
+            return (
+                <Escalator
+                    x={x}
+                    y={y}
+                    floor={floor}
+                    closeModal={closeAddModal}
+                />
+            );
+        case 7:
             return (
                 <ScreenDoor
                     x={x}

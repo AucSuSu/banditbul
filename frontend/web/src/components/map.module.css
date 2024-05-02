@@ -44,7 +44,8 @@ body {
     background-color: #f1f1f1;
 }
 
-.beaconListItem {
+.beaconListItem,
+.sosbeaconListItem {
     width: 80%;
     height: 100px;
     display: flex;
@@ -52,10 +53,30 @@ body {
     padding: 20px;
     text-align: center;
 }
-
-.beaconListItem:hover {
+.beaconListItem:hover,
+.sosbeaconListItem:hover {
     transition: 0.3s;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
+}
+
+.sosbeaconListItem {
+    flex-direction: column;
+    animation: sos 1s infinite;
+}
+
+@keyframes sos {
+    0% {
+        background-color: white;
+        color: red;
+    }
+    50% {
+        background-color: red;
+        color: white;
+    }
+    0% {
+        background-color: white;
+        color: red;
+    }
 }
 
 .model {
@@ -231,12 +252,12 @@ body {
     border: solid 1px black;
 }
 
-.ModaldeleteButton {
+.ModaldeleteButton,
+.sosAcceptButton,
+.deleteModalCloseButton,
+.sosDenyButton {
     cursor: pointer;
-}
-
-.deleteModalCloseButton {
-    cursor: pointer;
+    width: 50%;
 }
 
 .deleteModalContent {
@@ -251,13 +272,13 @@ body {
     align-items: center;
 }
 
-.ModaldeleteButton,
-.deleteModalCloseButton {
-    width: 50%;
-}
-
 .ModaldeleteButton:hover {
     color: red;
+}
+
+.sosAcceptButton:hover {
+    color: black;
+    font-weight: bold;
 }
 
 .deleteModalCloseButton:hover {
