@@ -31,7 +31,7 @@ public class BeaconController {
 
         // 어떤 시설물인지에 따라서 각자의 dto 만들어서 해당 dto를 보내줘야함
         // 여러 dto 클래스들이 구현하는 공통 인터페이스인 BeaconInfoDto를 사용해 메소드가 일관된 타입을 반환하도록 보장
-        BeaconInfoDto beaconInfoDto = beaconService.giveInfo(beaconId);
+        String beaconInfoDto = beaconService.giveInfo(beaconId);
         Message message = new Message(HttpStatusEnum.OK, "비콘 시설물 출력 완료", beaconInfoDto);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
