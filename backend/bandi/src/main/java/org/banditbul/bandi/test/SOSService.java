@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class SOSService {
+public class SOSService { // 세션 관리 및 생성 로직 처리
 
     private final ObjectMapper objectMapper;
-    private Map<String, SOSSession> SessionS;
+    private Map<String, SOSSession> SessionS; // 세션id와 sossession 객체 매핑
 
     @PostConstruct
     private void init() {
