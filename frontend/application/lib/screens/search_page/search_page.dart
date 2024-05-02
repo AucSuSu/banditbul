@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_text_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
+import 'package:frontend/screens/search_page/search_text_page.dart';
+import 'package:frontend/screens/search_page/search_voice_page.dart';
 import 'package:get/get.dart';
 
 class SearchPage extends StatefulWidget {
@@ -15,10 +15,12 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late int _selectedIndex;
-  static final List<Widget> _pages = <Widget>[
-    const SearchVoicePage(), // Voice Search 페이지
-    const SearchTextPage(), // Text Search 페이지
-  ];
+  bool showFloatingButton = true; // FloatingActionButton 표시 제어 변수
+  void toggleFloatingActionButton(bool show) {
+    setState(() {
+      showFloatingButton = show;
+    });
+  }
 
   @override
   void initState() {
@@ -34,45 +36,55 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = <Widget>[
+      const SearchVoicePage(), // Voice Search 페이지
+      SearchTextPage(
+        toggleFloatingActionButton: toggleFloatingActionButton,
+      ), // Text Search 페이지
+    ];
+
     return Scaffold(
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
-      floatingActionButton: SizedBox(
-        // 홈 버튼을 감싸는 컨테이너
-        width: 120,
-        height: 120,
-        child: FloatingActionButton(
-          onPressed: () {
-            // 홈 버튼 클릭 시 호출될 메소드
-            Get.offAll(() => const MainPage());
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ), // 홈 아이콘
-          backgroundColor: Colors.white,
-          child: const Column(
-            // 홈버튼 아이콘에 관한 코드
-            mainAxisSize: MainAxisSize.min, // Column 위젯이 필요한 만큼의 공간만 차지하도록 설정
-            mainAxisAlignment: MainAxisAlignment.center, // 자식을 중앙으로 정렬
-            children: [
-              Icon(
-                Icons.home,
-                size: 45,
-                color: Colors.black,
+      floatingActionButton: showFloatingButton
+          ? SizedBox(
+              // 홈 버튼을 감싸는 컨테이너
+              width: 120,
+              height: 120,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // 홈 버튼 클릭 시 호출될 메소드
+                  Get.offAll(() => const MainPage());
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ), // 홈 아이콘
+                backgroundColor: Colors.white,
+                child: const Column(
+                  // 홈버튼 아이콘에 관한 코드
+                  mainAxisSize:
+                      MainAxisSize.min, // Column 위젯이 필요한 만큼의 공간만 차지하도록 설정
+                  mainAxisAlignment: MainAxisAlignment.center, // 자식을 중앙으로 정렬
+                  children: [
+                    Icon(
+                      Icons.home,
+                      size: 45,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      '메인',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )
+                  ],
+                ), // 홈 버튼의 배경 색
               ),
-              Text(
-                '메인',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                ),
-              )
-            ],
-          ), // 홈 버튼의 배경 색
-        ),
-      ),
+            )
+          : null,
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerDocked, // 중앙에 위치시키기
       bottomNavigationBar: Container(
@@ -87,7 +99,8 @@ class _SearchPageState extends State<SearchPage> {
             children: List.generate(_pages.length + 1, (index) {
               if (index == 1) {
                 // 중앙 홈 버튼 위치에는 공간을 만들어둡니다.
-                return const SizedBox(width: 100); // FloatingActionButton의 공간을 만듭니다.
+                return const SizedBox(
+                    width: 100); // FloatingActionButton의 공간을 만듭니다.
               }
               int tabIndex = index > 1 ? index - 1 : index; // 홈 버튼으로 인한 인덱스 조정
               return InkWell(

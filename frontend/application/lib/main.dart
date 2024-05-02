@@ -3,8 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/arrive_page/arrive_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/screens/navigation_page/navigagion_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_text_page.dart';
-import 'package:frontend/screens/search_page/widgets/search_voice_page.dart';
+import 'package:frontend/screens/search_page/search_text_page.dart';
+import 'package:frontend/screens/search_page/search_voice_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
@@ -34,18 +34,6 @@ void main() async {
                   Get.offAll(() => const MainPage());
                 },
                 child: const Text('Main Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SearchTextPage());
-                },
-                child: const Text('Search Text'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SearchVoicePage());
-                },
-                child: const Text('Search Voice'),
               ),
               ElevatedButton(
                 onPressed: () {

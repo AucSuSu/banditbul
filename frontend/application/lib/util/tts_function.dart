@@ -54,7 +54,7 @@ class ClovaTTSManager {
         'X-NCP-APIGW-API-KEY': clientSecret,
       };
     } catch (error) {
-      print("초기화 에러 : ${error}");
+      print("초기화 에러 : $error");
     }
   }
 
@@ -96,7 +96,7 @@ class ClovaTTSManager {
       }
     } catch (error) {
       // 이거 Exception Handling 어떻게 할건지 정해야하나 ㅜ.ㅜ 내 알아서?
-      print("clova api 요청중 에러 발생 => ${error}");
+      print("clova api 요청중 에러 발생 => $error");
     }
   }
 

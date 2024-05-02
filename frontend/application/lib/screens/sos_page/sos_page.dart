@@ -11,7 +11,7 @@ class SosPage extends StatefulWidget {
 class _SosPageState extends State<SosPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       appBar: TitleBar(),
       body: Center(
         child: Text('ㅇㅇㅇ'),
