@@ -26,8 +26,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     private static final String[] PERMIT_URL_ARRAY = {
-            "/swagger-resources/**","/v3/api-docs/**","/swagger-ui/**",
-            "/api/login","/api/signup"
+            "/api/login","/api/signup", "/socket/**"
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
