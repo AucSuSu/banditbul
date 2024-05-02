@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 // dev
 @Data
-public class SOSSession {
+public class SOSSession { // 웹 소켓 세션 관리
 
     private String sessionId;
     private Set<WebSocketSession> sessions = new HashSet<>();
