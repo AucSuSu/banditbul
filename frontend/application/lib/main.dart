@@ -35,18 +35,6 @@ void main() async {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => const SearchTextPage());
-                },
-                child: const Text('Search Text'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SearchVoicePage());
-                },
-                child: const Text('Search Voice'),
-              ),
-              ElevatedButton(
-                onPressed: () {
                   Get.to(() => const SearchPage());
                 },
                 child: const Text('Search Nav Bar'),

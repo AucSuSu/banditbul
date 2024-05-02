@@ -12,7 +12,7 @@ class ChatBubble extends StatelessWidget {
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(bottom: 18),
         decoration: BoxDecoration(
           color: isUser ? Color(0xffFCF207) : Color(0xffF1FFCA),
@@ -21,7 +21,7 @@ class ChatBubble extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
         ),
