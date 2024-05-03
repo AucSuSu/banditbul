@@ -26,7 +26,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     private static final String[] PERMIT_URL_ARRAY = {
-            "/api/login","/api/signup", "/socket/**", "/api/navigation/**", "/api/beacon/info/**", "/api/sos/**", "/api/beaconlist/**"
+            "/api/login","/api/signup", "/socket/**", "/api/navigation/**", "/api/beacon/info/**", "/api/sos/**", "/api/stationinfo/**"
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

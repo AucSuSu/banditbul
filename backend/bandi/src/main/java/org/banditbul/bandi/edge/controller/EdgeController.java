@@ -27,7 +27,7 @@ public class EdgeController {
         Message message = new Message(HttpStatusEnum.OK, "길 찾기 완료", dto);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-    @GetMapping("/nav/toilet")
+    @GetMapping("/navigation/toilet")
     public ResponseEntity<Message> getToiletNavigation(@RequestParam("beacon_id") String beacon_id){
         List<Dir> nav = new ArrayList<>();
         Message message = new Message(HttpStatusEnum.OK, "화장실까지 길 찾기 완료", nav);
