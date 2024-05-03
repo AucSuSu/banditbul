@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // tts package import
-import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:flutter_tts/flutter_tts.dart';
 // dio
 import 'package:dio/dio.dart';
 // audio Player
@@ -11,19 +11,19 @@ import 'dart:io';
 //env
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class TTSManager {
-  // tts사용을 위해 FlutterTts 인스턴스 생성
-  final FlutterTts tts = FlutterTts();
+// class TTSManager {
+//   // tts사용을 위해 FlutterTts 인스턴스 생성
+//   final FlutterTts tts = FlutterTts();
 
-  TTSManager() {
-    tts.setLanguage('ko-KR'); // 언어
-    tts.setSpeechRate(0.4); // 읽기 속도 조절
-  }
+//   TTSManager() {
+//     tts.setLanguage('ko-KR'); // 언어
+//     tts.setSpeechRate(0.4); // 읽기 속도 조절
+//   }
 
-  void speak(String text) {
-    tts.speak(text);
-  }
-}
+//   void speak(String text) {
+//     tts.speak(text);
+//   }
+// }
 
 /** clova api문서 
  * curl -i -X POST \
@@ -128,7 +128,7 @@ class ClovaTTSManager {
 
 class TTSFunction extends StatelessWidget {
   // 갖다쓸때 이거 갖다 쓰면됨
-  final TTSManager ttsManager = TTSManager();
+  // final TTSManager ttsManager = TTSManager();
   // TextEditingController 인스턴스 -> 사용자의 입력을 받음
   final TextEditingController controller =
       TextEditingController(text: 'Hello world');
@@ -151,7 +151,7 @@ class TTSFunction extends StatelessWidget {
               // 읽기 버튼
               onPressed: () {
                 // 읽기 호출시 이렇게
-                ttsManager.speak(controller.text);
+                // ttsManager.speak(controller.text);
               },
               child: const Text('Speak')),
           ElevatedButton(

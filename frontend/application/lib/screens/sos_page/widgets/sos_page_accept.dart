@@ -30,9 +30,9 @@ class _SosPageAcceptState extends State<SosPageAccept> {
     }
 
     // Future 비동기 작동 ! -> 넘어가기
-    Future.delayed(Duration(seconds: 20), () {
+    Future.delayed(const Duration(seconds: 20), () {
       print("메인으로 돌아가기");
-      Get.off(() => MainPage()); // Get 패키지를 사용하여 화면 전환
+      Get.off(() => const MainPage()); // Get 패키지를 사용하여 화면 전환
     });
   }
 

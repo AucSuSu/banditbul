@@ -5,23 +5,32 @@ import 'package:web_socket_channel/io.dart';
 // websocket
 import 'package:web_socket_channel/web_socket_channel.dart';
 // json
-import 'dart:convert';
 // Future -> 비동기 처리 하는 거
 import 'dart:async';
+// env
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MessageDto {
   final String type;
   final String beaconId;
   final String sessionId;
+  final String uuId;
+  final Map<String, int>? count;
 
   MessageDto(
-      {required this.type, required this.beaconId, required this.sessionId});
+      {required this.type,
+      required this.beaconId,
+      required this.sessionId,
+      required this.uuId,
+      required this.count});
 
   factory MessageDto.fromJson(Map<String, dynamic> json) {
     return MessageDto(
         type: json['type'],
         beaconId: json['content'],
-        sessionId: json["sessionId"]);
+        sessionId: json["sessionId"],
+        uuId: json['uuId'],
+        count: json['count']);
   }
 }
 
@@ -30,13 +39,42 @@ class WebsocketManager {
   factory WebsocketManager() => _instance;
 
   WebSocketChannel? _channel;
-  // WebSocketChannel get channel => _channel;
+  bool? _connected;
 
   WebsocketManager._internal();
 
   // 최초 연결할 때 쓰기
-  void connect(String url) {
-    _channel = IOWebSocketChannel.connect(url);
+  void connect() async {
+    print("연결 시도 ---");
+    // _channel = IOWebSocketChannel.connect(dotenv.env['WS_URL'] ?? "");
+    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+
+    print("connect");
+
+    if (_channel != null) {
+      print("data");
+      _channel!.sink.add(MessageDto(
+          type: "SOS_ACCEPT",
+          beaconId: "12:12:12:12",
+          sessionId: "banditbul8",
+          uuId: "uuId",
+          count: null));
+      _channel!.stream.listen(
+        (data) {
+          print("Connected to WebSocket server");
+          _connected = true;
+        },
+        onError: (error) {
+          print("Error connecting to WebSocket server: $error");
+          _connected = false;
+        },
+        onDone: () {
+          print("WebSocket connection closed");
+          _connected = false;
+          //connect();
+        },
+      );
+    }
   }
 
   // 메세지 보내는 함수
@@ -79,30 +117,28 @@ class SOSClient extends StatefulWidget {
   @override
   _SOSClientState createState() => _SOSClientState();
 
-  SOSClient({super.key});
+  const SOSClient({super.key});
 }
 
 class _SOSClientState extends State<SOSClient> {
   bool isSOS = false;
-  final channel = IOWebSocketChannel.connect('ws://socket');
   final TextEditingController controller =
       TextEditingController(text: 'id1234');
 
-  // flutter 생명 주기에서 제거하고 싶을때 사용하는 거
-  @override
-  void dispose() {
-    channel.sink.close();
-    super.dispose();
-  }
-
   void postSOS(String uuid) async {
     try {
-      Dio dio = Dio();
-      final response = await dio.get(
-        "https://k10e102.k.ssafy.io:8080/api/sos/${uuid}",
-      );
+      // Dio dio = Dio();
+      // final response = await dio.get(
+      //   "https://k10e102.k.ssafy.io:8080/api/sos/$uuid",
+      // );
+      WebsocketManager().sendMessage(MessageDto(
+          type: "ENTER",
+          beaconId: "beaconId",
+          sessionId: "banditbul8",
+          uuId: "beaconId",
+          count: null));
     } catch (error) {
-      print("전송 실패 ${error}");
+      print("전송 실패 $error");
     }
   }
 
@@ -110,18 +146,8 @@ class _SOSClientState extends State<SOSClient> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // channel.stream.listen((msg) {
-    //   Map<String, dynamic> jsonMap = json.decode(msg);
-    //   MessageDto dto = MessageDto.fromJson(jsonMap);
-
-    //   if (dto.type == "OK") {
-    //     setState(() {
-    //       isSOS = true;
-    //     });
-
-    //     print(dto.content); // 수락 하는 경우
-    //   }
-    // });
+    WebsocketManager websocketManager = WebsocketManager();
+    websocketManager.connect();
   }
 
   @override
@@ -141,7 +167,7 @@ class _SOSClientState extends State<SOSClient> {
           ),
           isSOS == true
               ? ElevatedButton(onPressed: () {}, child: const Text('yes'))
-              : Text(''),
+              : const Text(''),
         ],
       ),
     );
