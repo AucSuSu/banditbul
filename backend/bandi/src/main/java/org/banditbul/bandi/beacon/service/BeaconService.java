@@ -21,6 +21,8 @@ import org.banditbul.bandi.edge.repository.EdgeRepository;
 import org.banditbul.bandi.elevator.dto.ElevatorDto;
 import org.banditbul.bandi.elevator.entity.Elevator;
 import org.banditbul.bandi.elevator.repository.ElevatorRepository;
+import org.banditbul.bandi.escalator.entity.Escalator;
+import org.banditbul.bandi.escalator.repository.EscalatorRepository;
 import org.banditbul.bandi.exit.dto.ExitDto;
 import org.banditbul.bandi.exit.entity.Exit;
 import org.banditbul.bandi.exit.repository.ExitRepository;
@@ -61,6 +63,7 @@ public class BeaconService {
     private final PointRepository pointRepository;
     private final StationRepository stationRepository;
     private final EdgeRepository edgeRepository;
+    private final EscalatorRepository escalatorRepository;
 
 
     public String getStationName(String beaconId){
@@ -111,7 +114,7 @@ public class BeaconService {
 
         // 우선 비콘ID로 해당 비콘의 시설물을 찾자
         // 해당하는 시설물: 개찰구 gate, 화장실 toilet, 출구 exit, 계단 stair, 엘리베이터 elevator, 스크린도어 screendoor
-        BeaconTYPE beaconType = beacon.getBeaconType(); // toilet, gate, exit, stair, elevator, screendoor
+        BeaconTYPE beaconType = beacon.getBeaconType(); // toilet, gate, exit, stair, elevator, screendoor, escalator
 
         Map<Dir, String> directionMap = new HashMap<>();
 
@@ -165,6 +168,10 @@ public class BeaconService {
             Elevator elevator = elevatorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
             sb.append(elevator.isUp()?"아래로 내려가는 ":"위로 올라가는 ").append("엘레베이터입니다.");
             return sb.toString();
+        } else if (beaconType == BeaconTYPE.ESCALATOR){
+            Escalator escalator = escalatorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 에스컬레이터가 없습니다."));
+            sb.append(escalator.isUp()?"아래로 내려가는 ":"위로 올라가는 ").append("에스컬레이터입니다.");
+            return sb.toString();
         } else if (beaconType == BeaconTYPE.SCREENDOOR){
             Screendoor screendoor = screendoorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
             // ㅇㅇ방면 ㅇ-ㅇ 열차입니다.
@@ -204,6 +211,8 @@ public class BeaconService {
             screendoorRepository.save(new Screendoor(beacon, beaconDto.getDirection()));
         }else if(beaconType == BeaconTYPE.POINT){
             pointRepository.save(new Point(beacon));
+        }else if(beaconType == BeaconTYPE.ESCALATOR){
+            escalatorRepository.save(new Escalator(beacon, beaconDto.getIsUp()));
         }
         return beacon.getId();
     }
