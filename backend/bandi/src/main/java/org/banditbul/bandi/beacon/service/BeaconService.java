@@ -79,9 +79,6 @@ public class BeaconService {
         for(Edge edge:edges){
             if (indvBeacons.contains(edge.getBeacon1()) && indvBeacons.contains(edge.getBeacon2())){
                 indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId()));
-                System.out.println("둘다 포함 하냐고 !!");
-            }else{
-                System.out.println("이게 안되나");
             }
         }
 
@@ -107,11 +104,11 @@ public class BeaconService {
         StringBuilder sb = new StringBuilder(); // 문장으로 보내줘야함
 
         if (beaconType == BeaconTYPE.TOILET){
-            Toilet toilet = toiletRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
+            Toilet toilet = toiletRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
             sb.append("화장실입니다. 남자 화장실은 ").append(directionMap.get(toilet.getManDir())).append("에, 여자 화장실은 ").append(directionMap.get(toilet.getWomanDir())).append("에 있습니다");
             return sb.toString();
         } else if (beaconType == BeaconTYPE.GATE){
-            Gate gate = gateRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
+            Gate gate = gateRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
 
             sb.append(gate.getIsUp()?"상행":"하행").append("선 개찰구입니다. ");
             if(gate.getElevator()!=null){
@@ -127,7 +124,7 @@ public class BeaconService {
 
             return sb.toString();
         } else if (beaconType == BeaconTYPE.EXIT){
-            Exit exit = exitRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
+            Exit exit = exitRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
 
             sb.append(exit.getNumber()).append("번 출구입니다. 출구로 나가시면 ").append(exit.getLandmark()).append("가 있습니다.");
             if(exit.getElevator()!=null){
@@ -142,15 +139,15 @@ public class BeaconService {
             sb.append("있습니다.");
             return sb.toString();
         } else if (beaconType == BeaconTYPE.STAIR){
-            Stair stair = stairRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 계단이 없습니다."));
+            Stair stair = stairRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 계단이 없습니다."));
             sb.append(stair.isUp()?"아래로 내려가는 ":"위로 올라가는 ").append("계단입니다.");
             return sb.toString();
         } else if (beaconType == BeaconTYPE.ELEVATOR){
-            Elevator elevator = elevatorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
+            Elevator elevator = elevatorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
             sb.append(elevator.isUp()?"아래로 내려가는 ":"위로 올라가는 ").append("엘레베이터입니다.");
             return sb.toString();
         } else if (beaconType == BeaconTYPE.SCREENDOOR){
-            Screendoor screendoor = screendoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
+            Screendoor screendoor = screendoorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
             // ㅇㅇ방면 ㅇ-ㅇ 열차입니다.
             sb.append(screendoor.getDirection()).append(" 앞 스크린도어입니다.");
             return sb.toString();
@@ -173,13 +170,14 @@ public class BeaconService {
         if(beaconType == BeaconTYPE.TOILET){
             toiletRepository.save(new Toilet(beacon, beaconDto.getManDir(), beaconDto.getWomanDir()));
         }else if(beaconType == BeaconTYPE.GATE){
-            gateRepository.save(new Gate(beacon, beaconDto.isUp(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
+            System.out.println(beaconDto.getIsUp());
+            gateRepository.save(new Gate(beacon, beaconDto.getIsUp(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
         }else if(beaconType == BeaconTYPE.EXIT){
             exitRepository.save(new Exit(beacon, beaconDto.getNumber(), beaconDto.getLandmark(), beaconDto.getElevator(), beaconDto.getEscalator(), beaconDto.getStair()));
         }else if(beaconType == BeaconTYPE.STAIR){
-            stairRepository.save(new Stair(beacon, beaconDto.isUp()));
+            stairRepository.save(new Stair(beacon, beaconDto.getIsUp()));
         }else if(beaconType == BeaconTYPE.ELEVATOR){
-            elevatorRepository.save(new Elevator(beacon, beaconDto.isUp()));
+            elevatorRepository.save(new Elevator(beacon, beaconDto.getIsUp()));
         }else if(beaconType == BeaconTYPE.SCREENDOOR){
             screendoorRepository.save(new Screendoor(beacon, beaconDto.getDirection()));
         }else if(beaconType == BeaconTYPE.POINT){

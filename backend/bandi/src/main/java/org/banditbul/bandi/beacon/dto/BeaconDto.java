@@ -17,7 +17,7 @@ public class BeaconDto {
     private Double longitude;
     private int range;
     private BeaconTYPE beaconType;
-    private boolean isUp;
+    private Boolean isUp;
     private Dir manDir;
     private Dir womanDir;
     private int number;

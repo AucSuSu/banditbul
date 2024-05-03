@@ -8,6 +8,7 @@ import org.banditbul.bandi.station.entity.Station;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@ToString
 public class Beacon {
     @Id
     @Column(name = "beacon_id")

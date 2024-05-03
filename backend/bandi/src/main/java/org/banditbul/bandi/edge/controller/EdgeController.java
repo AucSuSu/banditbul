@@ -6,6 +6,7 @@ import org.banditbul.bandi.common.Dir;
 import org.banditbul.bandi.common.HttpStatusEnum;
 import org.banditbul.bandi.common.Message;
 import org.banditbul.bandi.edge.dto.EdgeDto;
+import org.banditbul.bandi.edge.dto.ResultRouteDto;
 import org.banditbul.bandi.edge.service.EdgeService;
 import org.banditbul.bandi.station.dto.StationSessionDto;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,8 @@ public class EdgeController {
     public ResponseEntity<Message> getNavigation(@RequestParam("beaconId") String beaconId,
                                                  @RequestParam("destStation") String destStation){
         // 1. 해당 역에서 개찰구까지 경로 추천
-        edgeService.navCurStation(beaconId, destStation);
-        // 3. 목적지 역에서 개찰구에서 출구까지
-        // destStation에서 몇번역 몇번출구가 들어옴
-        List<Dir> nav = new ArrayList<>();
-        Message message = new Message(HttpStatusEnum.OK, "까지 길 찾기 완료", nav);
+        ResultRouteDto dto = edgeService.navCurStation(beaconId, destStation);
+        Message message = new Message(HttpStatusEnum.OK, "길 찾기 완료", dto);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
     @GetMapping("/nav/toilet")

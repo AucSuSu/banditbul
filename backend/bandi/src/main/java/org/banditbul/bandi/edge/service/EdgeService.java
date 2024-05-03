@@ -1,11 +1,14 @@
 
 package org.banditbul.bandi.edge.service;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
+import org.banditbul.bandi.edge.dto.CheckPointDto;
 import org.banditbul.bandi.edge.dto.EdgeDto;
+import org.banditbul.bandi.edge.dto.ResultRouteDto;
 import org.banditbul.bandi.edge.entity.Edge;
 import org.banditbul.bandi.edge.repository.EdgeRepository;
 import org.banditbul.bandi.elevator.entity.Elevator;
@@ -39,14 +42,36 @@ public class EdgeService {
     private final ElevatorRepository elevatorRepository;
     private final ScreendoorRepository screendoorRepository;
     private final EdgeRepository edgeRepository;
-    public void navCurStation(String beaconId, String dest){
+    public ResultRouteDto navCurStation(String beaconId, String dest){
         // 0. dest에서 역, 출구로 두개 쪼개기 아마 split 쓸듯?  substring?
+
+
+        // 공백을 기준으로 문자열을 분할하여 배열로 저장합니다.
+        String[] parts = dest.split("\\s+");
+
+        // 첫 번째 요소는 역 이름입니다.
+        String stationName = parts[0];
+
+        // 나머지 요소들을 모두 출구 번호로 합칩니다.
+        StringBuilder exitNumberBuilder = new StringBuilder();
+        for (int i = 1; i < parts.length; i++) {
+            exitNumberBuilder.append(parts[i]);
+            if (i < parts.length - 1) {
+                exitNumberBuilder.append(" "); // 출구 번호 사이에 공백을 추가합니다.
+            }
+        }
+        int exitNumber = Integer.parseInt(exitNumberBuilder.toString().replaceAll("[^0-9]", ""));
+        System.out.println("역 이름: " + stationName);
+        System.out.println("출구 번호: " + exitNumber);
+
+
+
 
         // 1. beaconId로 시작 비콘 찾기
         Beacon startBeacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다"));
         // 2. 현재 역과 도착역 찾기
         Station startStation = startBeacon.getStation();
-        Station destStation = stationRepository.findByName("서면역").orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+        Station destStation = stationRepository.findByName(stationName).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
         int curStationId = startStation.getId();
         int destStationId = destStation.getId();
         // 2-1. 상행/하행 개찰구(첫번째 도착점) 찾기
@@ -62,129 +87,230 @@ public class EdgeService {
         }
         // beaconId로 gate 객체 불러오기
         List<Gate> gateList = new ArrayList<>();
+
         for( String bId : beaconIdList){
-            Gate gate = gateRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
+            Beacon beacon = beaconRepository.findById(bId)
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다."));
+            Gate gate = gateRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
             gateList.add(gate);
         }
         // 찾아진 Gate들에 대한 처리 로직 - 상행/하행 골라주기
         Beacon destBeacon = null; // 내 목적지가 되는 gate!
+        Gate destGate = null;
         for (Gate gate : gateList) {
             if (gate.getIsUp() == null) {
                 destBeacon = gate.getBeacon();
+                destGate = gate;
                 break;
             } else if (destStationId > curStationId && !gate.getIsUp()) { // 하행
                 destBeacon = gate.getBeacon();
+                destGate = gate;
                 break;
             } else if (destStationId < curStationId && gate.getIsUp()) { // 상행
                 destBeacon = gate.getBeacon();
+                destGate = gate;
                 break;
             }
         }
-        // 2-2. 현재 비콘에서 개찰구 비콘까지의 경로 구하기
-        // 개찰구까지 알려주면 그 이후에는 계단, 에스컬레이터, 엘레베이터 알아서 선택해서 스크린도어로 이동하면 되기 때매
-        // 현재 포인트: startPoint
-        // 도착 포인트: destGatePoint
-        dij(startBeacon, destBeacon, beaconList, edgeList); // 다익스트라로 최단 경로 구하기
-        // 3. 목적지 역에서 개찰구에서 출구까지
-        Point startGatePoint = null; // 목적지 역의 상행 개찰구 point
-        Point destExitPoint = null; // 목적지 역의 출구 point
-//        dij(startGatePoint, destExitPoint);
-        // 4. 완성된 경로를 바탕으로 CCW 알고리즘으로 방향 정보 추가 후 리턴
-        int check=1;
-    }
-    public void navToilet(String beaconId){
-        // 1. 현재 역 찾기
-        // 가장 최근 접근한 비콘 id로 현재 역 id를 가지고 온다.
-//        int curStationId = beaconcoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beaconcoor이 없습니다."))
-//                .getStation().getId();
-//        // 시작하는 point 찾기
-//        Point startPoint = null;
-//        Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
-//        // 우선 비콘ID로 해당 비콘의 시설물을 찾자
-//        // 해당하는 시설물: 개찰구 gate, 화장실 toilet, 출구 exit, 계단 stair, 엘리베이터 elevator, 스크린도어 screendoor
-//        String beaconType = beacon.getBeacon_type(); // toilet, gate, exit, stair, elevator, screendoor
-//
-//        if (beaconType.equals("toilet")){
-//            Toilet toilet = toiletRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
-//            startPoint = toilet.getPoint();
-//        } else if (beaconType.equals("gate")){
-//            Gate gate = gateRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
-//            startPoint = gate.getPoint();
-//        } else if (beaconType.equals("exit")){
-//            Exit exit = exitRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
-//            startPoint = exit.getPoint();
-//        } else if (beaconType.equals("stair")){
-//            Stair stair = stairRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 계단이 없습니다."));
-//            startPoint = stair.getPoint();
-//        } else if (beaconType.equals("elevator")){
-//            Elevator elevator = elevatorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
-//            startPoint = elevator.getPoint();
-//        } else if (beaconType.equals("screendoor")){
-//            Screendoor screendoor = screendoorRepository.findByBeaconId(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
-//            startPoint = screendoor.getPoint();
-//        }
-        // 2. 현재 역에 있는 화장실 찾기
-        // 3. 화장실로의 길찾기 구하기
-    }
-    //    static HashMap<String, ArrayList<Node>> graph = new HashMap<>();
-    public List<String> dij(Beacon start, Beacon dest, List<Beacon> beaconList, List<Edge> edgeList){
-//        HashMap<String, Boolean> check = new HashMap<>(); // 방문 확인 용
-//        HashMap<String, Integer> dist = new HashMap<>(); // 거리 체크 용
-//        HashMap<String, String> road = new HashMap<>(); // 길 저장 용
-//        final int INF = Integer.MAX_VALUE;
-//
-//
-//        HashMap<String, ArrayList<Node>> graph = new HashMap<>(); // 하나의 비콘에 대응하는 다른비콘을
-//        // 출발점으로부터 모든 비콘의 거리들을 무한대로 초기화
-//        // 비콘의 개수만큼 초기화
-//        for (Beacon beacon : beaconList){
-//            dist.put(beacon.getId(), INF);
-//            check.put(beacon.getId(), false);
-//        }
-//
-//        for ()
-//        PriorityQueue<Node> pq = new PriorityQueue<>();
-//        dist.put(start.getId(), 0);
-//        pq.offer(new Node(start.getId(),0));
-//        while(!pq.isEmpty()){
-//            Node nowBeacon = pq.poll();
-//            String nowBeaconId = nowBeacon.beaconId;
-//            // 현재 비콘 id가 최종 목적지와 동일하다면 그만!
-//            if(nowBeaconId.equals(dest.getId())) break;
-//            for (Node next : graph.get(nowBeacon)){ // 현재 비콘과 이어진 노드
-//                int newDist = dist.get(nowBeacon) + next.dis; // nowBeacon을 거쳐서 다음 비콘으로 가는 경우
-//                if (dist.get(next.beaconId) > newDist){ // 현재보다 더 짧은 거리로 도달 가능한 경우
-//                    dist.put(next.beaconId, newDist);
-//                    pq.offer(new Node(next.beaconId, newDist));
-//                    road.put(next.beaconId, nowBeaconId);
-//                }
-//            }
-//        }
-//        return reconstructPath(road, start.getId(), dest.getId());
-        return null;
-    }
-    private static List<String> reconstructPath(HashMap<String, String> road, String startBeacon, String destBeacon){
-        List<String> path = new ArrayList<>();
-        for(String at=destBeacon; at!=null; at=road.get(at)){
-            path.add(at);
+        // 3. 현재 비콘에서 개찰구 비콘까지의 경로 구하기
+        // 출발 비콘: startBeacon
+        // 도착 비콘: destBeacon
+        // 다익스트라 알고리즘으로 경로상의 비콘 ID 리스트를 얻음
+        List<String> list = dij(startBeacon, destBeacon, beaconList, edgeList);
+        // ID 리스트를 사용하여 비콘 객체 리스트를 가져옴
+        List<Beacon> beacons = findBeaconsOrdered(list);
+        // CCW 알고리즘으로 방향 결정
+        List<String> directions = ccw(beacons);
+        System.out.println(beacons);
+
+        // 결과 리스트 생성
+        List<CheckPointDto> resultList = new ArrayList<>();
+        // 첫 번째 비콘에 대한 방향 초기화
+        if (beacons.size() > 1) {
+            resultList.add(new CheckPointDto(beacons.get(0).getId(), 10,"직진"));
         }
-        Collections.reverse(path);
-        return path;
-    }
-    static class Node implements Comparable<Node>{
-        String beaconId;
-        int dis; // 거리
-        public Node(String beaconId, int dis){
-            this.beaconId = beaconId;
-            this.dis = dis;
+        for (int i = 1; i < beacons.size() - 1; i++) {
+            Beacon current = beacons.get(i);
+            System.out.println(current.getId());
+            Beacon next = beacons.get(i + 1);
+
+            // Edge 테이블에서 current와 next 사이의 거리 가져오기
+            Edge edge = edgeRepository.findByBeacon1AndBeacon2(current, next);
+            if (edge == null) {
+                edge = edgeRepository.findByBeacon1AndBeacon2(next, current); // 양방향 검색
+            }
+
+            // 여기까지 왔는데 간선이 없으면 exception 던지자
+            if(edge == null) throw new EntityNotFoundException("찾으려는 간선이 없습니다.");
+
+            int distance = (edge != null) ? edge.getDistance() : 0;
+
+            // 비콘 ID, 거리, 방향 정보 포함하여 결과 리스트에 추가
+            resultList.add(new CheckPointDto(current.getId(), distance, directions.get(i-1)));
         }
-        // priority queue에서 dis 거리 정보를 기준으로 오름차순 정렬할 것이기 때문에
-        @Override
-        public int compareTo(Node o){
-            return Integer.compare(this.dis, o.dis);
+        // 마지막 비콘에 대한 텍스트 추가
+        if (beacons.size() > 2) {
+            resultList.add(new CheckPointDto(destBeacon.getId(), 0,formatGateInfo(destGate)));
         }
+
+        System.out.println(resultList);
+
+
+        // 4. 목적지 역에서 개찰구에서 출구까지
+
+        // 일단 전체 비콘과 간선 불러오기
+        List<Beacon> destStationBeaconList = destStation.getBeaconList();
+        List<Edge> destStationEdgeList = destStation.getEdgeList();
+
+        // 해당 역에 있는 모든 개찰구의 beaconId 찾기
+        List<String> gateIdList = new ArrayList<>();
+        for( Beacon beacon : destStationBeaconList){
+            if( beacon.getBeaconType().equals(BeaconTYPE.GATE)) gateIdList.add(beacon.getId());
+        }
+        // beaconId로 gate 찾기
+        Gate destinationGate = null;
+
+        for( String bId : gateIdList){
+            Beacon beacon = beaconRepository.findById(bId)
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다."));
+            Gate gate = gateRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
+            if( gate.getIsUp() == destGate.getIsUp()) destinationGate = gate;
+        }
+        // Gate 들에서 나올 게이트 골라주기 (시작점)
+        Beacon startGate = destinationGate.getBeacon();
+
+        Exit exit = exitRepository.findByNumber(exitNumber)
+            .orElseThrow(() -> new EntityNotFoundException("출구번호에 맞는 해당역의 출구가 없습니다."));
+        Beacon destExit = exit.getBeacon(); // 목적지 역의 출구 비콘
+
+        // 개찰구 비콘에서 출구 비콘까지의 경로 구하기
+        // 다익스트라 알고리즘으로 경로상의 비콘 ID 리스트를 얻음
+        System.out.println("시작 개찰구 : " + startGate);
+        System.out.println("출구 : " + destExit);
+        List<String> destList = dij(startGate, destExit, destStationBeaconList, destStationEdgeList);
+        // ID 리스트를 사용하여 비콘 객체 리스트를 가져옴
+        List<Beacon> beaconsList = findBeaconsOrdered(destList);
+        // CCW 알고리즘으로 방향 결정
+        List<String> directionList = ccw(beaconsList);
+        System.out.println(directionList);
+
+        // 결과 리스트 생성
+        List<CheckPointDto> resultList2 = new ArrayList<>();
+        // 첫 번째 비콘에 대한 방향 초기화
+        if (beaconsList.size() > 1) {
+            resultList.add(new CheckPointDto(beaconsList.get(0).getId(), 10,"직진"));
+        }
+        for (int i = 1; i < beaconsList.size() - 1; i++) {
+            Beacon current = beaconsList.get(i);
+            System.out.println(current.getId());
+            Beacon next = beaconsList.get(i + 1);
+
+            // Edge 테이블에서 current와 next 사이의 거리 가져오기
+            Edge edge = edgeRepository.findByBeacon1AndBeacon2(current, next);
+            if (edge == null) {
+                edge = edgeRepository.findByBeacon1AndBeacon2(next, current); // 양방향 검색
+            }
+
+            // 여기까지 왔는데 간선이 없으면 exception 던지자
+            if(edge == null) throw new EntityNotFoundException("찾으려는 간선이 없습니다.");
+
+            int distance = (edge != null) ? edge.getDistance() : 0;
+
+            // 비콘 ID, 거리, 방향 정보 포함하여 결과 리스트에 추가
+            resultList2.add(new CheckPointDto(current.getId(), distance, directionList.get(i-1)));
+        }
+        // 마지막 비콘에 대한 텍스트 추가
+        if (beacons.size() > 2) {
+            resultList2.add(new CheckPointDto(destBeacon.getId(), 0,formatExitInfo(exit)));
+        }
+        ResultRouteDto dto = new ResultRouteDto(resultList, resultList2);
+        System.out.println(resultList);
+        return dto;
     }
 
+    private List<String> dij(Beacon start, Beacon dest, List<Beacon> beaconList, List<Edge> edgeList){
+        HashMap<String, Boolean> visited = new HashMap<>(); // 방문 여부 체크
+        HashMap<String, Integer> distance = new HashMap<>(); // 각 비콘까지의 최단 거리
+        HashMap<String, String> path = new HashMap<>(); // 최단 경로를 추적
+        final int INF = Integer.MAX_VALUE;
+
+        // 그래프 초기화
+        HashMap<String, ArrayList<Node>> graph = new HashMap<>();
+        for (Edge edge : edgeList) {
+            graph.putIfAbsent(edge.getBeacon1().getId(), new ArrayList<>());
+            graph.putIfAbsent(edge.getBeacon2().getId(), new ArrayList<>());
+            graph.get(edge.getBeacon1().getId()).add(new Node(edge.getBeacon2().getId(), edge.getDistance()));
+            graph.get(edge.getBeacon2().getId()).add(new Node(edge.getBeacon1().getId(), edge.getDistance()));
+        }
+
+        // 모든 비콘의 거리를 무한대로 초기화
+        for (Beacon beacon : beaconList) {
+            distance.put(beacon.getId(), INF);
+            visited.put(beacon.getId(), false);
+        }
+
+        // 시작점의 거리를 0으로 설정
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        distance.put(start.getId(), 0);
+        pq.offer(new Node(start.getId(), 0));
+
+        while(!pq.isEmpty()) {
+            Node currentNode = pq.poll();
+            String currentId = currentNode.beaconId;
+
+            // 이미 방문한 정점은 건너뛰기
+            if (visited.get(currentId)) continue;
+            visited.put(currentId, true);
+
+            // 현재 정점과 인접한 정점들에 대한 처리
+            for (Node adjacent : graph.getOrDefault(currentId, new ArrayList<>())) {
+                if (distance.get(adjacent.beaconId) > distance.get(currentId) + adjacent.distance) {
+                    distance.put(adjacent.beaconId, distance.get(currentId) + adjacent.distance);
+                    pq.offer(new Node(adjacent.beaconId, distance.get(adjacent.beaconId)));
+                    path.put(adjacent.beaconId, currentId);
+                }
+            }
+        }
+
+        // 최단 경로 복원
+        return reconstructPath(path, start.getId(), dest.getId());
+    }
+    private List<String> reconstructPath(HashMap<String, String> path, String startId, String destId) {
+        LinkedList<String> route = new LinkedList<>();
+        for (String at = destId; path.containsKey(at); at = path.get(at)) {
+            route.addFirst(at);
+        }
+        route.addFirst(startId);
+        return route;
+    }
+    class Node implements Comparable<Node> {
+        String beaconId;
+        int distance;
+
+        public Node(String beaconId, int distance) {
+            this.beaconId = beaconId;
+            this.distance = distance;
+        }
+
+        @Override
+        public int compareTo(Node other) {
+            return Integer.compare(this.distance, other.distance);
+        }
+    }
+    public List<Beacon> findBeaconsOrdered(List<String> beaconIds) {
+        // 데이터베이스에서 ID 리스트에 있는 모든 Beacon 객체를 가져옵니다.
+        List<Beacon> beacons = beaconRepository.findByIdIn(beaconIds);
+
+        // 가져온 Beacon 리스트를 원래 beaconIds 리스트의 순서대로 정렬합니다.
+        Map<String, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < beaconIds.size(); i++) {
+            indexMap.put(beaconIds.get(i), i);
+        }
+
+        return beacons.stream()
+            .sorted(Comparator.comparingInt(beacon -> indexMap.get(beacon.getId())))
+            .collect(Collectors.toList());
+    }
     private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
 
         double theta = lon1 - lon2;
@@ -202,16 +328,54 @@ public class EdgeService {
 
         return (dist);
     }
+    public List<String> ccw(List<Beacon> beacons) {
+        List<String> directions = new ArrayList<>();
+        for (int i = 1; i < beacons.size() - 1; i++) {
+            Beacon A = beacons.get(i - 1);
+            Beacon B = beacons.get(i);
+            Beacon C = beacons.get(i + 1);
+
+            // CCW 공식 적용
+            double ccw = (B.getLongitude() - A.getLongitude()) * (C.getLatitude() - B.getLatitude()) -
+                (B.getLatitude() - A.getLatitude()) * (C.getLongitude() - B.getLongitude());
+
+            if (ccw > 0) {
+                directions.add("왼쪽");
+            } else if (ccw < 0) {
+                directions.add("오른쪽");
+            } else {
+                directions.add("직진");
+            }
+        }
+        return directions;
+    }
 
 
-    // This function converts decimal degrees to radians
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
-
-    // This function converts radians to decimal degrees
     private double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
+    }
+
+    // 개찰구 정보를 문자열로 변환
+    private String formatGateInfo(Gate gate) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("개찰구 정보: ");
+        sb.append(gate.getIsUp() ? "상행 " : "하행 ");
+        sb.append("엘리베이터: ").append(gate.getElevator()).append(", ");
+        sb.append("에스컬레이터: ").append(gate.getEscalator()).append(", ");
+        sb.append("계단: ").append(gate.getStair());
+        return sb.toString();
+    }
+
+    private String formatExitInfo(Exit exit) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("출구 정보: " + exit.getNumber() + "번 출구");
+        sb.append("엘리베이터: ").append(exit.getElevator()).append(", ");
+        sb.append("에스컬레이터: ").append(exit.getEscalator()).append(", ");
+        sb.append("계단: ").append(exit.getStair());
+        return sb.toString();
     }
 
     public Integer addEdge(EdgeDto dto){
