@@ -32,10 +32,10 @@ const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
 };
 
 const addBeaconRequest = async (data: RequestAddBeacon) => {
-    const api = "https://k10e102.k.ssafy.io:8080";
+    const api = "https://banditbul.co.kr/api";
 
     try {
-        const response = await axios.post(`${api}/api/beacon`, { data });
+        const response = await axios.post(`${api}/beacon`, { data });
         console.log(response);
         alert("성공");
     } catch (error) {
@@ -45,7 +45,7 @@ const addBeaconRequest = async (data: RequestAddBeacon) => {
 };
 
 // 화장실
-export const BathRoom: React.FC<IScreenDoorProps> = (props) => {
+export const Toilet: React.FC<IScreenDoorProps> = (props) => {
     const [boySelectShow, setBoySelectShow] = useState<boolean>(false);
     const [girSelectShow, setGirlSelectShow] = useState<boolean>(false);
     const [boy, setBoy] = useState<string | null>(null);
@@ -68,11 +68,10 @@ export const BathRoom: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
-            stationId: "",
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
-            beaconType: "BATHROOM",
+            beaconType: "TOILET",
             x: props.x,
             y: props.y,
             floor: props.floor,
@@ -279,7 +278,6 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
-            stationId: "",
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
@@ -612,7 +610,6 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
-            stationId: "",
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
@@ -916,7 +913,6 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
-            stationId: "",
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
@@ -1026,7 +1022,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data = {
             macAddress: formData.macAddress,
-            stationId: "",
+
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
@@ -1137,7 +1133,6 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data = {
             macAddress: formData.macAddress,
-            stationId: "",
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,
@@ -1248,7 +1243,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
     const saveBeacon = () => {
         const data = {
             macAddress: formData.macAddress,
-            stationId: "",
+
             range: 2,
             longitude: formData.longitude,
             latitude: formData.latitude,

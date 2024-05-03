@@ -9,7 +9,7 @@ import testBg from "../assets/testBg.png";
 import { Beacon, Edge } from "../util/type.tsx";
 import {
     ScreenDoor,
-    BathRoom,
+    Toilet,
     Exit,
     Gate,
     Stair,
@@ -34,7 +34,7 @@ const types = [
 const floorType = ["대합실", "승강장"];
 
 const Map: React.FC = () => {
-    const [floor, setFloor] = useState<number>(0);
+    const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     // const [edgeList, setEdgeList] = useState<Edge[]>([
     //     // { beacon1: "1", beacon2: "2" },
@@ -691,12 +691,7 @@ function Options(
     switch (type) {
         case 1:
             return (
-                <BathRoom
-                    x={x}
-                    y={y}
-                    floor={floor}
-                    closeModal={closeAddModal}
-                />
+                <Toilet x={x} y={y} floor={floor} closeModal={closeAddModal} />
             );
         case 2:
             return (

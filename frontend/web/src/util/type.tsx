@@ -17,7 +17,6 @@ export type Edge = {
 
 export type RequestAddBeacon = {
     macAddress: string;
-    stationId: string;
     latitude: number;
     longitude: number;
     range: number;
