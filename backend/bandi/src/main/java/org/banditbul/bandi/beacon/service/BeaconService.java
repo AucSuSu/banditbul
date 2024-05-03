@@ -83,7 +83,10 @@ public class BeaconService {
             }
         }
 
-        return new FloorInfoDto(indvBeacons, indvEdges);
+        String mapImageUrl = "https://d3h25rphev0vuf.cloudfront.net/" + (station.getName()+floor) + ".png";
+        System.out.println(mapImageUrl);
+
+        return new FloorInfoDto(indvBeacons, indvEdges, mapImageUrl);
 
     }
 

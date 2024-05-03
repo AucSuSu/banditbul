@@ -75,6 +75,8 @@ class BeaconServiceTest {
     @Transactional
     @DisplayName("특정 역 및 층 출력 확인 테스트")
     void testGetFloorInfoDto(){
+
+        // Given
         Station hadanstation = stationRepository.save(new Station("하단역", "ice98", "123123", 1));
         Station dadaestation = stationRepository.save(new Station("다대포역", "ice98", "123123", 1));
 
@@ -110,8 +112,10 @@ class BeaconServiceTest {
         List<IndvEdge> expectedEdges2 = List.of(new IndvEdge(beacon.getId(), beacon2.getId()),
                         new IndvEdge(beacon.getId(), beacon3.getId()));
 
+        String expectedImageUrl = "https://d3h25rphev0vuf.cloudfront.net/"+hadanstation.getName()+"1.png";
         assertEquals(expectedBeacons, floorInfoDto.getBeaconList(), "Beacon list should match expected");
         assertEquals(expectedEdges, floorInfoDto.getEdgeList(), "Edge list should match expected");
+        assertEquals(expectedImageUrl, floorInfoDto.getMapImageUrl(), "Image URL should match expected");
     }
 
 
