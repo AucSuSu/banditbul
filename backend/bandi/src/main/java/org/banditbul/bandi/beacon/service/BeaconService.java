@@ -79,6 +79,9 @@ public class BeaconService {
         for(Edge edge:edges){
             if (indvBeacons.contains(edge.getBeacon1()) && indvBeacons.contains(edge.getBeacon2())){
                 indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId()));
+                System.out.println("둘다 포함 하냐고 !!");
+            }else{
+                System.out.println("이게 안되나");
             }
         }
 
