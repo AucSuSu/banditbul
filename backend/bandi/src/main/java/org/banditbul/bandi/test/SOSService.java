@@ -35,11 +35,23 @@ public class SOSService { // 세션 관리 및 생성 로직 처리
 
     //sessionId에 해당하는 방 만들기
     public SOSSession createRoom(String sessionId) {
-        SOSSession chatRoom = SOSSession.builder()
+        // SessionS Map에서 sessionId에 해당하는 SOSSession을 조회합니다.
+        SOSSession chatRoom = SessionS.get(sessionId);
+
+        // chatRoom이 null이 아니라면 이미 방이 존재한다는 의미이므로, 해당 방을 반환합니다.
+        if (chatRoom != null) {
+            return chatRoom;
+        }
+
+        // 만약 null이라면 새로운 방을 생성합니다.
+        chatRoom = SOSSession.builder()
                 .sessionId(sessionId)
                 .build();
 
+        // 새로 생성한 방을 Map에 추가합니다.
         SessionS.put(sessionId, chatRoom);
+
+        // 새로 생성된 방을 반환합니다.
         return chatRoom;
     }
 
