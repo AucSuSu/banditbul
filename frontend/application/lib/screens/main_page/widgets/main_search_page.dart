@@ -9,6 +9,7 @@ class MainSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double phoneHeight = MediaQuery.of(context).size.height * 0.26;
     return Scaffold(
       appBar: const TitleBar(),
       body: Stack(
@@ -84,7 +85,7 @@ class MainSearchPage extends StatelessWidget {
                               BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                         ),
                         width: double.infinity,
-                        height: 250,
+                        height: phoneHeight,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(30, 0, 30, 35),
                           child: Column(
@@ -92,8 +93,8 @@ class MainSearchPage extends StatelessWidget {
                             children: [
                               Image.asset(
                                 'assets/images/search_voice.png',
-                                width: 200,
-                                height: 150,
+                                width: phoneHeight * 0.8,
+                                height: phoneHeight * 0.6,
                               ),
                               const Text(
                                 '음성으로 검색하기',
@@ -124,7 +125,7 @@ class MainSearchPage extends StatelessWidget {
                               BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                         ),
                         width: double.infinity,
-                        height: 250,
+                        height: phoneHeight,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(30, 0, 30, 35),
                           child: Column(
@@ -132,8 +133,8 @@ class MainSearchPage extends StatelessWidget {
                             children: [
                               Image.asset(
                                 'assets/images/search_text.png',
-                                width: 200,
-                                height: 150,
+                                width: phoneHeight * 0.8,
+                                height: phoneHeight * 0.6,
                               ),
                               const Text(
                                 '문자로 검색하기',

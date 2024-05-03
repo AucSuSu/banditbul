@@ -5,7 +5,6 @@ import 'package:web_socket_channel/io.dart';
 // websocket
 import 'package:web_socket_channel/web_socket_channel.dart';
 // json
-import 'dart:convert';
 // Future -> 비동기 처리 하는 거
 import 'dart:async';
 
@@ -79,7 +78,7 @@ class SOSClient extends StatefulWidget {
   @override
   _SOSClientState createState() => _SOSClientState();
 
-  SOSClient({super.key});
+  const SOSClient({super.key});
 }
 
 class _SOSClientState extends State<SOSClient> {
@@ -99,10 +98,10 @@ class _SOSClientState extends State<SOSClient> {
     try {
       Dio dio = Dio();
       final response = await dio.get(
-        "https://k10e102.k.ssafy.io:8080/api/sos/${uuid}",
+        "https://k10e102.k.ssafy.io:8080/api/sos/$uuid",
       );
     } catch (error) {
-      print("전송 실패 ${error}");
+      print("전송 실패 $error");
     }
   }
 
@@ -141,7 +140,7 @@ class _SOSClientState extends State<SOSClient> {
           ),
           isSOS == true
               ? ElevatedButton(onPressed: () {}, child: const Text('yes'))
-              : Text(''),
+              : const Text(''),
         ],
       ),
     );

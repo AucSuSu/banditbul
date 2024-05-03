@@ -15,12 +15,12 @@ class ChatBubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         margin: const EdgeInsets.only(bottom: 18),
         decoration: BoxDecoration(
-          color: isUser ? Color(0xffFCF207) : Color(0xffF1FFCA),
+          color: isUser ? const Color(0xffFCF207) : const Color(0xffF1FFCA),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),

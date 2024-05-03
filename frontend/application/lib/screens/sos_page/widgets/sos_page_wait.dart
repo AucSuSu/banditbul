@@ -27,13 +27,13 @@ class _SosPageWaitState extends State<SosPageWait> {
 
   // data 받기
   void onData(dynamic data) {
-    print('${data}');
+    print('$data');
     MessageDto messageDto = MessageDto.fromJson(data);
     // 만약 SOS_ACCEPT
     if (messageDto.type == "SOS_ACCEPT" &&
         messageDto.beaconId == Get.find<BeaconController>().beaconId.value) {
       // 관리자가 승인했음 -> 승인완료로 돌아가기
-      Get.to(() => SosPageAccept());
+      Get.to(() => const SosPageAccept());
     }
   }
 

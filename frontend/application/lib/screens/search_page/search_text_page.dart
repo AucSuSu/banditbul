@@ -17,6 +17,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
   TextEditingController textController =
       TextEditingController(); // 텍스트 입력을 위한 컨트롤러
   FocusNode textFocusNode = FocusNode(); // 텍스트 필드 포커스를 위한 FocusNode 추가
+  bool isEnd = false;
 
   @override
   // initState 함수를 사용하여 위젯이 생성될 때 API 요청 함수를 호출
@@ -124,7 +125,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: ListView.builder(
-                    // messages 리스트에 메시지가 없거나 마지막 메시지의 isUser가 false일 경우에만 TextField를 추가합니다.
+                    // messages 리스트에 메시지가 없거나 마지막 메시지의 isUser가 false이고 isEnd가 false일 경우에만 TextField를 추가합니다.
                     itemCount: messages.isEmpty || messages.last['isUser']
                         ? messages.length
                         : messages.length + 1,
@@ -136,8 +137,9 @@ class _SearchTextPageState extends State<SearchTextPage> {
                           isUser: messages[index]['isUser'],
                         );
                       } else if (messages.isNotEmpty &&
-                          !messages.last['isUser']) {
-                        // 마지막 메시지의 isUser가 false인 경우, 마지막 아이템으로 TextField 추가
+                          !messages.last['isUser'] &&
+                          !isEnd) {
+                        // 마지막 메시지의 isUser가 false이고 isEnd가 false인 경우, 마지막 아이템으로 TextField 추가
                         return Align(
                           alignment: Alignment.centerRight,
                           child: Container(

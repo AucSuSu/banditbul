@@ -20,6 +20,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double phoneHeight = MediaQuery.of(context).size.height * 0.26;
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -115,7 +117,7 @@ class _MainPageState extends State<MainPage> {
                                 BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                           ),
                           width: double.infinity,
-                          height: 250,
+                          height: phoneHeight,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(30, 0, 30, 35),
                             child: Column(
@@ -123,9 +125,10 @@ class _MainPageState extends State<MainPage> {
                               children: [
                                 Image.asset(
                                   'assets/images/search_road.png',
-                                  width: 200,
-                                  height: 150,
+                                  width: phoneHeight * 0.8,
+                                  height: phoneHeight * 0.6,
                                 ),
+                                // 이미지와 텍스트 사이의 간격(10%
                                 const Text(
                                   '도착역 안내받기',
                                   style: TextStyle(
@@ -155,16 +158,19 @@ class _MainPageState extends State<MainPage> {
                                 BorderRadius.circular(35), // 버튼을 둥글게 만들기 위한 속성
                           ),
                           width: double.infinity,
-                          height: 250,
+                          height: phoneHeight,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(30, 0, 30, 35),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Image.asset(
-                                  'assets/images/search_toilet.png',
-                                  width: 150,
-                                  height: 100,
+                                Container(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Image.asset(
+                                    'assets/images/search_toilet.png',
+                                    width: phoneHeight * 0.6,
+                                    height: phoneHeight * 0.4,
+                                  ),
                                 ),
                                 const Text(
                                   '화장실 안내받기',

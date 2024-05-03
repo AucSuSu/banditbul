@@ -31,7 +31,7 @@ class _WriteChatBubbleState extends State<WriteChatBubble> {
         ),
         child: TextField(
           controller: widget.controller,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: InputBorder.none, // 테두리 없음
             hintText: '대화 입력', // 입력 필드 안내 텍스트
           ),

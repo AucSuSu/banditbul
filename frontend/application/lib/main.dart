@@ -3,8 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/arrive_page/arrive_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/screens/navigation_page/navigagion_page.dart';
-import 'package:frontend/screens/search_page/search_text_page.dart';
-import 'package:frontend/screens/search_page/search_voice_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
@@ -80,7 +78,7 @@ void main() async {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => SOSClient());
+                  Get.to(() => const SOSClient());
                 },
                 child: const Text('SOSClient Page'),
               ),
