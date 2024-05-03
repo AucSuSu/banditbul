@@ -52,6 +52,7 @@ public class BeaconController {
     @PostMapping("/beacon")
     public ResponseEntity<Message> addBeacon(@RequestBody BeaconDto dto, HttpSession session){
         log.info("beacon 추가 컨트롤러 시작");
+
         StationSessionDto user = (StationSessionDto) session.getAttribute("user");
         System.out.println("유저 확인");
         System.out.println(user);

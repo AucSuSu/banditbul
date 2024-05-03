@@ -6,6 +6,7 @@ import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
+import org.banditbul.bandi.common.exception.ExistException;
 import org.banditbul.bandi.edge.dto.CheckPointDto;
 import org.banditbul.bandi.edge.dto.EdgeDto;
 import org.banditbul.bandi.edge.dto.ResultRouteDto;
@@ -60,7 +61,13 @@ public class EdgeService {
                 exitNumberBuilder.append(" "); // 출구 번호 사이에 공백을 추가합니다.
             }
         }
-        int exitNumber = Integer.parseInt(exitNumberBuilder.toString().replaceAll("[^0-9]", ""));
+        int exitNumber = 0;
+        try{
+            exitNumber = Integer.parseInt(exitNumberBuilder.toString().replaceAll("[^0-9]", ""));
+        }catch (NumberFormatException e){
+            throw new NumberFormatException("출구를 입력하지 않았습니다.");
+        }
+
         System.out.println("역 이름: " + stationName);
         System.out.println("출구 번호: " + exitNumber);
 
@@ -198,7 +205,7 @@ public class EdgeService {
         List<CheckPointDto> resultList2 = new ArrayList<>();
         // 첫 번째 비콘에 대한 방향 초기화
         if (beaconsList.size() > 1) {
-            resultList.add(new CheckPointDto(beaconsList.get(0).getId(), 10,"직진"));
+            resultList2.add(new CheckPointDto(beaconsList.get(0).getId(), 10,"직진"));
         }
         for (int i = 1; i < beaconsList.size() - 1; i++) {
             Beacon current = beaconsList.get(i);
@@ -221,7 +228,7 @@ public class EdgeService {
         }
         // 마지막 비콘에 대한 텍스트 추가
         if (beacons.size() > 2) {
-            resultList2.add(new CheckPointDto(destBeacon.getId(), 0,formatExitInfo(exit)));
+            resultList2.add(new CheckPointDto(destExit.getId(), 0,formatExitInfo(exit)));
         }
         ResultRouteDto dto = new ResultRouteDto(resultList, resultList2);
         System.out.println(resultList);
@@ -382,6 +389,13 @@ public class EdgeService {
         Beacon beacon1 = beaconRepository.findById(dto.getBeacon1()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
         Beacon beacon2 = beaconRepository.findById(dto.getBeacon2()).orElseThrow(() -> new EntityNotFoundException("비콘을 찾을 수 없습니다"));
         Station station = stationRepository.findById(dto.getStationId()).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+
+
+        // 양방향 체크를 통해 에지 존재 여부 확인
+        boolean exists = edgeRepository.existsByBeacon1AndBeacon2OrBeacon2AndBeacon1(beacon1, beacon2, beacon2, beacon1);
+        if (exists) {
+            throw new ExistException("이미 해당하는 에지가 존재합니다 (양방향).");
+        }
 
         int meter = (int) distance(beacon1.getLatitude(), beacon1.getLongitude(), beacon2.getLatitude(), beacon2.getLongitude(), "meter");
         Edge edge = new Edge(beacon1, beacon2, meter, station);

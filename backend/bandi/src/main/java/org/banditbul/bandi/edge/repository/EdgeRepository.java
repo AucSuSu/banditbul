@@ -12,4 +12,6 @@ public interface EdgeRepository extends JpaRepository<Edge, Integer> {
     public List<Edge> findAllByStation(Station station);
 
     Edge findByBeacon1AndBeacon2(Beacon beacon1, Beacon beacon2);
+    // 양방향으로 이미 존재하는 에지가 있는지 확인
+    boolean existsByBeacon1AndBeacon2OrBeacon2AndBeacon1(Beacon beacon1, Beacon beacon2, Beacon beacon1Reverse, Beacon beacon2Reverse);
 }

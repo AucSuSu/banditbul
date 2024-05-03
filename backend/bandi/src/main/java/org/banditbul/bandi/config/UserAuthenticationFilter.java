@@ -30,6 +30,34 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private final StationRepository stationRepository;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // /api/oauth 요청일 경우 필터의 나머지 로직을 건너뛰고 다음 필터로 진행
+        if ("/api/login".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // refreshToken으로 수행하는데 AccessToken 재발급하는 요청이면 해당필터 pass
+        if ("/api/signup".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if ("/api/navigation/**".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if ("/api/sos/**".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if ("/api/beaconlist/**".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
