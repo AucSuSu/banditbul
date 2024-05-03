@@ -35,7 +35,7 @@ const addBeaconRequest = async (data: RequestAddBeacon) => {
     const api = "https://banditbul.co.kr/api";
 
     try {
-        const response = await axios.post(`${api}/beacon`, { data });
+        const response = await axios.post(`${api}/beacon`, data);
         console.log(response);
         alert("성공");
     } catch (error) {
