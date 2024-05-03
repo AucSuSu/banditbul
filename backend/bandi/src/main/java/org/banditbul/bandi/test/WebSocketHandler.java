@@ -30,8 +30,6 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
         MessageDto messageDto = objectMapper.readValue(payload, MessageDto.class);
-        SOSSession room = sosService.findBySessionId(messageDto.getSessionId());
-        Set<WebSocketSession> sessions = room.getSessions();
 
         log.info("Message Received");
         log.info("Message SessionId: "+messageDto.getSessionId());
@@ -39,6 +37,9 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
         log.info("Message Type: "+messageDto.getType());
         log.info("Message uuId: "+messageDto.getUuId());
         log.info("Message count: "+messageDto.getCount());
+
+        SOSSession room = sosService.findBySessionId(messageDto.getSessionId());
+        Set<WebSocketSession> sessions = room.getSessions();
 
         //세션 입장
         if(messageDto.getType() == Type.ENTER){
