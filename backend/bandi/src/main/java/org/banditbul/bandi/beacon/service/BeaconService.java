@@ -182,7 +182,9 @@ public class BeaconService {
         System.out.println("여기까지 넘어옴");
         BeaconTYPE beaconType = beaconDto.getBeaconType();
         // 이미 그 비콘 id가 있으면 예외던지기
+        System.out.println(beaconDto.getMacAddress());
         Optional<Beacon> check = beaconRepository.findById(beaconDto.getMacAddress());
+        System.out.println("통과");
         if( check.isPresent() ){
             throw new ExistException("이미 존재하는 비콘 주소 입니다.");
         }
