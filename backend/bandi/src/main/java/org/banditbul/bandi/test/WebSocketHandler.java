@@ -78,6 +78,6 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info("** afterConnectionEstablished **");
+        log.info("** Connection closed ** Reason: " + status.getReason() + ", Code: " + status.getCode());
     }
 }
