@@ -4,8 +4,11 @@ import 'package:frontend/screens/arrive_page/arrive_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/screens/navigation_page/navigagion_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
+import 'package:frontend/screens/sos_page/sos_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
+import 'package:frontend/store/BeaconController.dart';
+import 'package:frontend/store/SessionController.dart';
 import 'package:frontend/util/stt_function.dart';
 import 'package:frontend/util/tts_function.dart';
 import 'package:frontend/util/websocket.dart';
@@ -14,6 +17,8 @@ import 'package:get/get.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
+  Get.put(BeaconController());
+  Get.put(SessionController());
   runApp(
     GetMaterialApp(
       // MaterialApp 대신 GetMaterialApp 사용 GetX 적용 하기 위함
@@ -81,6 +86,12 @@ void main() async {
                   Get.to(() => const SOSClient());
                 },
                 child: const Text('SOSClient Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const SosPage());
+                },
+                child: const Text('SOS Page'),
               ),
             ],
           ),
