@@ -8,6 +8,7 @@ import 'package:frontend/screens/search_page/search_voice_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
+import 'package:frontend/util/stt_function.dart';
 import 'package:frontend/util/tts_function.dart';
 import 'package:frontend/util/websocket.dart';
 
@@ -70,6 +71,12 @@ void main() async {
                   Get.to(() => TTSFunction());
                 },
                 child: const Text('TTSFunction Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const VoiceToTextPage());
+                },
+                child: const Text('STTFunction Page'),
               ),
               ElevatedButton(
                 onPressed: () {

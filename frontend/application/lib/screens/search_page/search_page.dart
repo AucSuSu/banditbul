@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = <Widget>[
+    final List<Widget> pages = <Widget>[
       const SearchVoicePage(), // Voice Search 페이지
       SearchTextPage(
         toggleFloatingActionButton: toggleFloatingActionButton,
@@ -45,7 +45,7 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        child: pages.elementAt(_selectedIndex),
       ),
       floatingActionButton: showFloatingButton
           ? SizedBox(
@@ -96,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
           color: const Color(0xffF1FFCA), // BottomAppBar의 배경 색
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(_pages.length + 1, (index) {
+            children: List.generate(pages.length + 1, (index) {
               if (index == 1) {
                 // 중앙 홈 버튼 위치에는 공간을 만들어둡니다.
                 return const SizedBox(

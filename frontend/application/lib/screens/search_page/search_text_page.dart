@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:frontend/screens/search_page/widgets/chat_bubble.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SearchTextPage extends StatefulWidget {
   const SearchTextPage({super.key, required this.toggleFloatingActionButton});
@@ -98,7 +97,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
     //   print(e);
     // }
     var newMessage = {
-      'text': '${stationName} 존재하지 않습니다. \n다시 입력해주세요',
+      'text': '$stationName 존재하지 않습니다. \n다시 입력해주세요',
       'isUser': false
     };
 
@@ -136,7 +135,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
                           text: messages[index]['text'],
                           isUser: messages[index]['isUser'],
                         );
-                      } else if (!messages.isEmpty &&
+                      } else if (messages.isNotEmpty &&
                           !messages.last['isUser']) {
                         // 마지막 메시지의 isUser가 false인 경우, 마지막 아이템으로 TextField 추가
                         return Align(
@@ -153,13 +152,13 @@ class _SearchTextPageState extends State<SearchTextPage> {
                             child: TextField(
                               focusNode: textFocusNode,
                               controller: textController,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
                               ),
                               decoration: InputDecoration(
                                 hintText: "대화 입력",
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
