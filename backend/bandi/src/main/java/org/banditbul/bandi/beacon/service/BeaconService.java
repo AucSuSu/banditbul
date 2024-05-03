@@ -157,7 +157,10 @@ public class BeaconService {
 
 
     public String createBeacon(BeaconDto beaconDto){
+        System.out.println("createBeacon 메소드");
+        System.out.println(beaconDto.getStationId());
         Station station = stationRepository.findById(beaconDto.getStationId()).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+        System.out.println("여기까지 넘어옴");
         BeaconTYPE beaconType = beaconDto.getBeaconType();
         // 이미 그 비콘 id가 있으면 예외던지기
         Optional<Beacon> check = beaconRepository.findById(beaconDto.getMacAddress());
