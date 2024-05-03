@@ -2,6 +2,8 @@ package org.banditbul.bandi.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -16,6 +18,7 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
     // 여기서 관리하기
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static SOSService sosService;
+    private static final Logger log = LoggerFactory.getLogger(WebsocketConfig.class);
 
     // 클라이언트가 연결되면 호출됨
     @Override
@@ -31,7 +34,12 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
         SOSSession room = sosService.findBySessionId(messageDto.getSessionId());
         Set<WebSocketSession> sessions = room.getSessions();
 
-        System.out.println(messageDto);
+        log.info("Message Received");
+        log.info("Message SessionId: "+messageDto.getSessionId());
+        log.info("Message BeaconId: "+messageDto.getBeaconId());
+        log.info("Message Type: "+messageDto.getType());
+        log.info("Message uuId: "+messageDto.getUuId());
+        log.info("Message count: "+messageDto.getCount());
 
         //세션 입장
         if(messageDto.getType() == Type.ENTER){
