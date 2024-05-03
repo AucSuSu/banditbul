@@ -24,6 +24,7 @@ public class Gate {
     private Boolean isUp;
 
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
+    @Column(nullable = true)
     private Dir elevator;
 
     @Enumerated(EnumType.STRING) // DB에 문자열로 저장
