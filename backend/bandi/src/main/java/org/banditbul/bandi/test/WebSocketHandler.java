@@ -31,7 +31,7 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
         String payload = message.getPayload();
         MessageDto messageDto = objectMapper.readValue(payload, MessageDto.class);
 
-        log.info("Message Received");
+        log.info("**Message Received");
         log.info("Message SessionId: "+messageDto.getSessionId());
         log.info("Message BeaconId: "+messageDto.getBeaconId());
         log.info("Message Type: "+messageDto.getType());
