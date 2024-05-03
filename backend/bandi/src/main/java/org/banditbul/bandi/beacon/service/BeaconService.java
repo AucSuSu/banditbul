@@ -1,5 +1,6 @@
 
 package org.banditbul.bandi.beacon.service;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.dto.BeaconDto;
@@ -77,7 +78,7 @@ public class BeaconService {
         // 해당 층의 엣지
         List<IndvEdge> indvEdges = new ArrayList<>();
         for(Edge edge:edges){
-            if (indvBeacons.contains(edge.getBeacon1()) && indvBeacons.contains(edge.getBeacon2())){
+            if (indvBeacons.contains(new IndvBeacon(edge.getBeacon1().getId(), edge.getBeacon1().getX(), edge.getBeacon1().getY())) && indvBeacons.contains(new IndvBeacon(edge.getBeacon2().getId(), edge.getBeacon2().getX(), edge.getBeacon2().getY()))){
                 indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId()));
             }
         }
