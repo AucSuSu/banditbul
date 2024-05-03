@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:web_socket_channel/io.dart';
 // websocket
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:stomp_dart_client/stomp_dart_client.dart';
+
 // json
 // Future -> 비동기 처리 하는 거
 import 'dart:async';
@@ -46,8 +48,8 @@ class WebsocketManager {
   // 최초 연결할 때 쓰기
   void connect() async {
     print("연결 시도 ---");
-    // _channel = IOWebSocketChannel.connect(dotenv.env['WS_URL'] ?? "");
-    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
+        headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
 
     print("connect");
 
@@ -75,6 +77,10 @@ class WebsocketManager {
         },
       );
     }
+  }
+
+  void onConnectCallback(StompFrame connectFrame) {
+    print("message 들어옴");
   }
 
   // 메세지 보내는 함수
