@@ -60,7 +60,7 @@ const Map: React.FC = () => {
     const ws = useRef<WebSocket | null>(null); // ws 객체
     // test 용
     const [sosBeaconIdList, setSosBeaconIdList] = useState<Set<string>>(
-        new Set(["1"])
+        new Set(["11:22:33:44:60"])
     );
 
     // sos 하는 beaconId를 담아둘거임 ! -> 현재 빌드를 위해서 이거 죽이고
@@ -92,29 +92,30 @@ const Map: React.FC = () => {
 
     useEffect(() => {
         //websocket 객체 연결
-        // ws.current = new WebSocket("wss://banditbul.co.kr/socket");
+        ws.current = new WebSocket("wss://banditbul.co.kr/socket");
+        //ws.current = new WebSocket("wss://localhost:8080/socket");
 
-        // // listner
-        // ws.current.onopen = () => {
-        //     console.log("web socket 연결");
-        // };
+        // listner
+        ws.current.onopen = () => {
+            console.log("web socket 연결");
+        };
 
-        // ws.current.onclose = () => {
-        //     console.log("web socket 연결 끊어짐");
-        // };
+        ws.current.onclose = () => {
+            console.log("web socket 연결 끊어짐");
+        };
 
-        // ws.current.onerror = () => {
-        //     console.log("web socket 에러 발생");
-        // };
+        ws.current.onerror = () => {
+            console.log("web socket 에러 발생");
+        };
 
-        // ws.current.onmessage = (event: MessageEvent) => {
-        //     console.log(event.data); // 메세지 출력하기
+        ws.current.onmessage = (event: MessageEvent) => {
+            console.log(event.data); // 메세지 출력하기
 
-        //     // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
-        //     // sosBeaconList에 추가하기
-        //     const newSosBeaconIdList = sosBeaconIdList.add(event.data.beaconId);
-        //     setSosBeaconIdList(newSosBeaconIdList);
-        // };
+            // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
+            // sosBeaconList에 추가하기
+            const newSosBeaconIdList = sosBeaconIdList.add(event.data.beaconId);
+            setSosBeaconIdList(newSosBeaconIdList);
+        };
 
         // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
 
@@ -214,20 +215,6 @@ const Map: React.FC = () => {
                     console.error(error);
                     alert("실패");
                 }
-
-                // async () => {
-                //     try {
-                //         console.log("전송할거야22");
-                //         const res = await Fetch("/api/edge", "POST", {
-                //             beacon1: selectedEdges[0],
-                //             beacon2: selectedEdges[1],
-                //         });
-                //         console.log(res.status);
-                //         console.log(res.data);
-                //     } catch (error) {
-                //         console.log(error);
-                //     }
-                // };
             } else {
                 alert("간선을 두개 선택해주세요");
             }
@@ -241,10 +228,13 @@ const Map: React.FC = () => {
     const sendAcceptMessage = (beaconId: string) => {
         if (ws.current?.OPEN) {
             var data = {
+                sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
             };
             ws.current.send(JSON.stringify(data));
+        } else {
+            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         }
         // sosList에서 비콘 지우기
         sosBeaconIdList.delete(beaconId);
@@ -255,11 +245,13 @@ const Map: React.FC = () => {
     const sendNoMessage = (beaconId: string) => {
         if (ws.current?.OPEN) {
             var data = {
-                type: "SOS_ACCEPT",
+                sessionId: "b",
+                type: "SOS_FAIL",
                 beaconId: beaconId,
             };
-
             ws.current.send(JSON.stringify(data));
+        } else {
+            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         }
 
         sosBeaconIdList.delete(beaconId);

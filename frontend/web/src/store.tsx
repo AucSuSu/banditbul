@@ -1,20 +1,29 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface StationStore {
-  testData :  string;
-  setTestData : (newData: string) => void;
+    testData: string;
+    setTestData: (newData: string) => void;
 }
 
-const stationStore = create<StationStore>()(
-    persist(
-      (set) => ({
-        testData : 'arim',
-        setTestData : (newData) => set(() => ({testData : newData})),
-        }),
-      { name: 'stationStore' },
-    ),
-)
+interface WebSocketStore {
+    webSocket: WebSocket | null;
+    setWebSocket: (ws: WebSocket) => void;
+}
 
-export default stationStore;
+export const stationStore = create<StationStore>()(
+    persist(
+        (set) => ({
+            testData: "arim",
+            setTestData: (newData) => set(() => ({ testData: newData })),
+        }),
+        { name: "stationStore" }
+    )
+);
+
+const useWebSocketStore = create<WebSocketStore>((set) => ({
+    webSocket: null,
+    setWebSocket: (ws) => set({ webSocket: ws }),
+}));
+
+export default useWebSocketStore;
