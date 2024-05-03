@@ -2,6 +2,7 @@ package org.banditbul.bandi.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Slf4j
+@Component
 public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연결 및 메시지 처리 로직
     // 여기서 관리하기
     private static ObjectMapper objectMapper = new ObjectMapper();
