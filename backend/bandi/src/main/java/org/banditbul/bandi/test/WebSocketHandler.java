@@ -18,7 +18,6 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
     // 여기서 관리하기
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static SOSService sosService;
-    private static final Logger log = LoggerFactory.getLogger(WebsocketConfig.class);
 
     // 클라이언트가 연결되면 호출됨
     @Override
