@@ -21,7 +21,7 @@ public class WebsocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         log.debug("Registering WebSocket handlers");
-        registry.addHandler(webSocketHandler, "/socket").setAllowedOrigins("*");
+        registry.addHandler(webSocketHandler, "/socket").setAllowedOrigins("*").withSockJS();
         log.info("WebSocket handler registered for '/socket' with allowed origins '*'");
     }
 }

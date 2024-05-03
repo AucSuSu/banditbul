@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class SOSService { // 세션 관리 및 생성 로직 처리
+    private static final Logger LOGGER = Logger.getLogger(SOSSession.class.getName());
 
     private final ObjectMapper objectMapper;
     private Map<String, SOSSession> SessionS; // 세션id와 sossession 객체 매핑
@@ -30,7 +32,14 @@ public class SOSService { // 세션 관리 및 생성 로직 처리
 
     //sessionId로 존재하는 방 찾기
     public SOSSession findBySessionId(String sessionId) {
-        return SessionS.get(sessionId);
+        SOSSession session = SessionS.get(sessionId);
+        if (session != null) {
+            LOGGER.info("Session found with ID: " + sessionId);
+            return session;
+        } else {
+            LOGGER.warning("No session found for ID: " + sessionId);
+            return null;
+        }
     }
 
     //sessionId에 해당하는 방 만들기
