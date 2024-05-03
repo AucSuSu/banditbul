@@ -1,9 +1,8 @@
 package org.banditbul.bandi.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -14,10 +13,11 @@ import java.util.Set;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연결 및 메시지 처리 로직
     // 여기서 관리하기
     private static ObjectMapper objectMapper = new ObjectMapper();
-    private static SOSService sosService;
+    private final SOSService sosService;
 
     // 클라이언트가 연결되면 호출됨
     @Override
