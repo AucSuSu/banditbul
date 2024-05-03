@@ -10,9 +10,11 @@ public class FloorInfoDto {
 
     List<IndvBeacon> beaconList;
     List<IndvEdge> edgeList;
+    String mapImageUrl;
 
-    public FloorInfoDto(List<IndvBeacon> beaconList, List<IndvEdge> edgeList) {
+    public FloorInfoDto(List<IndvBeacon> beaconList, List<IndvEdge> edgeList, String mapImageUrl) {
         this.beaconList = beaconList;
         this.edgeList = edgeList;
+        this.mapImageUrl = mapImageUrl;
     }
 }
