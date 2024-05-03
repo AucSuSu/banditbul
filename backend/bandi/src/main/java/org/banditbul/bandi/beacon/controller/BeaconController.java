@@ -18,6 +18,14 @@ import org.springframework.web.bind.annotation.*;
 public class BeaconController {
     private final BeaconService beaconService;
 
+    @GetMapping("/stationinfo/{beaconId}")
+    public ResponseEntity<Message> getStationName(@PathVariable(value = "beaconId") String beaconId){
+
+        String stationName = beaconService.getStationName(beaconId);
+        Message message = new Message(HttpStatusEnum.OK, stationName + " 역 이름 출력 완료", stationName);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+
+    }
     @GetMapping("/beaconlist/{floor}")
     public ResponseEntity<Message> getBeaconList(@PathVariable(value = "floor") int floor, HttpSession session){
         StationSessionDto user = (StationSessionDto) session.getAttribute("user");

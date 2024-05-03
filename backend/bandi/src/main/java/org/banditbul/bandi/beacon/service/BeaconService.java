@@ -11,6 +11,8 @@ import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 import org.banditbul.bandi.beacon.repository.BeaconRepository;
 import org.banditbul.bandi.common.Dir;
+import org.banditbul.bandi.common.HttpStatusEnum;
+import org.banditbul.bandi.common.Message;
 import org.banditbul.bandi.common.exception.EntityNotFoundException;
 import org.banditbul.bandi.common.exception.ExistException;
 import org.banditbul.bandi.edge.dto.IndvEdge;
@@ -38,7 +40,11 @@ import org.banditbul.bandi.station.repository.StationRepository;
 import org.banditbul.bandi.toilet.dto.ToiletDto;
 import org.banditbul.bandi.toilet.entity.Toilet;
 import org.banditbul.bandi.toilet.repository.ToiletRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -55,6 +61,15 @@ public class BeaconService {
     private final PointRepository pointRepository;
     private final StationRepository stationRepository;
     private final EdgeRepository edgeRepository;
+
+
+    public String getStationName(String beaconId){
+
+        return beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."))
+                .getStation().getName();
+    }
+
+
     public int getStationId(String beaconId){
         Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 beacon이 없습니다."));
         return beacon.getStation().getId();
