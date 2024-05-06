@@ -31,7 +31,10 @@ const types = [
     "스크린도어",
 ];
 
-const floorType = ["대합실", "승강장"];
+const floorType = [
+    { title: "대합실", floor: -1 },
+    { title: "승강장", floor: -2 },
+];
 
 const Map: React.FC = () => {
     const [floor, setFloor] = useState<number>(-1);
@@ -55,6 +58,7 @@ const Map: React.FC = () => {
         null
     );
     const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
+    const [mapImgaeUrl, setMapImageUrl] = useState<string>();
 
     // websocket
     const ws = useRef<WebSocket | null>(null); // ws 객체
@@ -69,28 +73,43 @@ const Map: React.FC = () => {
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
         {
-            type: "화장실",
             beaconId: "1",
-            coord: { x: 40, y: 30 },
-            name: "Beacon 1",
+            x: 40,
+            y: 30,
         },
         {
-            type: "개찰구",
-            beaconId: "11:22:33:44:60",
-            coord: { x: 300, y: 1000 },
-            name: "11:22:33:44:60",
-        },
-        {
-            type: "화장실",
             beaconId: "11:22:33:44:55",
-            coord: { x: 40, y: 1000 },
-            name: "11:22:33:44:55",
+            x: 40,
+            y: 30,
+        },
+        {
+            beaconId: "11:22:33:44:60",
+            x: 40,
+            y: 30,
         },
     ]);
 
     const [page] = useState(0);
 
+    const getMapInfo = async (floor: number) => {
+        const api = "https://banditbul.co.kr/api";
+        // zustand 에서 값 가져오기
+        try {
+            const response = await axios.get(`${api}/beaconlist/${floor}`);
+            const data = response.data;
+            setBeacons(data.beaconList);
+            setAddEdgeState(data.edgeList);
+            setMapImageUrl(mapImgaeUrl);
+
+            alert("성공");
+        } catch (error) {
+            console.error(error);
+            alert("실패");
+        }
+    };
+
     useEffect(() => {
+        getMapInfo(floor);
         //websocket 객체 연결
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         //ws.current = new WebSocket("wss://localhost:8080/socket");
@@ -141,8 +160,8 @@ const Map: React.FC = () => {
                 ...beacon,
                 coord: {
                     // 기존 parentWidth로 바꿔주기
-                    x: (beacon.coord.x / parentWidth) * 100,
-                    y: (beacon.coord.y / parentHeight) * 100,
+                    x: (beacon.x / parentWidth) * 100,
+                    y: (beacon.y / parentHeight) * 100,
                 },
             }));
             console.log(updatedBeacons);
@@ -154,7 +173,7 @@ const Map: React.FC = () => {
             setNewBeacon(null);
             window.removeEventListener("resize", resizeBeacon);
         };
-    }, []);
+    }, [floor]);
 
     // 간선 연결하기
     const handleRadioChange = (beaconId: string) => {
@@ -185,8 +204,8 @@ const Map: React.FC = () => {
             setNewBeacon({
                 type: types[0],
                 beaconId: "1",
-                coord: { x: 0, y: 0 },
-                name: "beacon",
+                x: 0,
+                y: 0,
             });
             setX(0);
             setY(0);
@@ -335,14 +354,14 @@ const Map: React.FC = () => {
                     {floorType.map((e, index) => (
                         <div
                             key={index}
-                            onClick={() => setFloor(index)}
+                            onClick={() => setFloor(e.floor)}
                             style={{
                                 cursor: "pointer",
                                 backgroundColor:
                                     floor == index ? "navy" : "ivory",
                             }}
                         >
-                            {e}
+                            {e.title}
                         </div>
                     ))}
                 </div>
@@ -351,7 +370,7 @@ const Map: React.FC = () => {
                         className={styles.model}
                         id="model"
                         style={{
-                            backgroundImage: `url(${testBg})`,
+                            backgroundImage: `url(${mapImgaeUrl})`,
                             backgroundSize: "contain",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
@@ -384,10 +403,10 @@ const Map: React.FC = () => {
                             const beacon2 = edge.beacon2;
                             const startPoint = beacons.find(
                                 (point) => point.beaconId === beacon1
-                            )!.coord;
+                            )!;
                             const endPoint = beacons.find(
                                 (point) => point.beaconId === beacon2
-                            )!.coord;
+                            )!;
 
                             return (
                                 <svg
@@ -419,8 +438,8 @@ const Map: React.FC = () => {
                                     }
                                     className={styles.beaconItem}
                                     style={{
-                                        left: `${point.coord.x}px`,
-                                        top: `${point.coord.y}px`,
+                                        left: `${point.x}px`,
+                                        top: `${point.y}px`,
                                     }}
                                 />
                             </div>
@@ -627,7 +646,7 @@ const Map: React.FC = () => {
                                             )}
                                             <div className={styles.beaconId}>
                                                 {" "}
-                                                {item.name}
+                                                {item.beaconId}
                                             </div>
 
                                             <div

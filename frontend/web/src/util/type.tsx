@@ -4,10 +4,10 @@ export type Coord = {
 };
 
 export type Beacon = {
-    type: string;
+    type?: string;
     beaconId: string;
-    coord: Coord;
-    name: string;
+    x: number;
+    y: number;
 };
 
 export type Edge = {
