@@ -55,12 +55,12 @@ class WebsocketManager {
 
     if (_channel != null) {
       print("data");
-      _channel!.sink.add(MessageDto(
-          type: "SOS_ACCEPT",
-          beaconId: "12:12:12:12",
-          sessionId: "banditbul8",
-          uuId: "uuId",
-          count: null));
+      // _channel!.sink.add(MessageDto(
+      //     type: "SOS_ACCEPT",
+      //     beaconId: "12:12:12:12",
+      //     sessionId: "banditbul8",
+      //     uuId: "uuId",
+      //     count: null));
       _channel!.stream.listen(
         (data) {
           print("Connected to WebSocket server");
@@ -88,6 +88,8 @@ class WebsocketManager {
     if (_channel == null) {
       throw Exception("WebSocket Channle 없음");
     } else {
+      _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
+          headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
       _channel!.sink.add(dto);
     }
   }
