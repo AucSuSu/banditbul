@@ -5,7 +5,7 @@ import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import blueBeacon from "../assets/blueBeacon.gif";
 import defaultBeacon from "../assets/defaultBeacon.gif";
 import yellowBeacon from "../assets/yellowBeacon.gif";
-import testBg from "../assets/testBg.png";
+// import testBg from "../assets/testBg.png";
 import { Beacon, Edge } from "../util/type.tsx";
 import {
     ScreenDoor,
