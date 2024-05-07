@@ -121,10 +121,12 @@ const Map: React.FC = () => {
 
         ws.current.onclose = () => {
             console.log("web socket 연결 끊어짐");
+            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         };
 
         ws.current.onerror = () => {
             console.log("web socket 에러 발생");
+            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         };
 
         ws.current.onmessage = (event: MessageEvent) => {
