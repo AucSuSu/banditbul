@@ -100,8 +100,9 @@ const Map: React.FC = () => {
             setBeacons(data.beaconList);
             setAddEdgeState(data.edgeList);
             setMapImageUrl(mapImgaeUrl);
-
             alert("성공");
+
+            console.log(data);
         } catch (error) {
             console.error(error);
             alert("실패");
