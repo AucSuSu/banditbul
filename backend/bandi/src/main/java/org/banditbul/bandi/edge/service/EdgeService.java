@@ -235,6 +235,92 @@ public class EdgeService {
         return dto;
     }
 
+    // 현재역의 화장실까지 가는 경로를 return
+    public ResultRouteDto navToilet(String beaconId){
+
+        // 1. beaconId로 시작 비콘 찾기
+        Beacon startBeacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다"));
+        Station startStation = startBeacon.getStation();
+        // 2. 그 역의 화장실 찾기
+        // 출발역 안에 있는 모든 beacon과 edge 리스트 가져오기
+        List<Beacon> beaconList = startStation.getBeaconList();
+        List<Edge> edgeList = startStation.getEdgeList();
+        // 2-2 비콘들을 돌면서 비콘 종류가 화장실인것들을 찾아오기
+        // 해당 역에 있는 모든 화장실의 beaconId 찾기
+        List<String> beaconIdList = new ArrayList<>();
+        for( Beacon beacon : beaconList){
+            if( beacon.getBeaconType().equals(BeaconTYPE.TOILET)) beaconIdList.add(beacon.getId());
+        }
+        // beaconId로 gate 객체 불러오기
+        List<Toilet> toiletList = new ArrayList<>();
+
+        for( String bId : beaconIdList){
+            Beacon toiletBeacon = beaconRepository.findById(bId)
+                    .orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다."));
+            Toilet toilet = toiletRepository.findByBeacon(toiletBeacon).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
+            toiletList.add(toilet);
+        }
+        // 찾아진 화장실들에 대한 처리 로직 - 현재위치에서 가장 가까운 화장실 고르기
+        Beacon destBeacon = null; // 내 목적지가 되는 화장실 비콘
+        Toilet destToilet = null;
+        double min = Double.MAX_VALUE;
+        for (Toilet toilet : toiletList) {
+            Beacon beacon = toilet.getBeacon();
+            Double longitude = beacon.getLongitude();
+            Double latitude = beacon.getLatitude();
+            double distance = distance(latitude, longitude, startBeacon.getLatitude(), startBeacon.getLongitude());
+            if( min > distance) {
+                destBeacon = beacon;
+                destToilet = toilet;
+            }
+        }
+
+        // 3. 현재 비콘에서 화장실 비콘까지의 경로 구하기
+        // 출발 비콘: startBeacon
+        // 도착 비콘: destBeacon
+        // 다익스트라 알고리즘으로 경로상의 비콘 ID 리스트를 얻음
+        List<String> list = dij(startBeacon, destBeacon, beaconList, edgeList);
+        // ID 리스트를 사용하여 비콘 객체 리스트를 가져옴
+        List<Beacon> beacons = findBeaconsOrdered(list);
+        // CCW 알고리즘으로 방향 결정
+        List<String> directions = ccw(beacons);
+        System.out.println(beacons);
+
+        // 결과 리스트 생성
+        List<CheckPointDto> resultList = new ArrayList<>();
+        // 첫 번째 비콘에 대한 방향 초기화
+        if (beacons.size() > 1) {
+            resultList.add(new CheckPointDto(beacons.get(0).getId(), 10,"직진"));
+        }
+        for (int i = 1; i < beacons.size() - 1; i++) {
+            Beacon current = beacons.get(i);
+            System.out.println(current.getId());
+            Beacon next = beacons.get(i + 1);
+
+            // Edge 테이블에서 current와 next 사이의 거리 가져오기
+            Edge edge = edgeRepository.findByBeacon1AndBeacon2(current, next);
+            if (edge == null) {
+                edge = edgeRepository.findByBeacon1AndBeacon2(next, current); // 양방향 검색
+            }
+
+            // 여기까지 왔는데 간선이 없으면 exception 던지자
+            if(edge == null) throw new EntityNotFoundException("찾으려는 간선이 없습니다.");
+
+            int distance = (edge != null) ? edge.getDistance() : 0;
+
+            // 비콘 ID, 거리, 방향 정보 포함하여 결과 리스트에 추가
+            resultList.add(new CheckPointDto(current.getId(), distance, directions.get(i-1)));
+        }
+        // 마지막 비콘에 대한 텍스트 추가
+        if (beacons.size() >= 2) {
+            resultList.add(new CheckPointDto(destBeacon.getId(), 0,formatToiletInfo(destToilet)));
+        }
+
+        System.out.println(resultList);
+        ResultRouteDto dto = new ResultRouteDto(resultList);
+        return dto;
+    }
+
     private List<String> dij(Beacon start, Beacon dest, List<Beacon> beaconList, List<Edge> edgeList){
         HashMap<String, Boolean> visited = new HashMap<>(); // 방문 여부 체크
         HashMap<String, Integer> distance = new HashMap<>(); // 각 비콘까지의 최단 거리
@@ -318,22 +404,16 @@ public class EdgeService {
             .sorted(Comparator.comparingInt(beacon -> indexMap.get(beacon.getId())))
             .collect(Collectors.toList());
     }
-    private double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
 
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
 
         dist = Math.acos(dist);
         dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
+        dist = dist * 60 * 1.1515 * 1609.344;
 
-        if (unit == "kilometer") {
-            dist = dist * 1.609344;
-        } else if(unit == "meter"){
-            dist = dist * 1609.344;
-        }
-
-        return (dist);
+        return dist;
     }
     public List<String> ccw(List<Beacon> beacons) {
         List<String> directions = new ArrayList<>();
@@ -376,6 +456,14 @@ public class EdgeService {
         return sb.toString();
     }
 
+    private String formatToiletInfo(Toilet toilet) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("화장실 정보: ");
+        sb.append("여자화장실: ").append(toilet.getWomanDir()).append(", ");
+        sb.append("남자화장실: ").append(toilet.getManDir()).append(", ");
+        return sb.toString();
+    }
+
     private String formatExitInfo(Exit exit) {
         StringBuilder sb = new StringBuilder();
         sb.append("출구 정보: " + exit.getNumber() + "번 출구");
@@ -397,7 +485,7 @@ public class EdgeService {
             throw new ExistException("이미 해당하는 에지가 존재합니다 (양방향).");
         }
 
-        int meter = (int) distance(beacon1.getLatitude(), beacon1.getLongitude(), beacon2.getLatitude(), beacon2.getLongitude(), "meter");
+        int meter = (int) distance(beacon1.getLatitude(), beacon1.getLongitude(), beacon2.getLatitude(), beacon2.getLongitude());
         Edge edge = new Edge(beacon1, beacon2, meter, station);
         Edge save = edgeRepository.save(edge);
         return save.getDistance();
