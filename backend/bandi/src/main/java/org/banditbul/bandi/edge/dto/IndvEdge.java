@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class IndvEdge {
-    String beaconId1;
-    String beaconId2;
+    String beacon1;
+    String beacon2;
 
-    public IndvEdge(String beaconId1, String beaconId2) {
-        this.beaconId1 = beaconId1;
-        this.beaconId2 = beaconId2;
+    public IndvEdge(String beacon1, String beacon2) {
+        this.beacon1 = beacon1;
+        this.beacon2 = beacon2;
     }
 }
