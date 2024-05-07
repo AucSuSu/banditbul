@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import static java.util.Objects.isNull;
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private final StationRepository stationRepository;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -46,25 +48,23 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        if ("/api/navigation/**".equals(path)) {
+        if (pathMatcher.match("/api/navigation/**",path)) {
             filterChain.doFilter(request, response);
             return;
         }
-        if ("/api/sos/**".equals(path)) {
+        if (pathMatcher.match("/api/sos/**",path)) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        if ("/api/stationinfo/**".equals(path)) {
+        if (pathMatcher.match("/api/stationinfo/**",path)) {
             filterChain.doFilter(request, response);
             return;
         }
-        if ("/api/beacon/info/**".equals(path)) {
+        if (pathMatcher.match("/api/beacon/info/**",path)) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        if ("/socket/**".equals(path)) {
+        if (pathMatcher.match("/socket/**",path)) {
             filterChain.doFilter(request, response);
             return;
         }
