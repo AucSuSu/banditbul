@@ -42,24 +42,24 @@ class _SosPageWaitState extends State<SosPageWait> {
     // controller 등록
     Get.put(SessionController());
     Get.put(BeaconController());
-
+    manager.connect();
     // beaconId -> 가장 까운거 넣어주기
     String beaconId = "11:22:34";
     getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
-    // String sessionId = Get.find<SessionController>().sessionId.value;
-    // manager.sendMessage(MessageDto(
-    //     type: "ENTER",
-    //     beaconId: beaconId,
-    //     sessionId: sessionId,
-    //     uuId: "1234",
-    //     count: null));
-    // manager.sendMessage(MessageDto(
-    //     type: "SOS",
-    //     beaconId: beaconId,
-    //     sessionId: sessionId,
-    //     uuId: "1234",
-    //     count: null));
-    // manager.listenToMessage((onData));
+    String sessionId = Get.find<SessionController>().sessionId.value;
+    manager.sendMessage(MessageDto(
+        type: "ENTER",
+        beaconId: beaconId,
+        sessionId: "b",
+        uuId: "1234",
+        count: null));
+    manager.sendMessage(MessageDto(
+        type: "SOS",
+        beaconId: beaconId,
+        sessionId: sessionId,
+        uuId: "1234",
+        count: null));
+    manager.listenToMessage((onData));
   }
 
   // data 받기
