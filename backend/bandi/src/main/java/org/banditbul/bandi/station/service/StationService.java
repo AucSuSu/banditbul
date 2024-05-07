@@ -24,6 +24,11 @@ public class StationService {
     public Station findById(int stationId){
         return stationRepository.findById(stationId).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
     }
+
+    public String findLoginId(int stationId){
+        Station station = stationRepository.findById(stationId).orElseThrow(() -> new EntityNotFoundException("해당하는 station이 없습니다."));
+        return station.getLoginId();
+    }
     public String signUp(SignUpDto dto){
         String pwd = bCryptPasswordEncoder.encode(dto.getPassword());
         Station byLoginId = stationRepository.findByLoginId(dto.getLoginId());
