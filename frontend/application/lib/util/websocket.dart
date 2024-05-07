@@ -48,19 +48,21 @@ class WebsocketManager {
   // 최초 연결할 때 쓰기
   void connect() async {
     print("연결 시도 ---");
-    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
-        headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
+    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
 
     print("connect");
 
     if (_channel != null) {
       print("data");
+
       // _channel!.sink.add(MessageDto(
-      //     type: "SOS_ACCEPT",
+      //     type: "ENTER",
       //     beaconId: "12:12:12:12",
-      //     sessionId: "banditbul8",
+      //     sessionId: "b",
       //     uuId: "uuId",
       //     count: null));
+      // print("sended");
+
       _channel!.stream.listen(
         (data) {
           print("Connected to WebSocket server");
@@ -73,7 +75,7 @@ class WebsocketManager {
         onDone: () {
           print("WebSocket connection closed");
           _connected = false;
-          //connect();
+          connect();
         },
       );
     }
@@ -90,20 +92,12 @@ class WebsocketManager {
     } else {
       _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
           headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
-      _channel!.sink.add(dto);
+      // _channel!.sink.add(dto);
+      _channel!.sink.add(
+          '{"type" : "ENTER", "beaconId" : "11:22:33:44", "sessionId" : "b", "count" : null}');
     }
   }
 
-  // // 구독 형식
-  // MessageDto listenToMessage(void Function(dynamic) onData) {
-  //   if (_channel == null) {
-  //     throw Exception("WebSocket Channle 없음");
-  //   } else {
-  //     return _channel!.stream.listen(onData);
-  //   }
-  // }
-
-  // 구독 형식
   Future<void> listenToMessage(void Function(dynamic) onData) async {
     // 연결된 WebSocket 채널이 없는 경우 에러 처리
     if (_channel == null) {
@@ -141,8 +135,8 @@ class _SOSClientState extends State<SOSClient> {
       // );
       WebsocketManager().sendMessage(MessageDto(
           type: "ENTER",
-          beaconId: "beaconId",
-          sessionId: "banditbul8",
+          beaconId: "11:22:33:44",
+          sessionId: "b",
           uuId: "beaconId",
           count: null));
     } catch (error) {
