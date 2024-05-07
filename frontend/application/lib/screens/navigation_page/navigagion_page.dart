@@ -50,11 +50,12 @@ class _NavigationPageState extends State<NavigationPage> {
       );
       var sessionId = response.data['object']['sessionId'];
       Get.find<SessionController>().setSessionId(sessionId);
-      WebsocketManager().connect("https://k10e102.k.ssafy.io:8080/socket");
       WebsocketManager().sendMessage(MessageDto(
           type: "ENTER",
           beaconId: Get.find<BeaconController>().beaconId.value,
-          sessionId: sessionId));
+          sessionId: sessionId,
+          uuId: "beaconId",
+          count: null));
     } catch (error) {
       print("전송 실패 $error");
     }
