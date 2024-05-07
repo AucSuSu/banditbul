@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.banditbul.bandi.beacon.dto.BeaconDto;
 import org.banditbul.bandi.beacon.dto.FloorInfoDto;
+import org.banditbul.bandi.beacon.dto.SosDto;
 import org.banditbul.bandi.beacon.service.BeaconService;
 import org.banditbul.bandi.common.HttpStatusEnum;
 import org.banditbul.bandi.station.dto.StationSessionDto;
+import org.banditbul.bandi.station.service.StationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.banditbul.bandi.common.Message;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class BeaconController {
     private final BeaconService beaconService;
+    private final StationService stationService;
 
     @GetMapping("/stationinfo/{beaconId}")
     public ResponseEntity<Message> getStationName(@PathVariable(value = "beaconId") String beaconId){
@@ -38,7 +41,9 @@ public class BeaconController {
     @GetMapping("/sos/{beaconId}")
     public ResponseEntity<Message> sendSos(@PathVariable(value = "beaconId") String beaconId){
         int stationId = beaconService.getStationId(beaconId);
-        Message message = new Message(HttpStatusEnum.OK, "sos 전달 완료", stationId);
+        String loginId = stationService.findLoginId(stationId);
+        SosDto sosDto = SosDto.builder().sessionId(loginId).build();
+        Message message = new Message(HttpStatusEnum.OK, "sos 전달 완료", sosDto);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
     @GetMapping("/beacon/info/{beaconId}")
