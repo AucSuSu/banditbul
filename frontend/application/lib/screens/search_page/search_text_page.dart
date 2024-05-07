@@ -64,12 +64,13 @@ class _SearchTextPageState extends State<SearchTextPage> {
     var tmpBeaconId =
         Get.find<BeaconController>().beaconId.value; // 비콘 ID 전역 가져오기
     try {
+      print(tmpBeaconId);
       var response =
           await dio.get('${dotenv.env['BASE_URL']}/stationinfo/$tmpBeaconId');
       if (response.statusCode == 200) {
-        var tmpStation = response.data['object']['stations'];
+        var tmpStation = response.data['object'];
         var newMessages = {
-          'text': '현재역 은 ${tmpStation} 입니다 \n도착역을 말씀해주세요',
+          'text': '현재역은 ${tmpStation} 입니다 \n도착역을 말씀해주세요',
           'isUser': false
         };
 
@@ -115,17 +116,24 @@ class _SearchTextPageState extends State<SearchTextPage> {
           manageMessageList(newMessage);
         });
         navigateToNavigationPage(); // 10초후 네비게이션으로 이동
-      } else if (response.statusCode == 404) {
-        var newMessage = {
-          'text': '$stationName 존재하지 않습니다. \n다시 입력해주세요',
-          'isUser': false,
-        };
-        setState(() {
-          manageMessageList(newMessage);
-        });
       }
     } catch (e) {
-      print('길찾기 api 에러 : $e');
+      if (e is DioException) {
+        if (e.response?.statusCode == 404) {
+          // 체크 조건 수정
+          var newMessage = {
+            'text': '$stationName 존재하지 않습니다. \n다시 입력해주세요',
+            'isUser': false,
+          };
+          setState(() {
+            manageMessageList(newMessage);
+          });
+        } else {
+          print('다른 HTTP 에러 : ${e.response?.statusCode}');
+        }
+      } else {
+        print('길찾기 api 에러 : $e');
+      }
     }
 
     // // 임시 데이터

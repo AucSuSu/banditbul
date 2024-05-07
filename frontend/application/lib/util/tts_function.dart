@@ -41,6 +41,8 @@ class ClovaTTSManager {
   late final String clientSecret;
   late final Map<String, dynamic> requestHeaders;
 
+  AudioPlayer _audioPlayer = AudioPlayer();
+
   ClovaTTSManager() {
     try {
       print("초기화");
@@ -104,8 +106,7 @@ class ClovaTTSManager {
   void _playAudio(String filePath) {
     try {
       print("재생중");
-      AudioPlayer audioPlayer = AudioPlayer();
-      audioPlayer
+      _audioPlayer
           .play(UrlSource(filePath)); // audioPlayer.playBytes(audioData);
     } catch (error) {
       print("재생 중 에러 발생");
@@ -123,6 +124,11 @@ class ClovaTTSManager {
     } catch (error) {
       print("이전 음성이 존재하지 않습니다.");
     }
+  }
+
+  void dispose() {
+    _audioPlayer.dispose();
+    print("AudioPlayer has been disposed.");
   }
 }
 

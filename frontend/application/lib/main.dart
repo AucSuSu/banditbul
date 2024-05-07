@@ -8,6 +8,7 @@ import 'package:frontend/screens/sos_page/sos_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
 import 'package:frontend/store/BeaconController.dart';
+import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/store/SessionController.dart';
 import 'package:frontend/util/stt_function.dart';
 import 'package:frontend/util/tts_function.dart';
@@ -17,6 +18,8 @@ import 'package:get/get.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
+  // 전역 관리를 위한 컨트롤러
+  Get.put(RouteController());
   Get.put(BeaconController());
   Get.put(SessionController());
   runApp(
