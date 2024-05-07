@@ -96,7 +96,7 @@ const Map: React.FC = () => {
         // zustand 에서 값 가져오기
         try {
             const response = await axios.get(`${api}/beaconlist/${floor}`);
-            const data = response.data;
+            const data = response.data.object;
             setBeacons(data.beaconList);
             setAddEdgeState(data.edgeList);
             setMapImageUrl(mapImgaeUrl);
