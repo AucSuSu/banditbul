@@ -55,6 +55,20 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        if ("/api/stationinfo/**".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if ("/api/beacon/info/**".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if ("/socket/**".equals(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -65,7 +79,9 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         log.info("userAuthenticationFilter 호출");
 
         HttpSession session = request.getSession(false); // 세션을 새로 생성하지 않음
+        System.out.println("세션 있나? : " + session);
         if (session != null) {
+            System.out.println(session);
             StationSessionDto user = (StationSessionDto) session.getAttribute("user");
             Station station = stationRepository.findById(user.getId()).orElseThrow(() -> new EntityNotFoundException("유저 정보가 없습니다."));
             if (station != null) {
