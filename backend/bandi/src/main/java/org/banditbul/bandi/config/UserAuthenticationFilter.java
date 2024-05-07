@@ -41,7 +41,6 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // refreshToken으로 수행하는데 AccessToken 재발급하는 요청이면 해당필터 pass
         if ("/api/signup".equals(path)) {
             filterChain.doFilter(request, response);
             return;
@@ -52,10 +51,6 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         if ("/api/sos/**".equals(path)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if ("/api/beaconlist/**".equals(path)) {
             filterChain.doFilter(request, response);
             return;
         }
