@@ -6,7 +6,7 @@ import blueBeacon from "../assets/blueBeacon.gif";
 import defaultBeacon from "../assets/defaultBeacon.gif";
 import yellowBeacon from "../assets/yellowBeacon.gif";
 // import testBg from "../assets/testBg.png";
-import { Beacon, Edge } from "../util/type.tsx";
+import { Beacon, Edge, MapInfo } from "../util/type.tsx";
 import {
     ScreenDoor,
     Toilet,
@@ -19,6 +19,7 @@ import {
 import styles from "./map.module.css";
 // import { Fetch } from "../util/axios.ts";
 import axios from "axios";
+import { getMapFunc } from "../store.tsx";
 
 const types = [
     "미선택",
@@ -44,7 +45,7 @@ const Map: React.FC = () => {
     //     // { beacon1: "2", beacon2: "3" },
     //     // { beacon1: "3", beacon2: "1" },
     // ]);
-    const [edgeList, _] = useState<Edge[]>([]);
+    const [edgeList, setEdgeList] = useState<Edge[]>([]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
     const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
@@ -92,22 +93,37 @@ const Map: React.FC = () => {
     const [page] = useState(0);
 
     const getMapInfo = async (floor: number) => {
-        const api = "https://banditbul.co.kr/api";
-        // zustand 에서 값 가져오기
         try {
-            const response = await axios.get(`${api}/beaconlist/${floor}`);
-            const data = response.data.object;
-            setBeacons(data.beaconList);
-            setAddEdgeState(data.edgeList);
-            setMapImageUrl(mapImgaeUrl);
-            alert("성공");
-
-            console.log(data);
+            const data: MapInfo = await getMapFunc(floor);
+            if (data != undefined) {
+                setBeacons(data.beaconList);
+                setEdgeList(data.edgeList);
+                setMapImageUrl(data.mapImageUrl);
+                alert("성공");
+            }
         } catch (error) {
-            console.error(error);
+            console.log(error);
             alert("실패");
         }
     };
+
+    // const getMapInfo = async (floor: number) => {
+    //     const api = "https://banditbul.co.kr/api";
+    //     // zustand 에서 값 가져오기
+    //     try {
+    //         const response = await axios.get(`${api}/beaconlist/${floor}`);
+    //         const data = response.data.object;
+    //         console.log(data);
+    //         setBeacons(data.beaconList);
+    //         setAddEdgeState(data.edgeList);
+    //         setMapImageUrl(data.mapImgaeUrl);
+    //         alert("성공");
+    //         // return data;
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("실패");
+    //     }
+    // };
 
     useEffect(() => {
         getMapInfo(floor);
@@ -142,40 +158,40 @@ const Map: React.FC = () => {
         // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
 
         // websocket ==
-        const resizeBeacon = () => {
-            console.log("resize");
-            const parentTarget = document.querySelector(
-                "#model"
-            ) as HTMLElement;
-            const parentElement = parentTarget.parentElement;
-            if (!parentElement) return;
-            // 부모 요소의 너비와 높이 가져오삼
-            const parentWidth = parentElement.offsetWidth;
-            const parentHeight = parentElement.offsetHeight;
-            // 백분율 계산
-            const newX = (x / parentWidth) * parentWidth;
-            const newY = (y / parentHeight) * parentHeight;
-            // 상대적인 위치를 상태로 업데이트
-            setX(newX);
-            setY(newY);
-            // 비콘의 위치 업데이트
-            const updatedBeacons = beacons.map((beacon) => ({
-                ...beacon,
-                coord: {
-                    // 기존 parentWidth로 바꿔주기
-                    x: (beacon.x / parentWidth) * 100,
-                    y: (beacon.y / parentHeight) * 100,
-                },
-            }));
-            console.log(updatedBeacons);
-            setBeacons(updatedBeacons);
-        };
-        resizeBeacon();
-        window.addEventListener("resize", resizeBeacon);
-        return () => {
-            setNewBeacon(null);
-            window.removeEventListener("resize", resizeBeacon);
-        };
+        // const resizeBeacon = () => {
+        //     console.log("resize");
+        //     const parentTarget = document.querySelector(
+        //         "#model"
+        //     ) as HTMLElement;
+        //     const parentElement = parentTarget.parentElement;
+        //     if (!parentElement) return;
+        //     // 부모 요소의 너비와 높이 가져오삼
+        //     const parentWidth = parentElement.offsetWidth;
+        //     const parentHeight = parentElement.offsetHeight;
+        //     // 백분율 계산
+        //     const newX = (x / parentWidth) * parentWidth;
+        //     const newY = (y / parentHeight) * parentHeight;
+        //     // 상대적인 위치를 상태로 업데이트
+        //     setX(newX);
+        //     setY(newY);
+        //     // 비콘의 위치 업데이트
+        //     const updatedBeacons = beacons.map((beacon) => ({
+        //         ...beacon,
+        //         coord: {
+        //             // 기존 parentWidth로 바꿔주기
+        //             x: (beacon.x / parentWidth) * 100,
+        //             y: (beacon.y / parentHeight) * 100,
+        //         },
+        //     }));
+        //     console.log(updatedBeacons);
+        //     setBeacons(updatedBeacons);
+        // };
+        // resizeBeacon();
+        // window.addEventListener("resize", resizeBeacon);
+        // return () => {
+        //     setNewBeacon(null);
+        //     window.removeEventListener("resize", resizeBeacon);
+        // };
     }, [floor]);
 
     // 간선 연결하기
@@ -232,6 +248,7 @@ const Map: React.FC = () => {
                         }
                     );
                     console.log(response);
+                    getMapInfo(floor);
                     alert("성공");
                 } catch (error) {
                     console.error(error);

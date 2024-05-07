@@ -15,6 +15,12 @@ export type Edge = {
     beacon2: string;
 };
 
+export type MapInfo = {
+    edgeList: Edge[];
+    beaconList: Beacon[];
+    mapImageUrl: string;
+};
+
 export type RequestAddBeacon = {
     macAddress: string;
     latitude: number;

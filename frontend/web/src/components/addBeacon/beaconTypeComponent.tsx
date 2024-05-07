@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./beaconTypeComponent.module.css";
 import { RequestAddBeacon } from "../../util/type";
 import axios from "axios";
+import getMapInfo from "../Map";
 
 interface IScreenDoorProps {
     x: number;
@@ -38,6 +39,7 @@ const addBeaconRequest = async (data: RequestAddBeacon) => {
         const response = await axios.post(`${api}/beacon`, data);
         console.log(response);
         alert("성공");
+        getMapInfo(data.floor);
     } catch (error) {
         console.error(error);
         alert("실패");
