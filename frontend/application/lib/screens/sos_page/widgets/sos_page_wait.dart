@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/store/BeaconController.dart';
-// import 'package:frontend/screens/main_page/main_page.dart';
+import 'package:frontend/store/SessionController.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
 import 'package:frontend/util/websocket.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
-
-// dio
+import 'package:dio/dio.dart';
 
 class SosPageWait extends StatefulWidget {
   const SosPageWait({super.key});
@@ -16,22 +15,67 @@ class SosPageWait extends StatefulWidget {
   _SosPageWaitState createState() => _SosPageWaitState();
 }
 
+void getSessionId(String beaconId) async {
+  try {
+    Dio dio = Dio();
+    print("여기서 에러 ㅈㄴ 발생 개 큰 발생");
+
+    final response = await dio.get(
+      "https://banditbul.co.kr/api/sos/$beaconId",
+    );
+
+    print(response);
+    var sessionId = response.data['object']['sessionId'];
+    SessionController().setSessionId(sessionId);
+  } catch (error) {
+    print("여기서 에러 ㅈㄴ 발생 개 큰 발생");
+    print(error);
+  }
+}
+
 class _SosPageWaitState extends State<SosPageWait> {
   // 페이지 들어오자마자 데이터 계속 받으면서
   @override
   void initState() {
     super.initState();
     WebsocketManager manager = WebsocketManager();
-    manager.listenToMessage((onData));
+    // controller 등록
+    Get.put(SessionController());
+    Get.put(BeaconController());
+
+    // beaconId -> 가장 까운거 넣어주기
+    String beaconId = "11:22:34";
+    getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
+    // String sessionId = Get.find<SessionController>().sessionId.value;
+    // manager.sendMessage(MessageDto(
+    //     type: "ENTER",
+    //     beaconId: beaconId,
+    //     sessionId: sessionId,
+    //     uuId: "1234",
+    //     count: null));
+    // manager.sendMessage(MessageDto(
+    //     type: "SOS",
+    //     beaconId: beaconId,
+    //     sessionId: sessionId,
+    //     uuId: "1234",
+    //     count: null));
+    // manager.listenToMessage((onData));
   }
 
   // data 받기
   void onData(dynamic data) {
     print('$data');
     MessageDto messageDto = MessageDto.fromJson(data);
+    print(Get.find<SessionController>().sessionId.value);
+    // api 요청으로 받아오기
+    print(Get.find<BeaconController>()
+        .beaconId
+        .value); // beaconId -> bluetooth로 받아오기
+
     // 만약 SOS_ACCEPT
     if (messageDto.type == "SOS_ACCEPT" &&
-        messageDto.beaconId == Get.find<BeaconController>().beaconId.value) {
+        messageDto.sessionId == Get.find<BeaconController>().beaconId.value &&
+        messageDto.sessionId == Get.find<SessionController>().sessionId.value) {
       // 관리자가 승인했음 -> 승인완료로 돌아가기
       Get.to(() => const SosPageAccept());
     }

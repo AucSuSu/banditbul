@@ -1,4 +1,5 @@
 {
-  "java.configuration.updateBuildConfiguration": "interactive",
-  "cmake.configureOnOpen": true
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cmake.configureOnOpen": true,
+    "cmake.sourceDirectory": "C:/SSAFY/finalPJ/S10P31E102/frontend/application/build/windows/x64/_deps/nuget-subbuild"
 }

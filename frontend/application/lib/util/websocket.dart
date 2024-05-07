@@ -51,17 +51,8 @@ class WebsocketManager {
     _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
 
     print("connect");
-
     if (_channel != null) {
       print("data");
-
-      // _channel!.sink.add(MessageDto(
-      //     type: "ENTER",
-      //     beaconId: "12:12:12:12",
-      //     sessionId: "b",
-      //     uuId: "uuId",
-      //     count: null));
-      // print("sended");
 
       _channel!.stream.listen(
         (data) {
@@ -93,8 +84,9 @@ class WebsocketManager {
       _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
           headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
       // _channel!.sink.add(dto);
+
       _channel!.sink.add(
-          '{"type" : "ENTER", "beaconId" : "11:22:33:44", "sessionId" : "b", "count" : null}');
+          '{"type" : ${dto.type}, "beaconId" : ${dto.beaconId}, "sessionId" : ${dto.sessionId}, "count" : null}');
     }
   }
 
@@ -129,10 +121,6 @@ class _SOSClientState extends State<SOSClient> {
 
   void postSOS(String uuid) async {
     try {
-      // Dio dio = Dio();
-      // final response = await dio.get(
-      //   "https://k10e102.k.ssafy.io:8080/api/sos/$uuid",
-      // );
       WebsocketManager().sendMessage(MessageDto(
           type: "ENTER",
           beaconId: "11:22:33:44",
