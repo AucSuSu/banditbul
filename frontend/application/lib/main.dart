@@ -10,6 +10,7 @@ import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/store/SessionController.dart';
+import 'package:frontend/test_page.dart';
 import 'package:frontend/util/stt_function.dart';
 import 'package:frontend/util/tts_function.dart';
 import 'package:frontend/util/websocket.dart';
@@ -102,6 +103,12 @@ void main() async {
                   Get.to(() => const ScanScreen());
                 },
                 child: const Text('ScanScreen Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => TestPage());
+                },
+                child: const Text('Test Page'),
               ),
             ],
           ),

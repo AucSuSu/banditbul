@@ -16,6 +16,7 @@ class _SosPageAcceptState extends State<SosPageAccept> {
   @override
   void initState() {
     _playManagerAcceptVoice();
+    super.initState();
   }
 
   void _playManagerAcceptVoice() async {

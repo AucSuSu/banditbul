@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 // dio
-import 'package:dio/dio.dart';
 import 'package:web_socket_channel/io.dart';
 // websocket
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -10,7 +9,6 @@ import 'package:stomp_dart_client/stomp_dart_client.dart';
 // Future -> 비동기 처리 하는 거
 import 'dart:async';
 // env
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MessageDto {
   final String type;

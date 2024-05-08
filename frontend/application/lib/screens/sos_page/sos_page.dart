@@ -15,11 +15,11 @@ class _SosPageState extends State<SosPage> {
   Widget build(BuildContext context) {
     var tmpText = Get.find<BeaconController>().beaconId.value;
     return Scaffold(
-      appBar: TitleBar(),
+      appBar: const TitleBar(),
       body: Center(
         child: Text(
           tmpText,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
           ),
         ),

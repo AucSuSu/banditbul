@@ -44,7 +44,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
   // 10초뒤에 navigation 페이지로 이동 하는 함수
   void navigateToNavigationPage() {
     Future.delayed(const Duration(seconds: 10), () {
-      Get.to(() => NavigationPage());
+      Get.to(() => const NavigationPage());
     });
   }
 
@@ -70,7 +70,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
       if (response.statusCode == 200) {
         var tmpStation = response.data['object'];
         var newMessages = {
-          'text': '현재역은 ${tmpStation} 입니다 \n도착역을 말씀해주세요',
+          'text': '현재역은 $tmpStation 입니다 \n도착역을 말씀해주세요',
           'isUser': false
         };
 
