@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({Key? key}) : super(key: key);
+  const ScanScreen({super.key});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -15,7 +15,7 @@ class _ScanScreenState extends State<ScanScreen> {
   bool _isScanning = false;
   late StreamSubscription<List<ScanResult>> _scanResultsSubscription;
   late StreamSubscription<bool> _isScanningSubscription;
-  TextEditingController _filterController = TextEditingController();
+  final TextEditingController _filterController = TextEditingController();
   Timer? _restartScanTimer;
   Timer? _debounceTimer; // TextField의 입력 처리를 위한 debounce timer
 
@@ -51,14 +51,15 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   void _startScan() {
-    FlutterBluePlus.startScan(timeout: Duration(seconds: 10));
+    print('scan실행됨');
+    FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
     _isScanning = true;
     _stopTimer();
   }
 
   void _stopTimer() {
     _restartScanTimer?.cancel(); // 기존에 존재하는 Timer를 취소
-    _restartScanTimer = Timer(Duration(seconds: 11), _stopScan);
+    _restartScanTimer = Timer(const Duration(seconds: 11), _stopScan);
   }
 
   void _stopScan() {
@@ -71,7 +72,7 @@ class _ScanScreenState extends State<ScanScreen> {
     _scanResults = {};
     _isScanning = false;
     _restartScanTimer?.cancel();
-    _restartScanTimer = Timer(Duration(seconds: 5), _startScan);
+    _restartScanTimer = Timer(const Duration(seconds: 5), _startScan);
   }
 
   @override
@@ -100,7 +101,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void _onFilterChanged(String value) {
     _debounceTimer?.cancel(); // 기존의 debounce timer가 있을 경우 취소
-    _debounceTimer = Timer(Duration(milliseconds: 300), () {
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
       _filterResults(); // 사용자 입력 완료 후 300ms 뒤에 필터링 실행
       _updateHighestRssiResult(); // 필터링 후 가장 높은 RSSI 결과 업데이트
       if (mounted) setState(() {});
@@ -118,24 +119,24 @@ class _ScanScreenState extends State<ScanScreen> {
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (nextAdminIndex < adminNames.length)
                     Text('다음 찾아야 할 이름: ${adminNames[nextAdminIndex]}'),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text('찾은 이름: ${findNames.join(", ")}'),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                       '현재 가장 높은 rssi: ${_highestRssiResult?.device.name ?? "N/A"}, ${_highestRssiResult?.device.id.id ?? "N/A"}, ${_highestRssiResult?.rssi ?? "N/A"}'),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: _filterController,
                     decoration: InputDecoration(
                       labelText: '이름으로 장치 필터링',
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
+                        icon: const Icon(Icons.clear),
                         onPressed: () {
                           _filterController.clear();
                           _filterResults();
@@ -154,7 +155,7 @@ class _ScanScreenState extends State<ScanScreen> {
                       subtitle: Text(
                           'MAC: ${result.device.id.id} - RSSI: ${result.rssi}'),
                     ))
-                .toList(),
+                ,
           ],
         ),
       ),

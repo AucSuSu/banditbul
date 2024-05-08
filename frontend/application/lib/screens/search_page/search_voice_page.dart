@@ -19,6 +19,7 @@ class SearchVoicePage extends StatefulWidget {
 class _SearchVoicePageState extends State<SearchVoicePage> {
   List<Map<String, dynamic>> messages = []; // 메시지를 저장할 리스트
   bool isEnd = false;
+  bool isProcessing = false; // 음성 처리 상태를 추적하는 변수
   final VoiceRecognitionService _voiceService = VoiceRecognitionService();
 
   @override
@@ -37,7 +38,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
   // 10초뒤에 navigation 페이지로 이동 하는 함수
   void navigateToNavigationPage() {
     Future.delayed(const Duration(seconds: 10), () {
-      Get.to(() => NavigationPage());
+      Get.to(() => const NavigationPage());
     });
   }
 
@@ -62,7 +63,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
       if (response.statusCode == 200) {
         var tmpStation = response.data['object'];
         var newMessages = {
-          'text': '현재역은 ${tmpStation} 입니다 \n도착역을 말씀해주세요',
+          'text': '현재역은 $tmpStation 입니다 \n도착역을 말씀해주세요',
           'isUser': false
         };
 
@@ -150,22 +151,30 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
 
   void toggleRecording() async {
     if (_voiceService.isRecording) {
+      setState(() {
+        isProcessing = true; // 음성 인식 처리 시작
+      });
       String filePath = await _voiceService
           .stopRecording(); // Assuming this now returns a Future<String>
       if (filePath.isNotEmpty) {
         String text = await _voiceService.convertSpeechToText(filePath);
         // if (text.isNotEmpty) {
         setState(() {
+          isProcessing = false; // 음성 인식 처리 완료
           manageMessageList({'text': text, 'isUser': true});
           findRoute(text);
         });
         // }
+      } else {
+        setState(() {
+          isProcessing = false; // 파일이 비어있으면 처리 완료
+        });
       }
     } else {
       await _voiceService
           .startRecording(); // Ensure this function starts recording and does not need to return anything
     }
-    setState(() {}); // This will refresh the UI after recording status changes
+    setState(() {}); // UI 갱신
   }
 
   @override
@@ -196,8 +205,12 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
                         !messages.last['isUser'] &&
                         !isEnd) {
                       // 마지막 메시지의 isUser가 false이고 isEnd가 false인 경우, 마지막 아이템으로 button 추가
-                      String buttonText =
-                          _voiceService.isRecording ? '입력 완료' : '음성 입력';
+                      // 버튼 텍스트 조건부 설정
+                      String buttonText = isProcessing
+                          ? '음성 분석중'
+                          : _voiceService.isRecording
+                              ? '입력 완료'
+                              : '음성 입력';
                       return Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -214,7 +227,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            onPressed: toggleRecording,
+                            onPressed: isProcessing ? null : toggleRecording,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [

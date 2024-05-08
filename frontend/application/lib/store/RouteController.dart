@@ -28,7 +28,7 @@ class RouteController extends GetxController {
     } else {
       if (currentRoute == route1) {
         freeMode.value = true; // route1이 끝나면 freeMode 활성화
-        if (!route2.isEmpty) {
+        if (route2.isNotEmpty) {
           // 화장실이 아닌 역안내 일경우 route2로 안내하는 로직
           currentRoute.value = route2; // route2로 변경
           currentRouteIndex.value = 0; // 인덱스 초기화
@@ -42,9 +42,13 @@ class RouteController extends GetxController {
 
   // 비콘 ID 체크와 route2 시작 검증
   bool checkBeacon(String beaconId) {
-    if (freeMode.isTrue && beaconId == route2.first['beaconId']) {
-      freeMode.value = false; // 첫 번째 route2 비콘을 만나면 freeMode 비활성화
+    if (!currentRoute.isEmpty) {
+      if (freeMode.isTrue && beaconId == route2.first['beaconId']) {
+        freeMode.value = false; // 첫 번째 route2 비콘을 만나면 freeMode 비활성화
+      }
+      return currentRoute[nextRouteIndex.value]['beaconId'] == beaconId;
+    } else {
+      return false;
     }
-    return currentRoute[nextRouteIndex.value]['beaconId'] == beaconId;
   }
 }

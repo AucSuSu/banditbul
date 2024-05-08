@@ -41,7 +41,7 @@ class ClovaTTSManager {
   late final String clientSecret;
   late final Map<String, dynamic> requestHeaders;
 
-  AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   ClovaTTSManager() {
     try {
