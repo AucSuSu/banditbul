@@ -80,16 +80,30 @@ class BeaconServiceTest {
         Station hadanstation = stationRepository.save(new Station("하단역", "ice98", "123123", 1));
 
         Beacon beacon = beaconRepository.save(new Beacon("출구용 비콘",hadanstation, 1,1, 1, 37.5665, 126.9780, 50,BeaconTYPE.EXIT));
-        Exit exit = exitRepository.save(new Exit(beacon, 3, "제나우스", null, Dir.L, Dir.R));
+        String beaconId = beacon.getId();
+        Beacon beacon2 = beaconRepository.save(new Beacon("화장실용 비콘",hadanstation, 1,2, 1, 37.5665, 126.9780, 50,BeaconTYPE.TOILET));
+        Beacon beacon3 = beaconRepository.save(new Beacon("개찰구용 비콘",hadanstation, 1,3, 1, 37.5665, 126.9780, 50,BeaconTYPE.GATE));
 
+        Exit exit = exitRepository.save(new Exit(beacon, 3, "제나우스", null, Dir.L, Dir.R));
+        Toilet toilet = toiletRepository.save(new Toilet(beacon2, Dir.R, null));
+        Gate gate = gateRepository.save(new Gate(beacon3, true, Dir.F, null, Dir.R));
+
+        Edge edge1 = edgeRepository.save(new Edge(beacon, beacon2, 20, hadanstation));
+        Edge edge2 = edgeRepository.save(new Edge(beacon, beacon3, 40, hadanstation));
+
+        System.out.println(edgeRepository.findByBeacon1_IdOrBeacon2_Id(beacon.getId(), beacon.getId()));
         // When
         beaconService.deleteBeacon(beacon.getId());
 
         // Then
-        Optional<Beacon> deletedBeacon = beaconRepository.findById(beacon.getId());
+
+        Optional<Beacon> deletedBeacon = beaconRepository.findById(beaconId);
         Optional<Exit> deletedExit =  exitRepository.findById(exit.getId());
+        List<Edge> deletedEdge = edgeRepository.findByBeacon1_IdOrBeacon2_Id(beaconId, beaconId);
+
         assertFalse(deletedBeacon.isPresent());
         assertFalse(deletedExit.isPresent());
+        assertTrue(deletedEdge.isEmpty());
     }
 
 
