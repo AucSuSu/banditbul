@@ -17,7 +17,7 @@ public class Stair {
     @Column(name = "stair_id")
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
