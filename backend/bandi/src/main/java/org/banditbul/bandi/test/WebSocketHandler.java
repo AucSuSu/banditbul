@@ -73,7 +73,8 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
         sessions.parallelStream().forEach( roomSession -> {
             try {
                 if(roomSession.isOpen()) {
-                    System.out.println(message);
+                    System.out.println("roomSession Id: "+ roomSession.getId());
+                    System.out.println("message: "+ message+"----------------------");
                     roomSession.sendMessage(message);
                 }
             } catch (IOException e) {
