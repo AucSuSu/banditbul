@@ -134,6 +134,12 @@ const Map: React.FC = () => {
         // listner
         ws.current.onopen = () => {
             console.log("web socket 연결");
+            var data = {
+                sessionId: "b",
+                type: "ENTER",
+                beaconId: null,
+            };
+            ws.current!.send(JSON.stringify(data));
         };
 
         ws.current.onclose = () => {
@@ -147,12 +153,13 @@ const Map: React.FC = () => {
         };
 
         ws.current.onmessage = (event: MessageEvent) => {
-            console.log(event.data); // 메세지 출력하기
-
+            console.log("socket 통신 메세지" + event.data); // 메세지 출력하기
             // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
             // sosBeaconList에 추가하기
             const newSosBeaconIdList = sosBeaconIdList.add(event.data.beaconId);
-            setSosBeaconIdList(newSosBeaconIdList);
+            if (!newSosBeaconIdList.has(event.data.beaconId)) {
+                setSosBeaconIdList(newSosBeaconIdList);
+            }
         };
 
         // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
@@ -193,6 +200,17 @@ const Map: React.FC = () => {
         //     window.removeEventListener("resize", resizeBeacon);
         // };
     }, [floor]);
+
+    useEffect(() => {
+        return () => {
+            var data = {
+                sessionId: "b",
+                type: "CLOSE",
+                beaconId: null,
+            };
+            ws.current!.send(JSON.stringify(data));
+        };
+    }, []);
 
     // 간선 연결하기
     const handleRadioChange = (beaconId: string) => {
@@ -274,6 +292,12 @@ const Map: React.FC = () => {
             ws.current.send(JSON.stringify(data));
         } else {
             ws.current = new WebSocket("wss://banditbul.co.kr/socket");
+            var data = {
+                sessionId: "b",
+                type: "SOS_ACCEPT",
+                beaconId: beaconId,
+            };
+            ws.current.send(JSON.stringify(data));
         }
         // sosList에서 비콘 지우기
         sosBeaconIdList.delete(beaconId);
