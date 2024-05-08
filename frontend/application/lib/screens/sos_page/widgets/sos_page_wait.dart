@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:frontend/util/websocket.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:dio/dio.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 class SosPageWait extends StatefulWidget {
   const SosPageWait({super.key});
@@ -18,8 +20,6 @@ class SosPageWait extends StatefulWidget {
 void getSessionId(String beaconId) async {
   try {
     Dio dio = Dio();
-    print("여기서 에러 ㅈㄴ 발생 개 큰 발생");
-
     final response = await dio.get(
       "https://banditbul.co.kr/api/sos/$beaconId",
     );
@@ -28,38 +28,79 @@ void getSessionId(String beaconId) async {
     var sessionId = response.data['object']['sessionId'];
     SessionController().setSessionId(sessionId);
   } catch (error) {
-    print("여기서 에러 ㅈㄴ 발생 개 큰 발생");
     print(error);
   }
 }
 
 class _SosPageWaitState extends State<SosPageWait> {
   // 페이지 들어오자마자 데이터 계속 받으면서
+  late WebSocketChannel _channel;
+
   @override
   void initState() {
     super.initState();
     WebsocketManager manager = WebsocketManager();
+    // _channel = manager.connect();
+    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+    print(_channel);
+
+    // var stream = _channel.stream.asBroadcastStream();
+    // final streamListener1 = stream.listen((val) {
+    //   print("data");
+    // });
+
+    if (_channel == null) {
+      _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+    } else {
+      _channel.stream.listen((response) {
+        print('데이터');
+        print('웹소켓 응답 : $response');
+      }, onDone: () {
+        print('연결 종료 ');
+        _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+      }, onError: (error) {
+        print('소켓 통신에 실패했습니다. $error');
+      });
+    }
+
     // controller 등록
     Get.put(SessionController());
     Get.put(BeaconController());
-    manager.connect();
     // beaconId -> 가장 까운거 넣어주기
     String beaconId = "11:22:34";
     getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
     String sessionId = Get.find<SessionController>().sessionId.value;
-    manager.sendMessage(MessageDto(
+
+    sendMessage(MessageDto(
         type: "ENTER",
         beaconId: beaconId,
         sessionId: "b",
         uuId: "1234",
         count: null));
-    manager.sendMessage(MessageDto(
+
+    sendMessage(MessageDto(
         type: "SOS",
         beaconId: beaconId,
         sessionId: "b",
         uuId: "1234",
         count: null));
-    manager.listenToMessage((onData));
+    // manager.listenToMessage((onData));
+  }
+
+  void startConnection() async {}
+
+  void sendMessage(MessageDto dto) {
+    if (_channel == null) {
+      throw Exception("WebSocket Channle 없음");
+    } else {
+      print("message 전송");
+
+      _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
+          headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
+
+      _channel!.sink.add(
+          '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "count" : null, "uuId" : "${dto.uuId}"}');
+    }
   }
 
   // data 받기
@@ -103,10 +144,10 @@ class _SosPageWaitState extends State<SosPageWait> {
                 borderRadius: BorderRadius.circular(25),
               ),
               width: double.infinity,
-              child: const Center(
+              child: Center(
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       '도움을',
                       style: TextStyle(
                         color: Colors.white,
@@ -114,7 +155,7 @@ class _SosPageWaitState extends State<SosPageWait> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    Text(
+                    const Text(
                       '요청중입니다',
                       style: TextStyle(
                         color: Colors.white,
