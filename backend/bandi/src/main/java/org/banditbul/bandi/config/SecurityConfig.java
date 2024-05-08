@@ -31,7 +31,7 @@ public class SecurityConfig {
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 이걸하면 세션 초기화되니까 비활성화
         return http
                 .addFilterBefore(corsConfig.corsFilter(), UsernamePasswordAuthenticationFilter.class) // CORS 필터를 가장 먼저 적용
                 .addFilterBefore(new UserAuthenticationFilter(stationRepository), UsernamePasswordAuthenticationFilter.class)
