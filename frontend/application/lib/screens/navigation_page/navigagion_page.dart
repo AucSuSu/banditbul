@@ -72,6 +72,9 @@ class _NavigationPageState extends State<NavigationPage> {
 
   // 경로에 따른 text 설정
   String getTextFromRoute() {
+    if (_routeController.currentRoute.isEmpty) {
+      return '불법 침입용';
+    }
     var _curIdx = _routeController.currentRouteIndex.value;
     var _nextIdx = _routeController.nextRouteIndex.value;
     var _curDist = _routeController.currentRoute[_curIdx]['distance'];
@@ -94,7 +97,11 @@ class _NavigationPageState extends State<NavigationPage> {
 
   // 경로에 따른 이미지 설정
   String getImageFromRoute() {
+    if (_routeController.currentRoute.isEmpty) {
+      return 'assets/images/navigation/left.png';
+    }
     var _curIdx = _routeController.currentRouteIndex.value;
+
     if (_routeController.currentRoute[_curIdx]['directionInfo'] == '왼쪽') {
       return 'assets/images/navigation/left.png';
     } else if (_routeController.currentRoute[_curIdx]['directionInfo'] ==

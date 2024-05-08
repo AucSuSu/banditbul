@@ -112,9 +112,18 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
     } catch (e) {
       if (e is DioException) {
         if (e.response?.statusCode == 404) {
-          // 체크 조건 수정
+          // 역 이름 체크
           var newMessage = {
-            'text': '$stationName 존재하지 않습니다. \n다시 입력해주세요',
+            'text': '$stationName이 존재하지 않습니다 \n다시 입력해주세요',
+            'isUser': false,
+          };
+          setState(() {
+            manageMessageList(newMessage);
+          });
+        } else if (e.response?.statusCode == 403) {
+          // 출구 체크
+          var newMessage = {
+            'text': '출구를 입력해주세요 \n다시 입력해주세요',
             'isUser': false,
           };
           setState(() {
