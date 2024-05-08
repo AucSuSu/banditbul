@@ -72,8 +72,10 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
     private  void sendToEachSocket(Set<WebSocketSession> sessions, TextMessage message){
         sessions.parallelStream().forEach( roomSession -> {
             try {
-                System.out.println(message);
-                roomSession.sendMessage(message);
+                if(roomSession.isOpen()) {
+                    System.out.println(message);
+                    roomSession.sendMessage(message);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
