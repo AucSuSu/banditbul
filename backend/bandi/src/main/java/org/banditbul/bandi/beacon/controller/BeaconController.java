@@ -23,6 +23,13 @@ public class BeaconController {
     private final BeaconService beaconService;
     private final StationService stationService;
 
+    @DeleteMapping("/beacon/{beaconId}")
+    public ResponseEntity<Message> deleteBeacon(@PathVariable(value = "beaconId") String beaconId){
+        beaconService.deleteBeacon(beaconId);
+        Message message = new Message(HttpStatusEnum.OK,  "비콘 삭제 완료", beaconId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
     @GetMapping("/stationinfo/{beaconId}")
     public ResponseEntity<Message> getStationName(@PathVariable(value = "beaconId") String beaconId){
 

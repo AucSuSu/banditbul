@@ -2,6 +2,7 @@
 package org.banditbul.bandi.beacon.service;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.dto.BeaconDto;
 import org.banditbul.bandi.beacon.dto.BeaconInfoDto;
@@ -64,6 +65,39 @@ public class BeaconService {
     private final StationRepository stationRepository;
     private final EdgeRepository edgeRepository;
     private final EscalatorRepository escalatorRepository;
+
+    @Transactional
+    public void deleteBeacon(String beaconId){
+        Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("Beacon not found"));
+
+        BeaconTYPE beaconType = beacon.getBeaconType(); // toilet, gate, exit, stair, elevator, screendoor, escalator
+
+        if (beaconType == BeaconTYPE.TOILET){
+            Toilet toilet = toiletRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
+            toiletRepository.delete(toilet);
+        } else if (beaconType == BeaconTYPE.GATE){
+            Gate gate = gateRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
+            gateRepository.delete(gate);
+        } else if (beaconType == BeaconTYPE.EXIT){
+            Exit exit = exitRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 출구가 없습니다."));
+            exitRepository.delete(exit);
+        } else if (beaconType == BeaconTYPE.STAIR){
+            Stair stair = stairRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 계단이 없습니다."));
+            stairRepository.delete(stair);
+        } else if (beaconType == BeaconTYPE.ELEVATOR){
+            Elevator elevator = elevatorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 엘리베이터가 없습니다."));
+            elevatorRepository.delete(elevator);
+        } else if (beaconType == BeaconTYPE.ESCALATOR){
+            Escalator escalator = escalatorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 에스컬레이터가 없습니다."));
+            escalatorRepository.delete(escalator);
+        } else if (beaconType == BeaconTYPE.SCREENDOOR){
+            Screendoor screendoor = screendoorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
+            // ㅇㅇ방면 ㅇ-ㅇ 열차입니다.
+            screendoorRepository.delete(screendoor);
+        }
+
+        beaconRepository.deleteById(beaconId);
+    }
 
 
     public String getStationName(String beaconId){
