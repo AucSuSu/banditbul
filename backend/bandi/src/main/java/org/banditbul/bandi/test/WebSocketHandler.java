@@ -45,6 +45,7 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
         if(messageDto.getType() == Type.ENTER){
             if (!sessions.contains(session)) {
                 sessions.add(session);
+                log.info("uuid: "+messageDto.getUuId()+"방 입장");
             }
         }
         //앱이 비콘에 들어옴
@@ -57,12 +58,15 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
             messageDto.setCount(beaconCounts);
             sendToEachSocket(sessions, message);
         }
+        //앱이 나감
+        else if(messageDto.getType() == Type.CLOSE){
+            sessions.remove(session);
+            log.info("uuid: "+messageDto.getUuId()+"방 나감");
+        }
         //그 외에는 그대로 패스
         else{
             sendToEachSocket(sessions, message);
         }
-
-        //sessions.remove(session); //-> 로그아웃시 삭제
     }
 
     private  void sendToEachSocket(Set<WebSocketSession> sessions, TextMessage message){
