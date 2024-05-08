@@ -34,6 +34,7 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
   final RouteController _routeController = Get.find<RouteController>();
+  final BeaconController _beaconController = Get.find<BeaconController>();
 
   // 메모리 관리를 위한 dispose
   @override
@@ -72,26 +73,26 @@ class _NavigationPageState extends State<NavigationPage> {
 
   // 경로에 따른 text 설정
   String getTextFromRoute() {
+    // beaconId 테스트용
     if (_routeController.currentRoute.isEmpty) {
-      return '불법 침입용';
+      return _beaconController.beaconId.value;
     }
-    var _curIdx = _routeController.currentRouteIndex.value;
-    var _nextIdx = _routeController.nextRouteIndex.value;
-    var _curDist = _routeController.currentRoute[_curIdx]['distance'];
+    var curIdx = _routeController.currentRouteIndex.value;
+    var curDist = _routeController.currentRoute[curIdx]['distance'];
 
-    if (_routeController.currentRoute[_curIdx]['directionInfo'] == '왼쪽') {
-      var _text = '좌회전 후 \n${_curDist}m 이동하세요'; // text 설정
-      clovaTTSManager.getTTS(_text); // TTS
-      return _text;
-    } else if (_routeController.currentRoute[_curIdx]['directionInfo'] ==
+    if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
+      var text = '좌회전 후 \n${curDist}m 이동하세요'; // text 설정
+      clovaTTSManager.getTTS(text); // TTS
+      return text;
+    } else if (_routeController.currentRoute[curIdx]['directionInfo'] ==
         '오른쪽') {
-      var _text = '우회전 후 \n${_curDist}m 이동하세요';
-      clovaTTSManager.getTTS(_text);
-      return _text;
+      var text = '우회전 후 \n${curDist}m 이동하세요';
+      clovaTTSManager.getTTS(text);
+      return text;
     } else {
-      var _text = '다음 안내까지 \n${_curDist}m 직진입니다.';
-      clovaTTSManager.getTTS(_text);
-      return _text;
+      var text = '다음 안내까지 \n${curDist}m 직진입니다.';
+      clovaTTSManager.getTTS(text);
+      return text;
     }
   }
 
@@ -100,11 +101,11 @@ class _NavigationPageState extends State<NavigationPage> {
     if (_routeController.currentRoute.isEmpty) {
       return 'assets/images/navigation/left.png';
     }
-    var _curIdx = _routeController.currentRouteIndex.value;
+    var curIdx = _routeController.currentRouteIndex.value;
 
-    if (_routeController.currentRoute[_curIdx]['directionInfo'] == '왼쪽') {
+    if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
       return 'assets/images/navigation/left.png';
-    } else if (_routeController.currentRoute[_curIdx]['directionInfo'] ==
+    } else if (_routeController.currentRoute[curIdx]['directionInfo'] ==
         '오른쪽') {
       return 'assets/images/navigation/right.png';
     } else {
@@ -143,7 +144,7 @@ class _NavigationPageState extends State<NavigationPage> {
                 child: Center(
                   child: Text(
                     getTextFromRoute(), // 이부분이 나중에는 동적으로 바뀌어야 할 것
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 27,
                       fontWeight: FontWeight.w700,
