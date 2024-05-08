@@ -31,12 +31,13 @@ public class SecurityConfig {
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http
                 .addFilterBefore(corsConfig.corsFilter(), UsernamePasswordAuthenticationFilter.class) // CORS 필터를 가장 먼저 적용
                 .addFilterBefore(new UserAuthenticationFilter(stationRepository), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(PERMIT_URL_ARRAY).permitAll()
-                        .anyRequest().authenticated())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+//                        .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
