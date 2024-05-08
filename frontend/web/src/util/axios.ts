@@ -1,61 +1,61 @@
-import axios from "axios";
+import axios, { AxiosInstance } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const BASE_URL = "https://banditbul.co.kr/api";
+const BASE_URL = 'https://banditbul.co.kr/api';
 
-async function Axios(
-    path: string,
-    method: string,
-    body: object | null = null
-): Promise<any> {
-    try {
-        // 요청 옵션 설정
-        const options: any = {
-            method,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            url: BASE_URL + path,
-        };
-        // 요청 바디 추가
-        if (body !== null) {
-            options.data = body;
-        }
-        // Axios로 HTTP 요청 보내기
-        const response = await axios(options);
-        // 응답 반환
-        return response;
-    } catch (error) {
-        // 오류 처리
-        throw error;
+axios.defaults.withCredentials = true;
+
+// formData
+const Auth = (): AxiosInstance => {
+  const navigate = useNavigate()
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+  }
+  });
+
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      if (error.response.status === 401) {
+        alert('로그인 만료')
+        navigate('/')
+      }
+
+      return Promise.reject(error);
     }
-}
+  );
 
-async function Auth(
-    path: string,
-    method: string,
-    body: object | null = null
-): Promise<any> {
-    try {
-        // 요청 옵션 설정
-        const options: any = {
-            method,
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-            url: BASE_URL + path,
-        };
-        // 요청 바디 추가
-        if (body !== null) {
-            options.data = body;
-        }
-        // Axios로 HTTP 요청 보내기
-        const response = await axios(options);
-        // 응답 반환
-        return response;
-    } catch (error) {
-        // 오류 처리
-        throw error;
+  return axiosInstance;
+};
+
+export default Auth;
+
+// 기본
+export const Axios = (): AxiosInstance => {
+  const navigate = useNavigate()
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+  });
+
+  axiosInstance.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      if (error.response.status === 401) {
+        alert('로그인 만료')
+        navigate('/')
+      }
+
+      return Promise.reject(error);
     }
-}
+  );
 
-export { Axios, Auth };
+  return axiosInstance;
+};

@@ -1,48 +1,26 @@
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import Auth, {Axios} from '../util/axios';
 import idImage from "../assets/id.png";
 import passwordImage from "../assets/pw.png";
 
-const testCode = () => {
-    axios.defaults.withCredentials = true;
-    axios
-        .post(
-            "https://banditbul.co.kr/api/logout",
-            {},
-            {
-                withCredentials: true,
-            }
-        )
-        .then((response) => {
-            console.log("로그아웃 성공", response);
-        })
-        .catch((error) => {
-            console.error("로그아웃 실패", error);
-        });
-};
 
 const Login = () => {
+    const auth = Auth()
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const api = "https://banditbul.co.kr";
-    // const api = 'https://localhost:8080'
+
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(loginId, password);
 
-        axios.defaults.withCredentials = true;
         const formData = new FormData();
         formData.append("loginId", loginId);
         formData.append("password", password);
 
         try {
-            const response = await axios.post(`${api}/api/login`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const response = await auth.post('/login', formData);
             console.log(response);
             alert("성공");
             navigate(`/Map`);
@@ -53,9 +31,25 @@ const Login = () => {
         // navigate(`/Map`);
     };
 
+    const handleLogout = () => {
+        const axios = Axios()
+        axios
+            .post(
+                "/logout",
+                {},
+            )
+            .then((response) => {
+                console.log("로그아웃 성공", response);
+            })
+            .catch((error) => {
+                console.error("로그아웃 실패", error);
+            });
+    };
+    
+
     return (
         <div className="flex-cc h-screen w-full bg-yellow-100 font-jamsil">
-            <button onClick={testCode}>TEST LOGOUT</button>
+            <button onClick={handleLogout}>TEST LOGOUT</button>
             <h1 className="text-4xl">Banditbul</h1>
             <form
                 className="flex-cc h-[50%] w-[60%] bg-slate-200"
