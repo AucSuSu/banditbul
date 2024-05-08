@@ -68,16 +68,13 @@ const Map: React.FC = () => {
         new Set([])
     );
 
-    // sos 하는 beaconId를 담아둘거임 ! -> 현재 빌드를 위해서 이거 죽이고
-    // const [sosBeaconIdList, _] = useState<Set<string>>(new Set());
-
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
-        // {
-        //     beaconId: "1",
-        //     x: 40,
-        //     y: 30,
-        // },
+        {
+            beaconId: "11:22:34",
+            x: 40,
+            y: 30,
+        },
         // {
         //     beaconId: "11:22:33:44:55",
         //     x: 40,
@@ -153,12 +150,21 @@ const Map: React.FC = () => {
 
         ws.current.onmessage = (event: MessageEvent) => {
             console.log("socket 통신 메세지" + event.data); // 메세지 출력하기
+            const d = JSON.parse(event.data);
+            console.log(d.beaconId);
             // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
             // sosBeaconList에 추가하기
-            const newSosBeaconIdList = sosBeaconIdList.add(event.data.beaconId);
-            if (!newSosBeaconIdList.has(event.data.beaconId)) {
+            if (!sosBeaconIdList.has(event.data.beaconId)) {
+                console.log("sosbeacon등록");
+                const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
+                newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
                 setSosBeaconIdList(newSosBeaconIdList);
+            } else {
+                console.log("sosbeacon현재 등록되어있음");
+                console.log(sosBeaconIdList);
             }
+
+            console.log(sosBeaconIdList);
         };
 
         // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
@@ -295,10 +301,12 @@ const Map: React.FC = () => {
             };
             ws.current.send(JSON.stringify(data));
         }
-        // sosList에서 비콘 지우기
-        sosBeaconIdList.delete(beaconId);
-        const updateSet = new Set(sosBeaconIdList);
-        setSosBeaconIdList(updateSet);
+
+        const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
+        newSosBeaconIdList.delete(beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
+        console.log(newSosBeaconIdList);
+        setSosBeaconIdList(newSosBeaconIdList);
+        console.log("수락");
     };
 
     const sendNoMessage = (beaconId: string) => {
@@ -313,9 +321,11 @@ const Map: React.FC = () => {
             ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         }
 
-        sosBeaconIdList.delete(beaconId);
-        const updateSet = new Set(sosBeaconIdList);
-        setSosBeaconIdList(updateSet);
+        const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
+        newSosBeaconIdList.delete(beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
+        console.log(newSosBeaconIdList);
+        setSosBeaconIdList(newSosBeaconIdList);
+        console.log("삭제");
     };
 
     // 저장이 완료 되었거나 완료하지 않고 닫은 경우
