@@ -14,7 +14,7 @@ public class Point {
     @Column(name = "point_id")
     private Integer id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "beacon_id")
     private Beacon beacon;
 
