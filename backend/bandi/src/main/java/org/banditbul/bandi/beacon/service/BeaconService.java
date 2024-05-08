@@ -70,6 +70,15 @@ public class BeaconService {
     public void deleteBeacon(String beaconId){
         Beacon beacon = beaconRepository.findById(beaconId).orElseThrow(() -> new EntityNotFoundException("Beacon not found"));
 
+        List<Edge> edges = edgeRepository.findByBeacon1_IdOrBeacon2_Id(beaconId, beaconId);
+        System.out.println("================ edges ================");
+        for(Edge edge:edges){
+            System.out.println(edge.getBeacon1()+"와 "+edge.getBeacon2()+"로 이루어진 엣지");
+            edgeRepository.delete(edge);
+        }
+        System.out.println("엣지 다 삭제!");
+
+
         BeaconTYPE beaconType = beacon.getBeaconType(); // toilet, gate, exit, stair, elevator, screendoor, escalator
 
         if (beaconType == BeaconTYPE.TOILET){
@@ -94,9 +103,14 @@ public class BeaconService {
             Screendoor screendoor = screendoorRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 스크린도어가 없습니다."));
             // ㅇㅇ방면 ㅇ-ㅇ 열차입니다.
             screendoorRepository.delete(screendoor);
+        }else if (beaconType == BeaconTYPE.POINT){
+            Point point = pointRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 포인트가 없습니다."));
+            pointRepository.delete(point);
         }
+        System.out.println(beaconType+" 타입 엔티티 삭제!");
 
         beaconRepository.deleteById(beaconId);
+        System.out.println("비콘 자체 삭제!");
     }
 
 
