@@ -2,14 +2,14 @@ import { useState } from "react";
 import React from "react";
 import styles from "./beaconTypeComponent.module.css";
 import { RequestAddBeacon } from "../../util/type";
-import axios from "axios";
 import getMapInfo from "../Map";
+import { Axios } from '../../util/axios';
 
 interface IScreenDoorProps {
     x: number;
     y: number;
     floor: number;
-    closeModal: Function;
+    closeModal: () => void;
 }
 
 interface ButtonsProps {
@@ -33,10 +33,10 @@ const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
 };
 
 const addBeaconRequest = async (data: RequestAddBeacon) => {
-    const api = "https://banditbul.co.kr/api";
+    const axios = Axios()
 
     try {
-        const response = await axios.post(`${api}/beacon`, data);
+        const response = await axios.post(`/beacon`, data);
         console.log(response);
         alert("성공");
         getMapInfo(data.floor);

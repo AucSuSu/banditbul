@@ -17,9 +17,8 @@ import {
     Escalator,
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
-// import { Fetch } from "../util/axios.ts";
-import axios from "axios";
 import { getMapFunc } from "../store.tsx";
+import { Axios } from '../util/axios.ts';
 
 const types = [
     "미선택",
@@ -38,6 +37,7 @@ const floorType = [
 ];
 
 const Map: React.FC = () => {
+    const axios = Axios()
     const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     // const [edgeList, setEdgeList] = useState<Edge[]>([
@@ -241,7 +241,7 @@ const Map: React.FC = () => {
 
                 try {
                     const response = await axios.post(
-                        `https://banditbul.co.kr/api/edge`,
+                        `edge`,
                         {
                             beacon1: selectedEdges[0],
                             beacon2: selectedEdges[1],
@@ -266,7 +266,7 @@ const Map: React.FC = () => {
 
     const sendAcceptMessage = (beaconId: string) => {
         if (ws.current?.OPEN) {
-            var data = {
+            const data = {
                 sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
@@ -283,7 +283,7 @@ const Map: React.FC = () => {
 
     const sendNoMessage = (beaconId: string) => {
         if (ws.current?.OPEN) {
-            var data = {
+            const data = {
                 sessionId: "b",
                 type: "SOS_FAIL",
                 beaconId: beaconId,
