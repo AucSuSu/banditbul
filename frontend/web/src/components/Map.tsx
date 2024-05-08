@@ -372,6 +372,17 @@ const Map: React.FC = () => {
         setDeleteSelectBeacon(null);
     };
 
+    const socketTest = () => {
+        var data = {
+            sessionId: "b",
+            type: "SOS_ACCEPT",
+            beaconId: "test",
+            uuId: "test",
+        };
+
+        ws.current!.send(JSON.stringify(data));
+    };
+
     // 예 버튼 클릭 시 실행 함수
     const handleConfirm = () => {
         // 여기에 예 버튼을 눌렀을 때 실행할 함수를 호출하거나 코드를 작성하세요.
@@ -404,6 +415,7 @@ const Map: React.FC = () => {
                             {e.title}
                         </div>
                     ))}
+                    <div onClick={() => socketTest()}>testButton</div>
                 </div>
                 <div className={styles.contentContainer}>
                     <div
