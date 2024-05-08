@@ -133,7 +133,7 @@ const Map: React.FC = () => {
         // listner
         ws.current.onopen = () => {
             console.log("web socket 연결");
-            var data = {
+            const data = {
                 sessionId: "b",
                 type: "ENTER",
                 beaconId: null,
@@ -202,7 +202,7 @@ const Map: React.FC = () => {
 
     useEffect(() => {
         return () => {
-            var data = {
+            const data = {
                 sessionId: "b",
                 type: "CLOSE",
                 beaconId: null,
@@ -288,7 +288,7 @@ const Map: React.FC = () => {
             ws.current.send(JSON.stringify(data));
         } else {
             ws.current = new WebSocket("wss://banditbul.co.kr/socket");
-            var data = {
+            const data = {
                 sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,

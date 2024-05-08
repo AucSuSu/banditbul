@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import axios from "axios";
 import { MapInfo } from "./util/type";
+import {Axios} from './util/axios';
 
 interface StationStore {
     testData: string;
@@ -24,10 +24,10 @@ export const stationStore = create<StationStore>()(
 );
 
 export const getMapFunc = async (floor: number): Promise<MapInfo> => {
-    const api = "https://banditbul.co.kr/api";
+    const axios = Axios()
     // zustand 에서 값 가져오기
     try {
-        const response = await axios.get(`${api}/beaconlist/${floor}`);
+        const response = await axios.get(`/beaconlist/${floor}`);
         const data = response.data.object;
         console.log(data);
         return data;
