@@ -18,7 +18,7 @@ import {
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
 import { getMapFunc } from "../store.tsx";
-import { Axios } from '../util/axios.ts';
+import { Axios } from "../util/axios.ts";
 
 const types = [
     "미선택",
@@ -37,7 +37,7 @@ const floorType = [
 ];
 
 const Map: React.FC = () => {
-    const axios = Axios()
+    const axios = Axios();
     const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     // const [edgeList, setEdgeList] = useState<Edge[]>([
@@ -65,7 +65,7 @@ const Map: React.FC = () => {
     const ws = useRef<WebSocket | null>(null); // ws 객체
     // test 용
     const [sosBeaconIdList, setSosBeaconIdList] = useState<Set<string>>(
-        new Set(["11:22:33:44:60"])
+        new Set([])
     );
 
     // sos 하는 beaconId를 담아둘거임 ! -> 현재 빌드를 위해서 이거 죽이고
@@ -73,21 +73,21 @@ const Map: React.FC = () => {
 
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
-        {
-            beaconId: "1",
-            x: 40,
-            y: 30,
-        },
-        {
-            beaconId: "11:22:33:44:55",
-            x: 40,
-            y: 30,
-        },
-        {
-            beaconId: "11:22:33:44:60",
-            x: 40,
-            y: 30,
-        },
+        // {
+        //     beaconId: "1",
+        //     x: 40,
+        //     y: 30,
+        // },
+        // {
+        //     beaconId: "11:22:33:44:55",
+        //     x: 40,
+        //     y: 30,
+        // },
+        // {
+        //     beaconId: "11:22:33:44:60",
+        //     x: 40,
+        //     y: 30,
+        // },
     ]);
 
     const [page] = useState(0);
@@ -129,7 +129,6 @@ const Map: React.FC = () => {
         getMapInfo(floor);
         //websocket 객체 연결
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
-        //ws.current = new WebSocket("wss://localhost:8080/socket");
 
         // listner
         ws.current.onopen = () => {
@@ -258,13 +257,10 @@ const Map: React.FC = () => {
                 // 간선 axios
 
                 try {
-                    const response = await axios.post(
-                        `edge`,
-                        {
-                            beacon1: selectedEdges[0],
-                            beacon2: selectedEdges[1],
-                        }
-                    );
+                    const response = await axios.post(`edge`, {
+                        beacon1: selectedEdges[0],
+                        beacon2: selectedEdges[1],
+                    });
                     console.log(response);
                     getMapInfo(floor);
                     alert("성공");
