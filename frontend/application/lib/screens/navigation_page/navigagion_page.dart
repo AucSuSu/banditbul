@@ -47,27 +47,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void sos() async {
-    postSOS("");
     Get.to(() => const SosPageWait());
-  }
-
-  void postSOS(String beaconId) async {
-    try {
-      Dio dio = Dio();
-      final response = await dio.get(
-        "https://k10e102.k.ssafy.io:8080/api/sos/$beaconId",
-      );
-      var sessionId = response.data['object']['sessionId'];
-      Get.find<SessionController>().setSessionId(sessionId);
-      WebsocketManager().sendMessage(MessageDto(
-          type: "ENTER",
-          beaconId: Get.find<BeaconController>().beaconId.value,
-          sessionId: sessionId,
-          uuId: "beaconId",
-          count: null));
-    } catch (error) {
-      print("전송 실패 $error");
-    }
   }
 
   // 경로에 따른 text 설정

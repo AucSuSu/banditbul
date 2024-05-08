@@ -56,7 +56,7 @@ class _SosPageWaitState extends State<SosPageWait> {
     manager.sendMessage(MessageDto(
         type: "SOS",
         beaconId: beaconId,
-        sessionId: sessionId,
+        sessionId: "b",
         uuId: "1234",
         count: null));
     manager.listenToMessage((onData));

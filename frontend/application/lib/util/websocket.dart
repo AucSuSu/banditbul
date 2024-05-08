@@ -86,7 +86,7 @@ class WebsocketManager {
       // _channel!.sink.add(dto);
 
       _channel!.sink.add(
-          '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "count" : null}');
+          '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "count" : null, "uuId" : "${dto.uuId}"}');
     }
   }
 
