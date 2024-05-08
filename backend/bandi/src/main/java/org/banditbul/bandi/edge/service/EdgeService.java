@@ -421,10 +421,9 @@ public class EdgeService {
             Beacon A = beacons.get(i - 1);
             Beacon B = beacons.get(i);
             Beacon C = beacons.get(i + 1);
-
             // CCW 공식 적용
-            double ccw = (B.getLatitude() - A.getLatitude()) * (C.getLongitude() - A.getLongitude()) -
-                    (B.getLongitude() - A.getLongitude()) * (C.getLatitude() - A.getLatitude());
+            double ccw = (B.getY() - A.getY()) * (C.getX() - A.getX()) -
+                    (B.getX() - A.getX()) * (C.getY() - A.getY());
 
             if (ccw > 0) {
                 directions.add("왼쪽");
