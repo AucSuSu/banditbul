@@ -6,7 +6,7 @@ import blueBeacon from "../assets/blueBeacon.gif";
 import defaultBeacon from "../assets/defaultBeacon.gif";
 import yellowBeacon from "../assets/yellowBeacon.gif";
 // import testBg from "../assets/testBg.png";
-import { Beacon, Edge, MapInfo } from "../util/type.tsx";
+import { Beacon, Edge } from "../util/type.tsx";
 import {
     ScreenDoor,
     Toilet,
@@ -17,7 +17,6 @@ import {
     Escalator,
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
-import { getMapFunc } from "../store.tsx";
 import { Axios } from "../util/axios.ts";
 
 const types = [
@@ -75,23 +74,15 @@ const Map: React.FC = () => {
             x: 40,
             y: 30,
         },
-        // {
-        //     beaconId: "11:22:33:44:55",
-        //     x: 40,
-        //     y: 30,
-        // },
-        // {
-        //     beaconId: "11:22:33:44:60",
-        //     x: 40,
-        //     y: 30,
-        // },
     ]);
 
-    const [page] = useState(0);
-
     const getMapInfo = async (floor: number) => {
+        //     const axios = Axios();
+
         try {
-            const data: MapInfo = await getMapFunc(floor);
+            console.log("진입 시도");
+            const response = await axios.get(`/beaconlist/${floor}`);
+            const data = response.data.object;
             if (data != undefined) {
                 setBeacons(data.beaconList);
                 setEdgeList(data.edgeList);
@@ -103,24 +94,7 @@ const Map: React.FC = () => {
             alert("실패");
         }
     };
-
-    // const getMapInfo = async (floor: number) => {
-    //     const api = "https://banditbul.co.kr/api";
-    //     // zustand 에서 값 가져오기
-    //     try {
-    //         const response = await axios.get(`${api}/beaconlist/${floor}`);
-    //         const data = response.data.object;
-    //         console.log(data);
-    //         setBeacons(data.beaconList);
-    //         setAddEdgeState(data.edgeList);
-    //         setMapImageUrl(data.mapImgaeUrl);
-    //         alert("성공");
-    //         // return data;
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert("실패");
-    //     }
-    // };
+    const [page] = useState(0);
 
     useEffect(() => {
         getMapInfo(floor);
@@ -204,7 +178,7 @@ const Map: React.FC = () => {
         //     setNewBeacon(null);
         //     window.removeEventListener("resize", resizeBeacon);
         // };
-    }, [floor]);
+    }, [floor, addEdgeState]);
 
     useEffect(() => {
         return () => {
@@ -261,14 +235,13 @@ const Map: React.FC = () => {
             console.log(selectedEdges.length);
             if (selectedEdges.length == 2) {
                 // 간선 axios
-
                 try {
                     const response = await axios.post(`edge`, {
                         beacon1: selectedEdges[0],
                         beacon2: selectedEdges[1],
                     });
                     console.log(response);
-                    getMapInfo(floor);
+                    // getMapInfo(floor);
                     alert("성공");
                 } catch (error) {
                     console.error(error);
