@@ -20,7 +20,7 @@ public class CorsConfig {
 //        config.addAllowedOrigin("192.168.30.107:5173");
 //        config.addAllowedOrigin("http://localhost:5173");
 //        config.addAllowedOrigin("https://banditbul.co.kr");
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("/**");
         config.addAllowedHeader("*"); // 모든 header에 응답을 허용하겠다.
         config.addAllowedMethod("*"); // 모든 post,get,put,delete,patch 요청을 허용하겠다.
         source.registerCorsConfiguration("/**", config);
