@@ -43,6 +43,7 @@ class _MainPageState extends State<MainPage> {
       if (response.statusCode == 200) {
         RouteController rc = Get.find<RouteController>();
         rc.setRoute1(response.data['object']['result1']);
+        rc.setRoute2([]);
 
         navigateToNavigationPage(); // 10초후 네비게이션으로 이동
       }
