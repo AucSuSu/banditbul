@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
+import 'package:frontend/util/tts_function.dart';
 import 'package:get/get.dart';
 
 class ArrivePage extends StatefulWidget {
@@ -12,6 +13,14 @@ class ArrivePage extends StatefulWidget {
 }
 
 class _ArrivePageState extends State<ArrivePage> {
+  final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
+
+  @override
+  void initState() {
+    super.initState();
+    clovaTTSManager.getTTS('목적지에 도착했습니다');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +47,7 @@ class _ArrivePageState extends State<ArrivePage> {
                 child: Column(
                   children: [
                     Text(
-                      'ㅇㅇㅇ 역', // 여기 부분이 개찰구 비콘에 따라 다르게 바뀔듯
+                      '목적지에', // 여기 부분이 개찰구 비콘에 따라 다르게 바뀔듯
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,

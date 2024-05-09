@@ -37,7 +37,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
 
   // 10초뒤에 navigation 페이지로 이동 하는 함수
   void navigateToNavigationPage() {
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Get.to(() => const NavigationPage());
     });
   }
@@ -101,7 +101,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         rc.setRoute1(response.data['object']['result1']);
         rc.setRoute2(response.data['object']['result2']);
         var newMessage = {
-          'text': '잠시 후 $stationName으로 안내합니다',
+          'text': '잠시 후 $stationName로 안내합니다',
           'isUser': false,
         };
         setState(() {
@@ -115,7 +115,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         if (e.response?.statusCode == 404) {
           // 역 이름 체크
           var newMessage = {
-            'text': '$stationName이 존재하지 않습니다 \n다시 입력해주세요',
+            'text': '올바르지 않은 입력입니다. \na역 b번 출구 형태로 입력해주세요',
             'isUser': false,
           };
           setState(() {
@@ -124,7 +124,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         } else if (e.response?.statusCode == 403) {
           // 출구 체크
           var newMessage = {
-            'text': '출구를 입력해주세요 \n다시 입력해주세요',
+            'text': '올바르지 않은 입력입니다. \na역 b번 출구 형태로 입력해주세요',
             'isUser': false,
           };
           setState(() {
