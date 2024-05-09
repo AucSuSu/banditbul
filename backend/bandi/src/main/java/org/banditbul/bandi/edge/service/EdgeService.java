@@ -128,8 +128,6 @@ public class EdgeService {
         List<Beacon> beacons = findBeaconsOrdered(list);
         // CCW 알고리즘으로 방향 결정
         List<String> directions = ccw(beacons);
-        System.out.println(beacons);
-
         // 결과 리스트 생성
         List<CheckPointDto> resultList = new ArrayList<>();
         // 첫 번째 비콘에 대한 방향 초기화
@@ -138,7 +136,6 @@ public class EdgeService {
         }
         for (int i = 1; i < beacons.size() - 1; i++) {
             Beacon current = beacons.get(i);
-            System.out.println(current.getId());
             Beacon next = beacons.get(i + 1);
 
             // Edge 테이블에서 current와 next 사이의 거리 가져오기
@@ -156,12 +153,9 @@ public class EdgeService {
             resultList.add(new CheckPointDto(current.getId(), distance, directions.get(i-1)));
         }
         // 마지막 비콘에 대한 텍스트 추가
-        if (beacons.size() > 2) {
+        if (beacons.size() >= 2) {
             resultList.add(new CheckPointDto(destBeacon.getId(), 0,formatGateInfo(destGate)));
         }
-
-        System.out.println(resultList);
-
 
         // 4. 목적지 역에서 개찰구에서 출구까지
 
@@ -227,7 +221,7 @@ public class EdgeService {
             resultList2.add(new CheckPointDto(current.getId(), distance, directionList.get(i-1)));
         }
         // 마지막 비콘에 대한 텍스트 추가
-        if (beacons.size() > 2) {
+        if (beacons.size() >= 2) {
             resultList2.add(new CheckPointDto(destExit.getId(), 0,formatExitInfo(exit)));
         }
         ResultRouteDto dto = new ResultRouteDto(resultList, resultList2);
@@ -287,6 +281,7 @@ public class EdgeService {
         System.out.println(beacons);
 
         // 결과 리스트 생성
+        System.out.println(beacons.size());
         List<CheckPointDto> resultList = new ArrayList<>();
         // 첫 번째 비콘에 대한 방향 초기화
         if (beacons.size() > 1) {
