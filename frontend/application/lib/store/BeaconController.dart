@@ -44,23 +44,27 @@ class BeaconController extends GetxController {
   }
 
   void startBeaconScanning() {
-    final BeaconScanner beaconScanner = BeaconScanner();
+    final BeaconScanner beaconScanner = BeaconScanner(
+      onScanResultChanged: (macAddress) {
+        setBeaconId(macAddress);
+      },
+    );
 
     beaconScanner.startScan();
-    periodicScanner = Timer.periodic(const Duration(seconds: 5), (timer) {
-      print('RSSI 가장 큰 값 5초마다 실행중');
-      String? highestRssiBeaconMac =
-          beaconScanner.getHighestRssiAdminBeaconMacAddress();
-      if (highestRssiBeaconMac != null) {
-        print('highestRssiBeaconMac: $highestRssiBeaconMac');
-        print('비콘 아이디: ${beaconId.value}');
-        setBeaconId(highestRssiBeaconMac);
-      } else {
-        print('highestRssiBeaconMac is null');
-        setBeaconId('null');
-        print('비콘 아이디: ${beaconId.value}');
-      }
-    });
+    // periodicScanner = Timer.periodic(const Duration(seconds: 5), (timer) {
+    //   print('RSSI 가장 큰 값 5초마다 실행중');
+    //   String? highestRssiBeaconMac =
+    //       beaconScanner.getHighestRssiAdminBeaconMacAddress();
+    //   if (highestRssiBeaconMac != null) {
+    //     print('highestRssiBeaconMac: $highestRssiBeaconMac');
+    //     print('비콘 아이디: ${beaconId.value}');
+    //     setBeaconId(highestRssiBeaconMac);
+    //   } else {
+    //     print('highestRssiBeaconMac is null');
+    //     setBeaconId('null');
+    //     print('비콘 아이디: ${beaconId.value}');
+    //   }
+    // });
   }
 
   // @override
