@@ -106,7 +106,7 @@ void main() async {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Get.to(() => TestPage());
+                  Get.to(() => const TestPage());
                 },
                 child: const Text('Test Page'),
               ),

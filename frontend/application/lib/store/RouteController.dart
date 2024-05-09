@@ -42,7 +42,7 @@ class RouteController extends GetxController {
 
   // 비콘 ID 체크와 route2 시작 검증
   bool checkBeacon(String beaconId) {
-    if (!currentRoute.isEmpty) {
+    if (currentRoute.isNotEmpty) {
       if (freeMode.isTrue && beaconId == route2.first['beaconId']) {
         freeMode.value = false; // 첫 번째 route2 비콘을 만나면 freeMode 비활성화
       }
