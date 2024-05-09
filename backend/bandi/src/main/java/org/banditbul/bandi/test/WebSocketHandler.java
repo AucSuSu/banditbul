@@ -70,17 +70,19 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
     }
 
     private  void sendToEachSocket(Set<WebSocketSession> sessions, TextMessage message){
-        sessions.parallelStream().forEach( roomSession -> {
+        sessions.removeIf(session -> !session.isOpen());  // 닫힌 세션 제거
+        for (WebSocketSession roomSession : sessions) {
             try {
-                if(roomSession.isOpen()) {
+                if (roomSession.isOpen()) {
                     System.out.println("roomSession Id: "+ roomSession.getId());
                     System.out.println("message: "+ message+"----------------------");
                     roomSession.sendMessage(message);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Failed to send message to WebSocket session: " + e.getMessage(), e);
+                // 에러가 발생한 세션을 처리하기 위한 추가 로직
             }
-        });
+        }
     }
 
     @Override
