@@ -26,7 +26,9 @@ class BeaconScanner {
     if (await requestPermissions()) {
       scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
         for (var result in results) {
-          scanResults.add(result);
+          if (result.device.name.startsWith('admin')) {
+            scanResults.add(result);
+          }
           updateHighestRssiAdminBeacon();
           // 스캔 결과가 갱신될 때마다 콜백 호출
           String? macAddress = getHighestRssiAdminBeaconMacAddress();
@@ -36,7 +38,7 @@ class BeaconScanner {
           }
         }
       });
-      FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
+      FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
       isScanning = true;
       stopTimer();
     }
@@ -44,7 +46,8 @@ class BeaconScanner {
 
   void stopTimer() {
     restartScanTimer?.cancel(); // Cancel existing timer
-    restartScanTimer = Timer(const Duration(seconds: 11), stopScan);
+    restartScanTimer =
+        Timer(const Duration(seconds: 5, milliseconds: 100), stopScan);
   }
 
   void stopScan() {
@@ -53,8 +56,7 @@ class BeaconScanner {
       scanResults = {};
       scanResultsSubscription.cancel();
       isScanning = false;
-      restartScanTimer?.cancel();
-      restartScanTimer = Timer(const Duration(seconds: 5), startScan);
+      startScan();
     }
   }
 
