@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:frontend/util/beacon_scanner.dart';
 
 class TestPage extends StatefulWidget {
+  const TestPage({super.key});
+
   @override
   _TestPageState createState() => _TestPageState();
 }
@@ -26,7 +27,7 @@ class _TestPageState extends State<TestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Beacon Scanner Test Page'),
+        title: const Text('Beacon Scanner Test Page'),
       ),
       body: Center(
         child: Column(
@@ -34,7 +35,7 @@ class _TestPageState extends State<TestPage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () => setState(() {}), // 스캔 결과를 갱신하기 위해 UI를 재구성
-              child: Text('Refresh Scan Results'),
+              child: const Text('Refresh Scan Results'),
             ),
             Expanded(
               child: _beaconScanner.scanResults.isNotEmpty
@@ -47,7 +48,7 @@ class _TestPageState extends State<TestPage> {
                         );
                       }).toList(),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('No beacons found.',
                           style: TextStyle(fontSize: 16))),
             ),
@@ -56,7 +57,7 @@ class _TestPageState extends State<TestPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: <Widget>[
-                        Text('Highest RSSI Admin Beacon',
+                        const Text('Highest RSSI Admin Beacon',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
                         Text(
@@ -66,8 +67,8 @@ class _TestPageState extends State<TestPage> {
                       ],
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
+                : const Padding(
+                    padding: EdgeInsets.all(8.0),
                     child: Text('No high signal beacon detected.',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
