@@ -74,11 +74,15 @@ class _NavigationPageState extends State<NavigationPage> {
   // 경로에 따른 text 설정
   String getTextFromRoute() {
     // beaconId 테스트용
-    if (_routeController.currentRoute.isEmpty) {
-      return _beaconController.beaconId.value;
-    }
+    // if (_routeController.currentRoute.isEmpty) {
+    //   return _beaconController.beaconId.value;
+    // }
+    var curRoute = _routeController.currentRoute;
     var curIdx = _routeController.currentRouteIndex.value;
     var curDist = _routeController.currentRoute[curIdx]['distance'];
+    if (curRoute == _routeController.route2 && curIdx == 0) {
+      return '지하철 탑승 중입니다'; // text 설정
+    }
 
     if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
       var text = '좌회전 후 \n${curDist}m 이동하세요'; // text 설정
@@ -98,10 +102,16 @@ class _NavigationPageState extends State<NavigationPage> {
 
   // 경로에 따른 이미지 설정
   String getImageFromRoute() {
-    if (_routeController.currentRoute.isEmpty) {
-      return 'assets/images/navigation/left.png';
-    }
+    // 비콘 id 테스트용
+    // if (_routeController.currentRoute.isEmpty) {
+    //   return 'assets/images/navigation/left.png';
+    // }
     var curIdx = _routeController.currentRouteIndex.value;
+    var curRoute = _routeController.currentRoute;
+
+    if (curRoute == _routeController.route2 && curIdx == 0) {
+      return 'assets/images/navigation/subway.png'; // image설정
+    }
 
     if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
       return 'assets/images/navigation/left.png';

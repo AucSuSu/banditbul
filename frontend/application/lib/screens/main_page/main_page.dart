@@ -1,8 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/screens/main_page/widgets/main_search_page.dart';
 import 'package:frontend/screens/navigation_page/navigagion_page.dart';
+import 'package:frontend/store/BeaconController.dart';
+import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/util/dotted_border_text.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
@@ -17,6 +21,35 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int selectedIndex = 0;
   DateTime? currentPress;
+
+  void navigateToNavigationPage() {
+    Future.delayed(const Duration(seconds: 5), () {
+      Get.to(() => const NavigationPage());
+    });
+  }
+
+  // 화장실 가는 함수
+  Future findToiletRoute() async {
+    Dio dio = Dio(); // Dio 인스턴스 생성
+
+    try {
+      var response = await dio.get(
+        '${dotenv.env['BASE_URL']}/navigation/toilet',
+        queryParameters: {
+          'beaconId': Get.find<BeaconController>().beaconId.value,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        RouteController rc = Get.find<RouteController>();
+        rc.setRoute1(response.data['object']['result1']);
+
+        navigateToNavigationPage(); // 10초후 네비게이션으로 이동
+      }
+    } catch (e) {
+      print('길찾기 api 에러 : $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +180,7 @@ class _MainPageState extends State<MainPage> {
                         onTap: () {
                           // 버튼을 클릭했을 때 수행하는 동작
                           print('화장실 안내받기 버튼 클릭');
-                          Get.to(
-                            () => const NavigationPage(),
-                          );
+                          findToiletRoute;
                         },
                         child: Container(
                           decoration: BoxDecoration(
