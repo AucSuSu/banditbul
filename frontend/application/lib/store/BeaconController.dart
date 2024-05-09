@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/screens/arrive_page/arrive_page.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/util/beacon_scanner.dart';
 import 'package:frontend/util/tts_function.dart';
@@ -30,16 +31,26 @@ class BeaconController extends GetxController {
     }
     // freeMode 필터
     if (routeController.freeMode.isTrue) {
+      // 지하철 내린후 개찰구는 말하지 않는 조건
       if (!(beaconId.value == routeController.route2.first['beaconId'])) {
         // 비콘 시설물 응답 정보 api 추가
         Dio dio = Dio();
-        //비콘 정보 말하는 api 임시 주석
         try {
           var response = await dio
               .get('${dotenv.env['BASE_URL']}/beacon/info/${beaconId.value}');
 
           var text = response.data['object'];
           clovaTTSManager.getTTS(text);
+          // 마지막 비콘일 경우 도착 페이지로 이동 하는 로직
+          if ((routeController.route2.isEmpty &&
+                  beaconId.value == routeController.route1.last['beaconId']) ||
+              (routeController.route2.isNotEmpty &&
+                  beaconId.value == routeController.route2.last['beaconId'])) {
+            clovaTTSManager.getTTS(text);
+            Future.delayed(Duration(seconds: 5), () {
+              Get.to(() => ArrivePage()); // TTS 재생 후 5초 기다린 다음 페이지 이동
+            });
+          }
         } catch (e) {
           print('비콘 시설물 응답 정보 api 에러 : $e');
         }
