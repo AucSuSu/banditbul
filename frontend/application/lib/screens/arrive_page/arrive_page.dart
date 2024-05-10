@@ -18,7 +18,11 @@ class _ArrivePageState extends State<ArrivePage> {
   @override
   void initState() {
     super.initState();
-    clovaTTSManager.getTTS('목적지에 도착 하였습니다');
+    clovaTTSManager.getTTS('목적지에 도착 하였습니다. 잠시 후 메인페이지로 이동합니다.');
+    // 7초 후 메인페이지로 이동
+    Future.delayed(const Duration(seconds: 7), () {
+      Get.offAll(() => const MainPage());
+    });
   }
 
   @override
