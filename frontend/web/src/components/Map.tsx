@@ -263,6 +263,7 @@ const Map: React.FC = () => {
                 sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
+                uuId: "test"
             };
             ws.current.send(JSON.stringify(data));
         } else {
@@ -271,6 +272,7 @@ const Map: React.FC = () => {
                 sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
+                uuId: "test"
             };
             ws.current.send(JSON.stringify(data));
         }
@@ -288,6 +290,7 @@ const Map: React.FC = () => {
                 sessionId: "b",
                 type: "SOS_FAIL",
                 beaconId: beaconId,
+                uuId: "test"
             };
             ws.current.send(JSON.stringify(data));
         } else {
