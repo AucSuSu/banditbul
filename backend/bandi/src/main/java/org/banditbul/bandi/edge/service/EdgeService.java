@@ -198,7 +198,7 @@ public class EdgeService {
         // 결과 리스트 생성
         List<CheckPointDto> resultList2 = new ArrayList<>();
         // 첫 번째 비콘에 대한 방향 초기화
-        if (beaconsList.size() > 1) {
+        if (!beacons.isEmpty()) {
             resultList2.add(new CheckPointDto(beaconsList.get(0).getId(), 10,"직진"));
         }
         for (int i = 1; i < beaconsList.size() - 1; i++) {
@@ -284,7 +284,7 @@ public class EdgeService {
         System.out.println(beacons.size());
         List<CheckPointDto> resultList = new ArrayList<>();
         // 첫 번째 비콘에 대한 방향 초기화
-        if (beacons.size() > 1) {
+        if (!beacons.isEmpty()) {
             resultList.add(new CheckPointDto(beacons.get(0).getId(), 10,"직진"));
         }
         for (int i = 1; i < beacons.size() - 1; i++) {
