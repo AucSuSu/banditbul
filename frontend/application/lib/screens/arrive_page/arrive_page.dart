@@ -18,7 +18,7 @@ class _ArrivePageState extends State<ArrivePage> {
   @override
   void initState() {
     super.initState();
-    clovaTTSManager.getTTS('목적지에 도착했습니다');
+    clovaTTSManager.getTTS('목적지에 도착 하였습니다');
   }
 
   @override
@@ -55,7 +55,7 @@ class _ArrivePageState extends State<ArrivePage> {
                       ),
                     ),
                     Text(
-                      '도착하였습니다',
+                      '도착 하였습니다',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
