@@ -15,22 +15,24 @@ class MessageDto {
   final String beaconId;
   final String sessionId;
   final String uuId;
-  final Map<String, int>? count;
+  // final Map<String, int>? count;
 
   MessageDto(
       {required this.type,
       required this.beaconId,
       required this.sessionId,
       required this.uuId,
-      required this.count});
+      // required this.count
+      });
 
   factory MessageDto.fromJson(Map<String, dynamic> json) {
     return MessageDto(
         type: json['type'],
-        beaconId: json['content'],
+        beaconId: json['beaconId'],
         sessionId: json["sessionId"],
         uuId: json['uuId'],
-        count: json['count']);
+        // count: json['count']
+        );
   }
 }
 
@@ -47,28 +49,29 @@ class WebsocketManager {
   WebSocketChannel connect() {
     print("연결 시도 ---");
     _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+    // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket');
 
     print("connect");
-    // if (_channel != null) {
-    //   print("data");
+    if (_channel != null) {
+      print("data");
 
-    //   _channel!.stream.listen(
-    //     (data) {
-    //       print(data);
-    //       print("Connected to WebSocket server");
-    //       _connected = true;
-    //     },
-    //     onError: (error) {
-    //       print("Error connecting to WebSocket server: $error");
-    //       _connected = false;
-    //     },
-    //     onDone: () {
-    //       print("WebSocket connection closed");
-    //       _connected = false;
-    //       connect();
-    //     },
-    //   );
-    // }
+      _channel!.stream.listen(
+        (data) {
+          print(data);
+          print("Connected to WebSocket server");
+          _connected = true;
+        },
+        onError: (error) {
+          print("Error connecting to WebSocket server: $error");
+          _connected = false;
+        },
+        onDone: () {
+          print("WebSocket connection closed");
+          _connected = false;
+          connect();
+        },
+      );
+    }
 
     return _channel!;
   }
@@ -91,8 +94,11 @@ class WebsocketManager {
     if (_channel == null) {
       throw Exception("WebSocket Channle 없음");
     } else {
+      
       _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
           headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
+      // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket',
+          // headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
       // _channel!.sink.add(dto);
 
       _channel!.sink.add(
@@ -117,6 +123,7 @@ class _SOSClientState extends State<SOSClient> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    
     WebsocketManager websocketManager = WebsocketManager();
     websocketManager.connect();
   }

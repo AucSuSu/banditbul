@@ -4,6 +4,7 @@ import 'package:frontend/store/SessionController.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
+import 'dart:convert'; // jsonDecode 함수를 사용하기 위해 필요
 import 'package:frontend/util/websocket.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
 import 'package:dio/dio.dart';
@@ -34,34 +35,22 @@ void getSessionId(String beaconId) async {
 
 class _SosPageWaitState extends State<SosPageWait> {
   // 페이지 들어오자마자 데이터 계속 받으면서
-  late WebSocketChannel _channel;
+  late WebSocketChannel _channel = IOWebSocketChannel.connect('wss://banditbul.co.kr/socket');
 
   @override
   void initState() {
     super.initState();
     WebsocketManager manager = WebsocketManager();
-    // _channel = manager.connect();
-    _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
-    print(_channel);
-
-    // var stream = _channel.stream.asBroadcastStream();
-    // final streamListener1 = stream.listen((val) {
-    //   print("data");
-    // });
-
-    if (_channel == null) {
-      _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
-    } else {
-      _channel.stream.listen((response) {
+    _channel.stream.listen((response) {
         print('데이터');
         print('웹소켓 응답 : $response');
+        onData(response);
       }, onDone: () {
         print('연결 종료 ');
-        _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket");
+        // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket');
       }, onError: (error) {
         print('소켓 통신에 실패했습니다. $error');
       });
-    }
 
     // controller 등록
     Get.put(SessionController());
@@ -76,14 +65,16 @@ class _SosPageWaitState extends State<SosPageWait> {
         beaconId: beaconId,
         sessionId: "b",
         uuId: "1234",
-        count: null));
+        // count: 
+        ));
 
     sendMessage(MessageDto(
         type: "SOS",
         beaconId: beaconId,
         sessionId: "b",
         uuId: "1234",
-        count: null));
+        // count: 1
+        ));
     // manager.listenToMessage((onData));
   }
 
@@ -95,28 +86,35 @@ class _SosPageWaitState extends State<SosPageWait> {
     } else {
       print("message 전송");
 
-      _channel = IOWebSocketChannel.connect("wss://banditbul.co.kr/socket",
-          headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
+      // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket',
+      //     headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
 
       _channel!.sink.add(
-          '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "count" : null, "uuId" : "${dto.uuId}"}');
+          '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "uuId" : "${dto.uuId}"}');
     }
   }
 
   // data 받기
   void onData(dynamic data) {
-    print('$data');
-    MessageDto messageDto = MessageDto.fromJson(data);
+    print("여기다");
+    // JSON 문자열을 파싱하여 Map으로 변환
+    Map<String, dynamic> dataMap = jsonDecode(data);
+    print('$dataMap');
+    MessageDto messageDto = MessageDto.fromJson(dataMap);
     print(Get.find<SessionController>().sessionId.value);
     // api 요청으로 받아오기
     print(Get.find<BeaconController>()
         .beaconId
         .value); // beaconId -> bluetooth로 받아오기
-
+    print(messageDto.type);
+    print(Get.find<SessionController>().sessionId.value);
+    print(Get.find<BeaconController>().beaconId.value);
+    print(messageDto.sessionId);
     // 만약 SOS_ACCEPT
-    if (messageDto.type == "SOS_ACCEPT" &&
-        messageDto.sessionId == Get.find<BeaconController>().beaconId.value &&
-        messageDto.sessionId == Get.find<SessionController>().sessionId.value) {
+    if (messageDto.type == "SOS_ACCEPT"
+        // messageDto.sessionId == Get.find<BeaconController>().beaconId.value &&
+        // messageDto.sessionId == Get.find<SessionController>().sessionId.value
+        ) {
       // 관리자가 승인했음 -> 승인완료로 돌아가기
       Get.to(() => const SosPageAccept());
     }
