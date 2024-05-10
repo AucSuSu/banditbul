@@ -13,16 +13,19 @@ class SosPage extends StatefulWidget {
 class _SosPageState extends State<SosPage> {
   @override
   Widget build(BuildContext context) {
-    var tmpText = Get.find<BeaconController>().beaconId.value;
+    BeaconController beaconController = Get.find<BeaconController>();
+
+    // Obx 위젯을 사용하여 beaconId가 변경될 때마다 자동으로 업데이트
     return Scaffold(
       appBar: const TitleBar(),
       body: Center(
-        child: Text(
-          tmpText,
-          style: const TextStyle(
-            color: Colors.black,
-          ),
-        ),
+        child: Obx(() => Text(
+              beaconController.beaconId.value,
+              style: const TextStyle(
+                fontSize: 30,
+                color: Colors.black,
+              ),
+            )),
       ),
     );
   }

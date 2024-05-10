@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   DateTime? currentPress;
 
   void navigateToNavigationPage() {
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 1), () {
       Get.to(() => const NavigationPage());
     });
   }
@@ -181,7 +181,7 @@ class _MainPageState extends State<MainPage> {
                         onTap: () {
                           // 버튼을 클릭했을 때 수행하는 동작
                           print('화장실 안내받기 버튼 클릭');
-                          findToiletRoute;
+                          findToiletRoute();
                         },
                         child: Container(
                           decoration: BoxDecoration(

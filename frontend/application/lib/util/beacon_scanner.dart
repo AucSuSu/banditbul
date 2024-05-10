@@ -47,7 +47,7 @@ class BeaconScanner {
   void stopTimer() {
     restartScanTimer?.cancel(); // Cancel existing timer
     restartScanTimer =
-        Timer(const Duration(seconds: 5, milliseconds: 100), stopScan);
+        Timer(const Duration(seconds: 5, milliseconds: 300), stopScan);
   }
 
   void stopScan() {
