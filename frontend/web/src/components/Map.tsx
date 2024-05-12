@@ -18,7 +18,9 @@ import {
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
 import { Axios } from "../util/axios.ts";
-
+// import ToggleButton from "./slideToggle/toggle.tsx";
+import addBeaconInfo from "../assets/addBeaconInfo.png";
+import IconStationTtile from "../assets/iconStationTitle.png";
 const types = [
     "미선택",
     "화장실",
@@ -30,10 +32,10 @@ const types = [
     "스크린도어",
 ];
 
-const floorType = [
-    { title: "대합실", floor: -1 },
-    { title: "승강장", floor: -2 },
-];
+// const floorType = [
+//     { title: "대합실", floor: -1 },
+//     { title: "승강장", floor: -2 },
+// ];
 
 const Map: React.FC = () => {
     const axios = Axios();
@@ -87,11 +89,11 @@ const Map: React.FC = () => {
                 setBeacons(data.beaconList);
                 setEdgeList(data.edgeList);
                 setMapImageUrl(data.mapImageUrl);
-                alert("성공");
+                // alert("성공");
             }
         } catch (error) {
             console.log(error);
-            alert("실패");
+            // alert("실패");
         }
     };
     const [page] = useState(0);
@@ -263,7 +265,7 @@ const Map: React.FC = () => {
                 sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
-                uuId: "test"
+                uuId: "test",
             };
             ws.current.send(JSON.stringify(data));
         } else {
@@ -272,7 +274,7 @@ const Map: React.FC = () => {
                 sessionId: "b",
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
-                uuId: "test"
+                uuId: "test",
             };
             ws.current.send(JSON.stringify(data));
         }
@@ -290,7 +292,7 @@ const Map: React.FC = () => {
                 sessionId: "b",
                 type: "SOS_FAIL",
                 beaconId: beaconId,
-                uuId: "test"
+                uuId: "test",
             };
             ws.current.send(JSON.stringify(data));
         } else {
@@ -386,9 +388,17 @@ const Map: React.FC = () => {
     return (
         <>
             <div className={styles.mainContainer}>
-                {page}
+                <div className={styles.titleContainer}>
+                    <div
+                        className={styles.titleImage}
+                        style={{
+                            backgroundImage: `url(${IconStationTtile})`,
+                        }}
+                    ></div>
+                </div>
+
                 <div className={styles.des_container}>
-                    {floorType.map((e, index) => (
+                    {/* {floorType.map((e, index) => (
                         <div
                             key={index}
                             onClick={() => setFloor(e.floor)}
@@ -400,8 +410,16 @@ const Map: React.FC = () => {
                         >
                             {e.title}
                         </div>
-                    ))}
-                    <div onClick={() => socketTest()}>testButton</div>
+                    ))} */}
+                    {/* <div
+                        style={{
+                            backgroundColor: "black",
+                            display: "inline-block",
+                        }}
+                    >
+                        {" "}
+                        <ToggleButton floor={floor} setFloor={setFloor} />
+                    </div> */}
                 </div>
                 <div className={styles.contentContainer}>
                     <div
@@ -538,6 +556,19 @@ const Map: React.FC = () => {
                                             등록하기
                                         </div>
                                     </div>
+                                    <div className={styles.addBeaconDes}>
+                                        <img src={addBeaconInfo} />
+
+                                        <div
+                                            className={styles.information}
+                                            style={{ color: "white" }}
+                                        >
+                                            우측 반딧불 아이콘을 원하는 위치에
+                                            드래그하세요! <br /> 모든 위치는
+                                            바라보는 방향 기준으로 지정해주세요.
+                                        </div>
+                                    </div>
+
                                     {Options(
                                         selectType,
                                         x,

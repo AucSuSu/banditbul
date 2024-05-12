@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./beaconTypeComponent.module.css";
 import { RequestAddBeacon } from "../../util/type";
 import getMapInfo from "../Map";
-import { Axios } from '../../util/axios';
+import { Axios } from "../../util/axios";
 
 interface IScreenDoorProps {
     x: number;
@@ -22,7 +22,7 @@ const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
         <>
             <div className={styles.buttonContainer}>
                 <div className={styles.saveButton} onClick={save}>
-                    저장하기
+                    저장
                 </div>
                 <div className={styles.cancelButton} onClick={cancel}>
                     취소
@@ -33,7 +33,7 @@ const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
 };
 
 const addBeaconRequest = async (data: RequestAddBeacon) => {
-    const axios = Axios()
+    const axios = Axios();
 
     try {
         const response = await axios.post(`/beacon`, data);
@@ -94,10 +94,11 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소 </div>
+                    <div className={styles.question}>Mac 주소 </div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -106,7 +107,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -115,7 +116,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -127,18 +128,25 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                             setBoySelectShow(!boySelectShow);
                         }}
                     >
-                        {boy === null
-                            ? "없음"
-                            : (() => {
-                                  switch (boy) {
-                                      case "R":
-                                          return "오른쪽";
-                                      case "L":
-                                          return "왼쪽";
-                                      default:
-                                          return "앞쪽";
-                                  }
-                              })()}
+                        <div className={styles.choosen}>
+                            {" "}
+                            {boy === null
+                                ? "없음"
+                                : (() => {
+                                      switch (boy) {
+                                          case "R":
+                                              return "오른쪽";
+                                          case "L":
+                                              return "왼쪽";
+                                          default:
+                                              return "앞쪽";
+                                      }
+                                  })()}
+                        </div>
+                        <div
+                            className={styles.downIcon}
+                            style={{ backgroundImage: "url${}" }}
+                        ></div>
                         {boySelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -189,18 +197,21 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                             setGirlSelectShow(!girSelectShow);
                         }}
                     >
-                        {girl === null
-                            ? "없음"
-                            : (() => {
-                                  switch (girl) {
-                                      case "R":
-                                          return "오른쪽";
-                                      case "L":
-                                          return "왼쪽";
-                                      default:
-                                          return "앞쪽";
-                                  }
-                              })()}
+                        <div className={styles.choosen}>
+                            {girl === null
+                                ? "없음"
+                                : (() => {
+                                      switch (girl) {
+                                          case "R":
+                                              return "오른쪽";
+                                          case "L":
+                                              return "왼쪽";
+                                          default:
+                                              return "앞쪽";
+                                      }
+                                  })()}
+                        </div>
+
                         {girSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -306,10 +317,11 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소 </div>
+                    <div className={styles.question}>Mac 주소 </div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -318,7 +330,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -327,7 +339,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -639,10 +651,11 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소</div>
+                    <div className={styles.question}>Mac 주소</div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -651,7 +664,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -660,7 +673,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -938,10 +951,11 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소 </div>
+                    <div className={styles.question}>Mac 주소 </div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -950,7 +964,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -959,7 +973,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -1048,10 +1062,11 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소 </div>
+                    <div className={styles.question}>Mac 주소 </div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -1060,7 +1075,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -1069,7 +1084,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -1158,10 +1173,11 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소 </div>
+                    <div className={styles.question}>Mac 주소 </div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -1170,7 +1186,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -1179,7 +1195,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -1269,10 +1285,11 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
         <>
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
-                    <div className={styles.question}>비콘의 주소 </div>
+                    <div className={styles.question}>Mac 주소 </div>
                     <input
                         name="macAddress"
                         type="text"
+                        placeholder="ex) 00:00:00:00"
                         onChange={handleChange}
                     />
                 </div>
@@ -1281,7 +1298,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         name="latitude"
                         type="number"
-                        placeholder="ex) 000"
+                        placeholder="ex) 35.000000"
                         onChange={handleChange}
                     />
                 </div>
@@ -1290,7 +1307,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
                     <input
                         type="text"
                         name="longitude"
-                        placeholder="ex) 000"
+                        placeholder="ex) 127.000000"
                         onChange={handleChange}
                     />
                 </div>
