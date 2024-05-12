@@ -40,7 +40,6 @@ class BeaconController extends GetxController {
               .get('${dotenv.env['BASE_URL']}/beacon/info/${beaconId.value}');
 
           var text = response.data['object'];
-          clovaTTSManager.getTTS(text);
           // 마지막 비콘일 경우 도착 페이지로 이동 하는 로직
           if ((routeController.route2.isEmpty &&
                   beaconId.value == routeController.route1.last['beaconId']) ||
@@ -50,6 +49,8 @@ class BeaconController extends GetxController {
             Future.delayed(Duration(seconds: 5), () {
               Get.to(() => ArrivePage()); // TTS 재생 후 5초 기다린 다음 페이지 이동
             });
+          } else {
+            clovaTTSManager.getTTS(text);
           }
         } catch (e) {
           print('비콘 시설물 응답 정보 api 에러 : $e');
