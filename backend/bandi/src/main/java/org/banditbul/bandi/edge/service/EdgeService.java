@@ -178,8 +178,9 @@ public class EdgeService {
             Beacon beacon = beaconRepository.findById(bId)
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다."));
             Gate gate = gateRepository.findByBeacon(beacon).orElseThrow(() -> new EntityNotFoundException("해당하는 개찰구가 없습니다."));
-            if( gate.getIsUp() == destGate.getIsUp()) destinationGate = gate;
+            if( gate.getIsUp() == !destGate.getIsUp()) destinationGate = gate;
         }
+        System.out.println(destinationGate);
         // Gate 들에서 나올 게이트 골라주기 (시작점)
         Beacon startGate = destinationGate.getBeacon();
 
