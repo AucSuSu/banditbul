@@ -35,46 +35,48 @@ void getSessionId(String beaconId) async {
 
 class _SosPageWaitState extends State<SosPageWait> {
   // 페이지 들어오자마자 데이터 계속 받으면서
-  late WebSocketChannel _channel = IOWebSocketChannel.connect('wss://banditbul.co.kr/socket');
+  late WebSocketChannel _channel =
+      IOWebSocketChannel.connect('wss://banditbul.co.kr/socket');
 
   @override
   void initState() {
     super.initState();
     WebsocketManager manager = WebsocketManager();
     _channel.stream.listen((response) {
-        print('데이터');
-        print('웹소켓 응답 : $response');
-        onData(response);
-      }, onDone: () {
-        print('연결 종료 ');
-        // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket');
-      }, onError: (error) {
-        print('소켓 통신에 실패했습니다. $error');
-      });
+      print('데이터');
+      print('웹소켓 응답 : $response');
+      onData(response);
+    }, onDone: () {
+      print('연결 종료 ');
+      // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket');
+    }, onError: (error) {
+      print('소켓 통신에 실패했습니다. $error');
+    });
 
     // controller 등록
     Get.put(SessionController());
     Get.put(BeaconController());
+    BeaconController beaconController = Get.find<BeaconController>();
     // beaconId -> 가장 까운거 넣어주기
-    String beaconId = "11:22:34";
+    String beaconId = beaconController.beaconId.value;
     getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
     String sessionId = Get.find<SessionController>().sessionId.value;
 
     sendMessage(MessageDto(
-        type: "ENTER",
-        beaconId: beaconId,
-        sessionId: "b",
-        uuId: "1234",
-        // count: 
-        ));
+      type: "ENTER",
+      beaconId: beaconId,
+      sessionId: "b",
+      uuId: "1234",
+      // count:
+    ));
 
     sendMessage(MessageDto(
-        type: "SOS",
-        beaconId: beaconId,
-        sessionId: "b",
-        uuId: "1234",
-        // count: 1
-        ));
+      type: "SOS",
+      beaconId: beaconId,
+      sessionId: "b",
+      uuId: "1234",
+      // count: 1
+    ));
     // manager.listenToMessage((onData));
   }
 

@@ -30,11 +30,13 @@ class RouteController extends GetxController {
         freeMode.value = true; // route1이 끝나면 freeMode 활성화
         if (route2.isNotEmpty) {
           // 화장실이 아닌 역안내 일경우 route2로 안내하는 로직
+          setRoute1([]); // route1 초기화
           currentRoute.value = route2; // route2로 변경
           currentRouteIndex.value = 0; // 인덱스 초기화
           nextRouteIndex.value = 1;
         }
       } else {
+        setRoute2([]); // route2 초기화
         freeMode.value = true;
       }
     }
