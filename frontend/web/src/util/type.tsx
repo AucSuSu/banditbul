@@ -4,7 +4,7 @@ export type Coord = {
 };
 
 export type Beacon = {
-    type?: string;
+    beaconTYPE?: string;
     beaconId: string;
     x: number;
     y: number;

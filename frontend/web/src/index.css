@@ -3,6 +3,22 @@
 @tailwind utilities;
 
 @font-face {
+    font-family: "Pretendard-semi";
+    src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+        format("woff");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Pretendard-Regular";
+    src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+        format("woff");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
     font-family: "TheJamsil5Bold";
     src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2")
         format("woff2");
@@ -43,17 +59,36 @@
     }
 }
 
+/*input type number 하면 기본으로 생성되는 + - 작은 스크롤 없애기  */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox  */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* scroll*/
 ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    appearance: none;
     width: 10px;
+    border-radius: 50px;
 }
+
 ::-webkit-scrollbar-thumb {
-    background-color: navajowhite;
-    border-radius: 5px;
+    background-color: rgba(252, 212, 8, 1);
+    max-height: 40px;
+
+    border-radius: 50px;
 }
-::-webkit-scrollbar-thumb:hover {
-    background-color: navy;
-}
+
 /* 가로 스크롤 바 */
 ::-webkit-scrollbar-track {
     background-color: #f1f1f1;
+    border-radius: 50px;
 }

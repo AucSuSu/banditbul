@@ -4,14 +4,42 @@
 
 body {
     margin: 0;
-    font-family: "NeoDunggeunmo", sans-serif;
+    font-family: "prentendard", sans-serif;
+    background-color: black;
+    color: white;
 }
 
-.beaconList {
-    width: 30%;
+.addBeaconDes {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.beaconIcon {
+    color: white;
+    align-items: flex-start;
+}
+.information {
+    color: white;
+    align-items: flex-end;
+    font-size: 15px;
+}
+.titleContainer {
+    padding-top: 20px;
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    overflow-y: auto;
+}
+
+.titleImage {
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 320px; /* 부모 요소에 맞게 너비를 100%로 설정 */
+    height: 90%; /* 부모 요소에 맞게 높이를 100%로 설정 */
 }
 
 .horizontalLine {
@@ -29,54 +57,79 @@ body {
     padding-top: 20px;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-}
-::-webkit-scrollbar-thumb {
-    background-color: navajowhite;
-    border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background-color: navy;
-}
-/* 가로 스크롤 바 */
-::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-}
-
 .beaconListItem,
 .sosbeaconListItem {
-    width: 80%;
+    font-family: "pretendardSemi";
+    font-weight: 800;
+    width: 100%;
     height: 100px;
     display: flex;
-    margin-left: 10%;
     padding: 20px;
     text-align: center;
+    justify-content: center;
+    background-color: rgba(34, 34, 34, 1);
 }
+
 .beaconListItem:hover,
 .sosbeaconListItem:hover {
     transition: 0.3s;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
 }
 
+.rightContainer {
+    margin-right: 5%;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.beaconList {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    border: 1px solid white;
+}
+
+.buttonContainer {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.addEdgeButton,
+.floatingButton {
+    display: inline;
+    background-color: rgba(217, 217, 217, 1);
+    color: black;
+    font-family: "pretendardSemi";
+    font-weight: 800;
+    border-radius: 50px;
+    padding: 10px;
+    font-size: 20px;
+    flex-wrap: wrap;
+}
+
+.numberOfUser {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
 .sosbeaconListItem {
     flex-direction: column;
     animation: sos 1s infinite;
-}
-
-@keyframes sos {
-    0% {
-        background-color: white;
-        color: red;
-    }
-    50% {
-        background-color: red;
-        color: white;
-    }
-    0% {
-        background-color: white;
-        color: red;
-    }
 }
 
 .model {
@@ -106,7 +159,7 @@ body {
 }
 
 .contentContainer {
-    height: 90%;
+    height: 80vh;
     width: 100%;
     display: flex;
     padding-left: 30px;
@@ -116,38 +169,10 @@ body {
     height: 20%;
 }
 
-.floatingButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background-color: azure;
-    border-radius: 30px;
-    padding: 20px;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.addEdgeButton {
-    position: fixed;
-    bottom: 20px;
-    right: 200px;
-    z-index: 1000;
-    background-color: azure;
-    border-radius: 30px;
-    padding: 20px;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.addEdgeButton:hover {
-    transition: 0.3s;
-    background-color: ivory;
-    color: black;
-}
-
+.addEdgeButton:hover,
 .floatingButton:hover {
     transition: 0.3s;
-    background-color: navy;
-    color: white;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .locateButton {
@@ -192,27 +217,38 @@ body {
 .addContentContainer {
     display: flex;
     width: 80%;
-    padding-top: 20px;
+    height: 90%;
     align-items: center;
-    /* justify-content: center; */
     flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.titleBox {
+    width: 100%;
+    height: 40%;
+    margin-bottom: 10px;
+    display: flex;
+    align-self: flex-start;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.optionBox {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .typeTitle {
     font-size: 30px;
 }
 
-.inputTextBox {
-    width: 100%;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .dropdownInBox {
     margin: 20px;
-    width: 40%;
+    width: 60%;
     cursor: pointer;
     padding: 8px;
     position: relative;
@@ -220,8 +256,10 @@ body {
     text-align: left;
     border-radius: 20px;
     box-sizing: border-box;
-    background-color: #00498c;
-    color: white;
+    color: black;
+    background-color: rgba(252, 212, 8, 1);
+    color: black;
+    font-weight: 800;
 }
 
 .selectedItem {
@@ -250,27 +288,25 @@ body {
 
 .dropdownItem:hover {
     transition: 0.3s;
-    background-color: antiquewhite;
+    background-color: rgba(252, 212, 8, 1);
+    color: black;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
     animation: vibration 0.5s infinite;
 }
 
 .beaconDeleteButton {
     cursor: pointer;
-    width: 40%;
     display: flex;
     border-radius: 30px;
     align-items: center;
     justify-content: center;
     padding: 5px;
     z-index: 999;
-    background-color: white;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .beaconDeleteButton:hover {
     transition: 0.3s;
-    border: solid 1px black;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .ModaldeleteButton,
@@ -308,4 +344,19 @@ body {
 
 .deleteDes {
     height: 40%;
+}
+
+@keyframes sos {
+    0% {
+        background-color: white;
+        color: red;
+    }
+    50% {
+        background-color: red;
+        color: white;
+    }
+    0% {
+        background-color: white;
+        color: red;
+    }
 }
