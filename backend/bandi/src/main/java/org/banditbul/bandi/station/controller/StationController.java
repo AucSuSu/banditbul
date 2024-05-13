@@ -7,6 +7,7 @@ import org.banditbul.bandi.common.HttpStatusEnum;
 import org.banditbul.bandi.common.Message;
 import org.banditbul.bandi.station.dto.LoginDto;
 import org.banditbul.bandi.station.dto.SignUpDto;
+import org.banditbul.bandi.station.dto.StationInfoDto;
 import org.banditbul.bandi.station.service.StationService;
 import org.banditbul.bandi.test.SOSService;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,8 @@ public class StationController {
     }
     @PostMapping("/login")
     public ResponseEntity<Message> login(LoginDto dto, HttpSession session){
-        String sessionId = stationService.login(dto, session);
-        Message message = new Message(HttpStatusEnum.OK, "로그인 완료", sessionId);
+        StationInfoDto infoDto = stationService.login(dto, session);
+        Message message = new Message(HttpStatusEnum.OK, "로그인 완료", infoDto);
         sosService.createRoom(dto.getLoginId());
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
