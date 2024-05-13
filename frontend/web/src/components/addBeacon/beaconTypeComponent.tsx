@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./beaconTypeComponent.module.css";
 import { RequestAddBeacon } from "../../util/type";
 import getMapInfo from "../Map";
+// import axios from "axios";
 import { Axios } from "../../util/axios";
 import Icon from "../../assets/IconDownArrow.svg";
 
@@ -34,8 +35,8 @@ export const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
 };
 
 const addBeaconRequest = async (data: RequestAddBeacon) => {
+    console.log("추가 시도");
     const axios = Axios();
-
     try {
         const response = await axios.post(`/beacon`, data);
         console.log(response);
