@@ -24,6 +24,13 @@ import IconStationTtile from "../assets/iconStationTitle.png";
 import Icon from "../assets/IconDownArrow.svg";
 import IconDelete from "../assets/IconDelete.svg";
 import IconUser from "../assets/IconUser.svg";
+import IconElevator from "../assets/IconElevator.svg";
+import IconEscalator from "../assets/IconEscalator.svg";
+import IconExit from "../assets/IconExit.svg";
+import IconStair from "../assets/IconStair.svg";
+import IconInfo from "../assets/IconInfo.svg";
+import IconGate from "../assets/IconGate.svg";
+
 const types = [
     "미선택",
     "화장실",
@@ -33,6 +40,15 @@ const types = [
     "엘리베이터",
     "에스컬레이터",
     "스크린도어",
+];
+
+const picIcons = [
+    { type: "엘리베이터", img: IconElevator },
+    { type: "에스컬레이터", img: IconEscalator },
+    { type: "출구", img: IconExit },
+    { type: "개찰구", img: IconGate },
+    { type: "관리실", img: IconInfo },
+    { type: "계단", img: IconStair },
 ];
 
 const Map: React.FC = () => {
@@ -382,6 +398,7 @@ const Map: React.FC = () => {
                 );
                 const data = response.data.object;
                 console.log(data);
+                getMapInfo(floor);
             } catch (error) {
                 console.log(error);
                 // alert("실패");
@@ -495,24 +512,36 @@ const Map: React.FC = () => {
                             );
                         })}
 
-                        {beacons.map((point, index) => (
-                            <div key={index}>
-                                <img
-                                    key={index}
-                                    src={
-                                        point.beaconId == clickedId
-                                            ? blueBeacon
-                                            : defaultBeacon
-                                    }
-                                    className={styles.beaconItem}
-                                    style={{
-                                        left: `${point.x}px`,
-                                        top: `${point.y}px`,
-                                    }}
-                                />
-                            </div>
-                        ))}
+                        <div
+                            className={styles.picContainer}
+                            style={{ backgroundColor: "white" }}
+                        >
+                            {beacons.map((point, index) => (
+                                <div key={index}>
+                                    <img
+                                        key={index}
+                                        src={
+                                            point.beaconId == clickedId
+                                                ? blueBeacon
+                                                : defaultBeacon
+                                        }
+                                        className={styles.beaconItem}
+                                        style={{
+                                            left: `${point.x}px`,
+                                            top: `${point.y}px`,
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
                     </div>
+                    {picIcons.map((data, index) => (
+                        <div>
+                            <img src={data.img} alt="" />
+                            <div>{data.type}</div>
+                        </div>
+                    ))}
+                    picIcons
                     <div className={styles.rightContainer}>
                         <div className={styles.beaconList}>
                             {modalshow ? (
