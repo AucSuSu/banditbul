@@ -4,6 +4,7 @@ import styles from "./beaconTypeComponent.module.css";
 import { RequestAddBeacon } from "../../util/type";
 import getMapInfo from "../Map";
 import { Axios } from "../../util/axios";
+import Icon from "../../assets/IconDownArrow.svg";
 
 interface IScreenDoorProps {
     x: number;
@@ -17,7 +18,7 @@ interface ButtonsProps {
     cancel: () => void;
 }
 
-const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
+export const ButtonContainer: React.FC<ButtonsProps> = ({ save, cancel }) => {
     return (
         <>
             <div className={styles.buttonContainer}>
@@ -129,7 +130,6 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                         }}
                     >
                         <div className={styles.choosen}>
-                            {" "}
                             {boy === null
                                 ? "없음"
                                 : (() => {
@@ -143,10 +143,8 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                                       }
                                   })()}
                         </div>
-                        <div
-                            className={styles.downIcon}
-                            style={{ backgroundImage: "url${}" }}
-                        ></div>
+                        <img className={styles.downIcon} src={Icon} alt="" />
+
                         {boySelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -211,7 +209,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                                       }
                                   })()}
                         </div>
-
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {girSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -363,7 +361,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                                           return "앞쪽";
                                   }
                               })()}
-
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {elevatorSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -433,7 +431,8 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                                       default:
                                           return "앞쪽";
                                   }
-                              })()}
+                              })()}{" "}
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {escalatorSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -492,6 +491,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                             setStairSelectShow(!stairSelectShow);
                         }}
                     >
+                        {" "}
                         {stair === null
                             ? "없음"
                             : (() => {
@@ -503,7 +503,8 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                                       default:
                                           return "앞쪽";
                                   }
-                              })()}
+                              })()}{" "}
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {stairSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -554,7 +555,8 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                             setDirSelectShow(!dirSelectShow);
                         }}
                     >
-                        {dir == null ? "상행,하행 모두" : dir}
+                        {dir == null ? "상행,하행 모두" : dir}{" "}
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {dirSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -708,6 +710,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                                           return "앞쪽";
                                   }
                               })()}
+                        <img className={styles.downIcon} src={Icon} alt="" />
 
                         {elevatorSelectShow && (
                             <ul className={styles.dropdownContainer}>
@@ -778,7 +781,8 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                                       default:
                                           return "앞쪽";
                                   }
-                              })()}
+                              })()}{" "}
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {escalatorSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -848,7 +852,8 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                                       default:
                                           return "앞쪽";
                                   }
-                              })()}
+                              })()}{" "}
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {stairSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -985,7 +990,9 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
                             setDirSelectShow(!dirSelectShow);
                         }}
                     >
-                        {dir}
+                        {" "}
+                        {dir}{" "}
+                        <img className={styles.downIcon} src={Icon} alt="" />
                         {dirSelectShow && (
                             <ul className={styles.dropdownContainer}>
                                 <li
@@ -1097,6 +1104,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                         }}
                     >
                         <div className={styles.selected}>{dir} 계단</div>
+                        <img className={styles.downIcon} src={Icon} alt="" />
 
                         {dirSelectShow && (
                             <ul className={styles.dropdownContainer}>
@@ -1107,7 +1115,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                                         setDirSelectShow(!dirSelectShow);
                                     }}
                                 >
-                                    내려가는 계단
+                                    내려가는
                                 </li>
                                 <li
                                     className={styles.dropdownItem}
@@ -1116,7 +1124,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                                         setDirSelectShow(!dirSelectShow);
                                     }}
                                 >
-                                    올라가는 계단
+                                    올라가는
                                 </li>
                             </ul>
                         )}
@@ -1210,6 +1218,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                         <div className={styles.selected}>
                             {dir} 에스컬레이터
                         </div>
+                        <img className={styles.downIcon} src={Icon} alt="" />
 
                         {dirSelectShow && (
                             <ul className={styles.dropdownContainer}>
@@ -1220,7 +1229,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                                         setDirSelectShow(!dirSelectShow);
                                     }}
                                 >
-                                    내려가는 에스컬레이터
+                                    내려가는
                                 </li>
                                 <li
                                     className={styles.dropdownItem}
@@ -1229,7 +1238,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                                         setDirSelectShow(!dirSelectShow);
                                     }}
                                 >
-                                    올라가는 에스컬레이터
+                                    올라가는
                                 </li>
                             </ul>
                         )}

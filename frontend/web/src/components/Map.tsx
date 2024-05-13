@@ -21,6 +21,9 @@ import { Axios } from "../util/axios.ts";
 // import ToggleButton from "./slideToggle/toggle.tsx";
 import addBeaconInfo from "../assets/addBeaconInfo.png";
 import IconStationTtile from "../assets/iconStationTitle.png";
+import Icon from "../assets/IconDownArrow.svg";
+import IconDelete from "../assets/IconDelete.svg";
+import IconUser from "../assets/IconUser.svg";
 const types = [
     "미선택",
     "화장실",
@@ -32,20 +35,10 @@ const types = [
     "스크린도어",
 ];
 
-// const floorType = [
-//     { title: "대합실", floor: -1 },
-//     { title: "승강장", floor: -2 },
-// ];
-
 const Map: React.FC = () => {
     const axios = Axios();
-    const [floor, setFloor] = useState<number>(-1);
+    const [floor, _] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
-    // const [edgeList, setEdgeList] = useState<Edge[]>([
-    //     // { beacon1: "1", beacon2: "2" },
-    //     // { beacon1: "2", beacon2: "3" },
-    //     // { beacon1: "3", beacon2: "1" },
-    // ]);
     const [edgeList, setEdgeList] = useState<Edge[]>([]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
@@ -72,6 +65,7 @@ const Map: React.FC = () => {
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
         {
+            beaconTYPE: "TOILET",
             beaconId: "11:22:34",
             x: 40,
             y: 30,
@@ -96,7 +90,6 @@ const Map: React.FC = () => {
             // alert("실패");
         }
     };
-    const [page] = useState(0);
 
     useEffect(() => {
         getMapInfo(floor);
@@ -220,7 +213,7 @@ const Map: React.FC = () => {
         const locate = () => {
             setLocateIng(true);
             setNewBeacon({
-                type: types[0],
+                beaconTYPE: types[0],
                 beaconId: "1",
                 x: 0,
                 y: 0,
@@ -360,17 +353,6 @@ const Map: React.FC = () => {
         setDeleteSelectBeacon(null);
     };
 
-    const socketTest = () => {
-        var data = {
-            sessionId: "b",
-            type: "SOS_ACCEPT",
-            beaconId: "test",
-            uuId: "test",
-        };
-
-        ws.current!.send(JSON.stringify(data));
-    };
-
     // 예 버튼 클릭 시 실행 함수
     const handleConfirm = () => {
         // 여기에 예 버튼을 눌렀을 때 실행할 함수를 호출하거나 코드를 작성하세요.
@@ -501,143 +483,238 @@ const Map: React.FC = () => {
                             </div>
                         ))}
                     </div>
-
-                    <div className={styles.beaconList}>
-                        {modalshow ? (
-                            <>
-                                <div className={styles.addContentContainer}>
-                                    <div className={styles.inputTextBox}>
-                                        <ul
-                                            className={styles.dropdownInBox}
-                                            onClick={() => {
-                                                setDropDownOpen(!dropDownOpen);
-                                                console.log("clicked");
-                                            }}
-                                        >
-                                            <div
-                                                className={styles.selectedItem}
-                                            >
-                                                {types[selectType]}
-                                                {/* {dropDownOpen ? "▼" : "▲"} */}
-                                                <div
-                                                    className={
-                                                        styles.horizontalLine
-                                                    }
-                                                ></div>
-                                            </div>
-                                            {dropDownOpen && (
+                    <div className={styles.rightContainer}>
+                        <div className={styles.beaconList}>
+                            {modalshow ? (
+                                <>
+                                    <div className={styles.addContentContainer}>
+                                        <div className={styles.titleBox}>
+                                            <div className={styles.optionBox}>
                                                 <ul
                                                     className={
-                                                        styles.dropdownContainer
+                                                        styles.dropdownInBox
                                                     }
-                                                    style={{}}
+                                                    onClick={() => {
+                                                        setDropDownOpen(
+                                                            !dropDownOpen
+                                                        );
+                                                        console.log("clicked");
+                                                    }}
                                                 >
-                                                    {types
-                                                        .slice(1)
-                                                        .map((data, index) => (
-                                                            <li
-                                                                className={
-                                                                    styles.dropdownItem
-                                                                }
-                                                                key={index}
-                                                                onClick={() =>
-                                                                    clickType(
+                                                    <div
+                                                        className={
+                                                            styles.selectedItem
+                                                        }
+                                                    >
+                                                        {types[selectType]}
+                                                        <img
+                                                            className={
+                                                                styles.downIcon
+                                                            }
+                                                            src={Icon}
+                                                            alt=""
+                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.horizontalLine
+                                                            }
+                                                        ></div>
+                                                    </div>
+                                                    {dropDownOpen && (
+                                                        <ul
+                                                            className={
+                                                                styles.dropdownContainer
+                                                            }
+                                                            style={{}}
+                                                        >
+                                                            {types
+                                                                .slice(1)
+                                                                .map(
+                                                                    (
+                                                                        data,
                                                                         index
+                                                                    ) => (
+                                                                        <li
+                                                                            className={
+                                                                                styles.dropdownItem
+                                                                            }
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            onClick={() =>
+                                                                                clickType(
+                                                                                    index
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                data
+                                                                            }{" "}
+                                                                            {
+                                                                                index
+                                                                            }
+                                                                        </li>
                                                                     )
+                                                                )}
+                                                        </ul>
+                                                    )}
+                                                </ul>
+
+                                                <div
+                                                    className={styles.typeTitle}
+                                                >
+                                                    등록
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={styles.addBeaconDes}
+                                            >
+                                                <img src={addBeaconInfo} />
+
+                                                <div
+                                                    className={
+                                                        styles.information
+                                                    }
+                                                    style={{ color: "white" }}
+                                                >
+                                                    우측 반딧불 아이콘을 원하는
+                                                    위치에 드래그하세요! <br />{" "}
+                                                    모든 위치는 바라보는 방향
+                                                    기준으로 지정해주세요.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {Options(
+                                            selectType,
+                                            x,
+                                            y,
+                                            floor,
+                                            closeAddModal
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <div className={styles.beaconScroll}>
+                                    {beacons.map((item, index) =>
+                                        sosBeaconIdList.has(item.beaconId) ? (
+                                            <div
+                                                className={
+                                                    styles.sosbeaconListItem
+                                                }
+                                                key={index}
+                                                onMouseOver={() =>
+                                                    handleMouseOver(
+                                                        item.beaconId
+                                                    )
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.sosBeaconContent
+                                                    }
+                                                >
+                                                    <p
+                                                        className={
+                                                            styles.sosBeaconTitle
+                                                        }
+                                                    >
+                                                        SOS 신호가
+                                                        발생되었습니다
+                                                        <br />
+                                                        {/* 위치를 확인하고 도움을
+                                                    주세요 */}
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.yesNoContainer
+                                                    }
+                                                >
+                                                    <span
+                                                        className={
+                                                            styles.sosAcceptButton
+                                                        }
+                                                        onClick={() => {
+                                                            sendAcceptMessage(
+                                                                item.beaconId
+                                                            );
+                                                        }}
+                                                    >
+                                                        수락
+                                                    </span>
+                                                    <span
+                                                        className={
+                                                            styles.sosDenyButton
+                                                        }
+                                                        onClick={() => {
+                                                            sendNoMessage(
+                                                                item.beaconId
+                                                            );
+                                                        }}
+                                                    >
+                                                        거부
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ) : deleteSelectBeacon ==
+                                          item.beaconId ? (
+                                            <>
+                                                <div
+                                                    className={
+                                                        styles.beaconListItem
+                                                    }
+                                                    key={index}
+                                                    onMouseOver={() =>
+                                                        handleMouseOver(
+                                                            item.beaconId
+                                                        )
+                                                    }
+                                                    onMouseOut={handleMouseOut}
+                                                >
+                                                    {" "}
+                                                    <div
+                                                        className={
+                                                            styles.deleteModalContent
+                                                        }
+                                                    >
+                                                        <p
+                                                            className={
+                                                                styles.deleteDes
+                                                            }
+                                                        >
+                                                            삭제하시겠습니까?
+                                                        </p>
+                                                        <div
+                                                            className={
+                                                                styles.yesNoContainer
+                                                            }
+                                                        >
+                                                            <span
+                                                                onClick={
+                                                                    handleConfirm
+                                                                }
+                                                                className={
+                                                                    styles.ModaldeleteButton
                                                                 }
                                                             >
-                                                                {data} {index}
-                                                            </li>
-                                                        ))}
-                                                </ul>
-                                            )}
-                                        </ul>
-                                        <div className={styles.typeTitle}>
-                                            등록하기
-                                        </div>
-                                    </div>
-                                    <div className={styles.addBeaconDes}>
-                                        <img src={addBeaconInfo} />
-
-                                        <div
-                                            className={styles.information}
-                                            style={{ color: "white" }}
-                                        >
-                                            우측 반딧불 아이콘을 원하는 위치에
-                                            드래그하세요! <br /> 모든 위치는
-                                            바라보는 방향 기준으로 지정해주세요.
-                                        </div>
-                                    </div>
-
-                                    {Options(
-                                        selectType,
-                                        x,
-                                        y,
-                                        floor,
-                                        closeAddModal
-                                    )}
-                                </div>
-                            </>
-                        ) : (
-                            <div className={styles.beaconScroll}>
-                                {beacons.map((item, index) =>
-                                    sosBeaconIdList.has(item.beaconId) ? (
-                                        <div
-                                            className={styles.sosbeaconListItem}
-                                            key={index}
-                                            onMouseOver={() =>
-                                                handleMouseOver(item.beaconId)
-                                            }
-                                        >
-                                            <div
-                                                className={
-                                                    styles.sosBeaconContent
-                                                }
-                                            >
-                                                <p
-                                                    className={
-                                                        styles.sosBeaconTitle
-                                                    }
-                                                >
-                                                    SOS 신호가 발생되었습니다
-                                                    <br />
-                                                    {/* 위치를 확인하고 도움을
-                                                    주세요 */}
-                                                </p>
-                                            </div>
-                                            <div
-                                                className={
-                                                    styles.yesNoContainer
-                                                }
-                                            >
-                                                <span
-                                                    className={
-                                                        styles.sosAcceptButton
-                                                    }
-                                                    onClick={() => {
-                                                        sendAcceptMessage(
-                                                            item.beaconId
-                                                        );
-                                                    }}
-                                                >
-                                                    수락
-                                                </span>
-                                                <span
-                                                    className={
-                                                        styles.sosDenyButton
-                                                    }
-                                                    onClick={() => {
-                                                        sendNoMessage(
-                                                            item.beaconId
-                                                        );
-                                                    }}
-                                                >
-                                                    거부
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ) : deleteSelectBeacon == item.beaconId ? (
-                                        <>
+                                                                예
+                                                            </span>
+                                                            <span
+                                                                className={
+                                                                    styles.deleteModalCloseButton
+                                                                }
+                                                                onClick={
+                                                                    closeModal
+                                                                }
+                                                            >
+                                                                아니오
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
                                             <div
                                                 className={
                                                     styles.beaconListItem
@@ -650,90 +727,55 @@ const Map: React.FC = () => {
                                                 }
                                                 onMouseOut={handleMouseOut}
                                             >
-                                                {" "}
+                                                {addEdgeState && (
+                                                    <input
+                                                        type="radio"
+                                                        id={`option-${index}`}
+                                                        checked={selectedEdges.includes(
+                                                            item.beaconId
+                                                        )}
+                                                        onClick={() =>
+                                                            handleRadioChange(
+                                                                item.beaconId
+                                                            )
+                                                        }
+                                                    />
+                                                )}
+                                                <div
+                                                    className={styles.beaconId}
+                                                >
+                                                    {" "}
+                                                    {item.beaconTYPE}
+                                                </div>
+                                                <img src={IconUser} alt="" />
                                                 <div
                                                     className={
-                                                        styles.deleteModalContent
+                                                        styles.numberOfUser
                                                     }
                                                 >
-                                                    <p
-                                                        className={
-                                                            styles.deleteDes
-                                                        }
-                                                    >
-                                                        삭제하시겠습니까?
-                                                    </p>
-                                                    <div
-                                                        className={
-                                                            styles.yesNoContainer
-                                                        }
-                                                    >
-                                                        <span
-                                                            onClick={
-                                                                handleConfirm
-                                                            }
-                                                            className={
-                                                                styles.ModaldeleteButton
-                                                            }
-                                                        >
-                                                            예
-                                                        </span>
-                                                        <span
-                                                            className={
-                                                                styles.deleteModalCloseButton
-                                                            }
-                                                            onClick={closeModal}
-                                                        >
-                                                            아니오
-                                                        </span>
-                                                    </div>
+                                                    3
                                                 </div>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div
-                                            className={styles.beaconListItem}
-                                            key={index}
-                                            onMouseOver={() =>
-                                                handleMouseOver(item.beaconId)
-                                            }
-                                            onMouseOut={handleMouseOut}
-                                        >
-                                            {addEdgeState && (
-                                                <input
-                                                    type="radio"
-                                                    id={`option-${index}`}
-                                                    checked={selectedEdges.includes(
-                                                        item.beaconId
-                                                    )}
-                                                    onClick={() =>
-                                                        handleRadioChange(
-                                                            item.beaconId
-                                                        )
+                                                <img
+                                                    src={IconDelete}
+                                                    alt=""
+                                                    className={
+                                                        styles.beaconDeleteButton
                                                     }
+                                                    onClick={() => {
+                                                        openModal();
+                                                        setDeleteSelectBeacon(
+                                                            item.beaconId
+                                                        );
+                                                    }}
                                                 />
-                                            )}
-                                            <div className={styles.beaconId}>
-                                                {" "}
-                                                {item.beaconId}
                                             </div>
-
-                                            <div
-                                                className={
-                                                    styles.beaconDeleteButton
-                                                }
-                                                onClick={() => {
-                                                    openModal();
-                                                    setDeleteSelectBeacon(
-                                                        item.beaconId
-                                                    );
-                                                }}
-                                            >
-                                                삭제하기
-                                            </div>
-                                        </div>
-                                    )
-                                )}
+                                        )
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        {!modalshow && (
+                            <div className={styles.buttonContainer}>
                                 <div className={styles.addEdgeButton}>
                                     <div
                                         onClick={addEdgeModal}

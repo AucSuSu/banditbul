@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @font-face {
+    font-family: "Pretendard-semi";
+    src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+        format("woff");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
     font-family: "Pretendard-Regular";
     src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
         format("woff");
@@ -62,4 +70,25 @@ input::-webkit-inner-spin-button {
 /* Firefox  */
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+/* scroll*/
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(252, 212, 8, 1);
+    max-height: 40px;
+
+    border-radius: 50px;
+}
+
+/* 가로 스크롤 바 */
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 50px;
 }

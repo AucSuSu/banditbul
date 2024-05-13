@@ -8,6 +8,7 @@ export default {
                 jamsilLight: ["TheJamsil3Regular"],
                 jamsilMedium: ["TheJamsil4Medium"],
                 prentendard: ["Pretendard-Regular"],
+                pretendardSemi: ["Pretendard-semi"],
             },
         },
     },
