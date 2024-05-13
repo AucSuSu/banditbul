@@ -15,7 +15,6 @@ import 'package:frontend/util/stt_function.dart';
 import 'package:frontend/util/tts_function.dart';
 import 'package:frontend/util/websocket.dart';
 import 'package:frontend/scanBeacon/scan_screen.dart';
-
 import 'package:get/get.dart';
 
 void main() async {
