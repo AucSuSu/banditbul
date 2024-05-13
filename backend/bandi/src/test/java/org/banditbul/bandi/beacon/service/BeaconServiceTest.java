@@ -141,8 +141,8 @@ class BeaconServiceTest {
         FloorInfoDto floorInfoDto = beaconService.getFloorInfoDto(1, hadanstation.getId());
 
         // Then
-        List<IndvBeacon> expectedBeacons = List.of(new IndvBeacon(beacon.getId(), beacon.getX(), beacon.getY()),
-                new IndvBeacon(beacon2.getId(), beacon2.getX(), beacon2.getY()), new IndvBeacon(beacon3.getId(), beacon3.getX(), beacon3.getY()));
+        List<IndvBeacon> expectedBeacons = List.of(new IndvBeacon(beacon.getId(), beacon.getX(), beacon.getY(), beacon.getBeaconType()),
+                new IndvBeacon(beacon2.getId(), beacon2.getX(), beacon2.getY(), beacon2.getBeaconType()), new IndvBeacon(beacon3.getId(), beacon3.getX(), beacon3.getY(), beacon3.getBeaconType()));
         List<IndvEdge> expectedEdges = List.of(new IndvEdge(edge1.getBeacon1().getId(), edge1.getBeacon2().getId()),
                 new IndvEdge(edge2.getBeacon1().getId(), edge2.getBeacon2().getId()));
         List<IndvEdge> expectedEdges2 = List.of(new IndvEdge(beacon.getId(), beacon2.getId()),
