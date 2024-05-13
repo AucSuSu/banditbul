@@ -578,8 +578,8 @@ const Map: React.FC = () => {
                                                     style={{ color: "white" }}
                                                 >
                                                     우측 반딧불 아이콘을 원하는
-                                                    위치에 드래그하세요! <br />{" "}
-                                                    모든 위치는 바라보는 방향
+                                                    위치에 드래그하세요! 모든
+                                                    위치는 바라보는 방향
                                                     기준으로 지정해주세요.
                                                 </div>
                                             </div>
@@ -776,23 +776,21 @@ const Map: React.FC = () => {
                         </div>
                         {!modalshow && (
                             <div className={styles.buttonContainer}>
-                                <div className={styles.addEdgeButton}>
-                                    <div
-                                        onClick={addEdgeModal}
-                                        style={{ cursor: "pointer" }}
-                                    >
-                                        {addEdgeState
-                                            ? "저장하기"
-                                            : "경로 등록하기"}
-                                    </div>
+                                <div
+                                    className={styles.addEdgeButton}
+                                    onClick={addEdgeModal}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    {addEdgeState
+                                        ? "저장하기"
+                                        : "경로 등록하기"}
                                 </div>
-                                <div className={styles.floatingButton}>
-                                    <div
-                                        onClick={addBeaconModal}
-                                        style={{ cursor: "pointer" }}
-                                    >
-                                        비콘 추가 하기
-                                    </div>
+                                <div
+                                    className={styles.floatingButton}
+                                    onClick={addBeaconModal}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    비콘 추가 하기
                                 </div>
                             </div>
                         )}
