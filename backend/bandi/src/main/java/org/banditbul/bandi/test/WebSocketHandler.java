@@ -56,7 +56,10 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
 
             messageDto.setType(Type.MONITOR);
             messageDto.setCount(beaconCounts);
-            sendToEachSocket(sessions, message);
+
+            String updatedPayload = objectMapper.writeValueAsString(messageDto); // 업데이트된 messageDto를 JSON 문자열로 변환
+            TextMessage newMessage = new TextMessage(updatedPayload); // 새 TextMessage 생성
+            sendToEachSocket(sessions, newMessage); // 새로운 메시지를 세션의 모든 소켓에 전송
         }
         //앱이 나감
         else if(messageDto.getType() == Type.CLOSE){
