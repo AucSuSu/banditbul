@@ -349,10 +349,6 @@ const Map: React.FC = () => {
         setY(ui.y);
     };
 
-    const deleteBeacon = (beaconId: string) => {
-        console.log("delete beacon : " + beaconId);
-    };
-
     const handleMouseOver = (beaconId: string) => {
         console.log(beaconId);
         setClickedId(beaconId);
@@ -374,13 +370,22 @@ const Map: React.FC = () => {
     };
 
     // 예 버튼 클릭 시 실행 함수
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         // 여기에 예 버튼을 눌렀을 때 실행할 함수를 호출하거나 코드를 작성하세요.
         alert("삭제 함수 실행"); // 예시로 경고창을 띄움
         closeModal(); // 모달 닫기
         if (deleteSelectBeacon) {
-            alert("삭제 완료");
-            deleteBeacon(deleteSelectBeacon);
+            try {
+                console.log("삭제");
+                const response = await axios.delete(
+                    `/beacon/${deleteSelectBeacon}`
+                );
+                const data = response.data.object;
+                console.log(data);
+            } catch (error) {
+                console.log(error);
+                // alert("실패");
+            }
         } else {
             console.log("삭제 오류");
         }
