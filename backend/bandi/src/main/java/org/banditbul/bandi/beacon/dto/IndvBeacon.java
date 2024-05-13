@@ -1,17 +1,21 @@
 package org.banditbul.bandi.beacon.dto;
 
 import lombok.Data;
+import org.banditbul.bandi.beacon.entity.Beacon;
+import org.banditbul.bandi.beacon.entity.BeaconTYPE;
 
 @Data
 public class IndvBeacon {
     String beaconId;
     int x;
     int y;
+    BeaconTYPE beaconTYPE;
 
-    public IndvBeacon(String beaconId, int x, int y) {
+    public IndvBeacon(String beaconId, int x, int y, BeaconTYPE beaconTYPE) {
         this.beaconId = beaconId;
         this.x = x;
         this.y = y;
+        this.beaconTYPE = beaconTYPE;
     }
 
     @Override
