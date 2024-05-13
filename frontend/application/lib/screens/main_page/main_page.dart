@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/screens/main_page/widgets/main_search_page.dart';
-import 'package:frontend/screens/navigation_page/navigagion_page.dart';
+import 'package:frontend/screens/navigation_page/navigation_page.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/util/dotted_border_text.dart';

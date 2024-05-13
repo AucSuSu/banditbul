@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/screens/navigation_page/navigagion_page.dart';
+import 'package:frontend/screens/navigation_page/navigation_page.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/util/title_bar.dart';

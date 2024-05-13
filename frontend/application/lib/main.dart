@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/arrive_page/arrive_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
-import 'package:frontend/screens/navigation_page/navigagion_page.dart';
+import 'package:frontend/screens/navigation_page/navigation_page.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/sos_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
