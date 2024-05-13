@@ -6,7 +6,7 @@ import blueBeacon from "../assets/blueBeacon.gif";
 import defaultBeacon from "../assets/defaultBeacon.gif";
 import yellowBeacon from "../assets/yellowBeacon.gif";
 // import testBg from "../assets/testBg.png";
-import { Beacon, Edge } from "../util/type.tsx";
+import { Beacon, Edge, BeaconCounts } from "../util/type.tsx";
 import {
     ScreenDoor,
     Toilet,
@@ -39,6 +39,7 @@ const Map: React.FC = () => {
     const axios = Axios();
     const [floor, _] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
+    const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
     const [edgeList, setEdgeList] = useState<Edge[]>([]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
@@ -123,6 +124,15 @@ const Map: React.FC = () => {
             console.log(d.beaconId);
             // 만약 websocket에서 보내준 메세지의 sessionId가 내 id와 같은 경우
             // sosBeaconList에 추가하기
+            //앱이 비콘에 입장 시 count 반환
+            if (d.type === "MONITOR" && d.count) {
+                console.log("Monitor 업데이트");
+                setBeaconCounts((prevCounts) => ({
+                    ...prevCounts,
+                    ...d.count, // 여러 비콘의 카운트를 한 번에 업데이트
+                }));
+            }
+
             if (!sosBeaconIdList.has(event.data.beaconId)) {
                 console.log("sosbeacon등록");
                 const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
@@ -753,7 +763,13 @@ const Map: React.FC = () => {
                                                         styles.numberOfUser
                                                     }
                                                 >
-                                                    3
+                                                    {beaconCounts[item.beaconId]
+                                                        ? `Users: ${
+                                                              beaconCounts[
+                                                                  item.beaconId
+                                                              ]
+                                                          }`
+                                                        : "0"}
                                                 </div>
                                                 <img
                                                     src={IconDelete}

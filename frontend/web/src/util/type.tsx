@@ -39,3 +39,7 @@ export type RequestAddBeacon = {
     y: number;
     floor: number;
 };
+
+export type BeaconCounts = {
+    [beaconId: string]: number;
+};
