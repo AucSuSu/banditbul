@@ -131,18 +131,28 @@ const Map: React.FC = () => {
                     ...prevCounts,
                     ...d.count, // 여러 비콘의 카운트를 한 번에 업데이트
                 }));
+            } else if (d.type == "SOS") {
+                if (!sosBeaconIdList.has(event.data.beaconId)) {
+                    console.log("sosbeacon등록");
+                    const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
+                    newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
+                    setSosBeaconIdList(newSosBeaconIdList);
+                } else {
+                    console.log("sosbeacon현재 등록되어있음");
+                    console.log(sosBeaconIdList);
+                }
+            } else if (d.type == "CANCEL") {
+                if (!sosBeaconIdList.has(event.data.beaconId)) {
+                    const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
+                    newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
+                    setSosBeaconIdList(newSosBeaconIdList);
+                } else {
+                    const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
+                    newSosBeaconIdList.delete(event.data.beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
+                    console.log(newSosBeaconIdList);
+                    setSosBeaconIdList(newSosBeaconIdList);
+                }
             }
-
-            if (!sosBeaconIdList.has(event.data.beaconId)) {
-                console.log("sosbeacon등록");
-                const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
-                newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
-                setSosBeaconIdList(newSosBeaconIdList);
-            } else {
-                console.log("sosbeacon현재 등록되어있음");
-                console.log(sosBeaconIdList);
-            }
-
             console.log(sosBeaconIdList);
         };
 
@@ -764,7 +774,7 @@ const Map: React.FC = () => {
                                                     }
                                                 >
                                                     {beaconCounts[item.beaconId]
-                                                        ? `Users: ${
+                                                        ? ` ${
                                                               beaconCounts[
                                                                   item.beaconId
                                                               ]
