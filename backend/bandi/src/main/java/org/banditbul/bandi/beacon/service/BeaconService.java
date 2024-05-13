@@ -134,13 +134,13 @@ public class BeaconService {
         // 해당 층의 비콘
         List<IndvBeacon> indvBeacons = new ArrayList<>();
         for(Beacon beacon:beacons){
-            indvBeacons.add(new IndvBeacon(beacon.getId(), beacon.getX(), beacon.getY()));
+            indvBeacons.add(new IndvBeacon(beacon.getId(), beacon.getX(), beacon.getY(), beacon.getBeaconType()));
         }
 
         // 해당 층의 엣지
         List<IndvEdge> indvEdges = new ArrayList<>();
         for(Edge edge:edges){
-            if (indvBeacons.contains(new IndvBeacon(edge.getBeacon1().getId(), edge.getBeacon1().getX(), edge.getBeacon1().getY())) && indvBeacons.contains(new IndvBeacon(edge.getBeacon2().getId(), edge.getBeacon2().getX(), edge.getBeacon2().getY()))){
+            if (indvBeacons.contains(new IndvBeacon(edge.getBeacon1().getId(), edge.getBeacon1().getX(), edge.getBeacon1().getY(), edge.getBeacon1().getBeaconType())) && indvBeacons.contains(new IndvBeacon(edge.getBeacon2().getId(), edge.getBeacon2().getX(), edge.getBeacon2().getY(), edge.getBeacon2().getBeaconType()))){
                 indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId()));
             }
         }
