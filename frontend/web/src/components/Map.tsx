@@ -6,7 +6,7 @@ import blueBeacon from "../assets/blueBeacon.gif";
 import defaultBeacon from "../assets/defaultBeacon.gif";
 import yellowBeacon from "../assets/yellowBeacon.gif";
 // import testBg from "../assets/testBg.png";
-import { Beacon, Edge, BeaconCounts } from "../util/type.tsx";
+import { Beacon, Edge, BeaconCounts, typeToKor } from "../util/type.tsx";
 import {
     ScreenDoor,
     Toilet,
@@ -470,6 +470,9 @@ const Map: React.FC = () => {
                                 <svg
                                     key={`line-${index}`}
                                     className={styles.edge}
+                                    style={{
+                                        height: "1px",
+                                    }}
                                 >
                                     <line
                                         x1={startPoint.x + 15}
@@ -477,6 +480,8 @@ const Map: React.FC = () => {
                                         x2={endPoint.x + 15}
                                         y2={endPoint.y + 15}
                                         style={{
+                                            height: "1px",
+                                            zIndex: 999,
                                             stroke: "black",
                                             strokeWidth: 2,
                                         }}
@@ -764,8 +769,10 @@ const Map: React.FC = () => {
                                                 <div
                                                     className={styles.beaconId}
                                                 >
-                                                    {" "}
-                                                    {item.beaconTYPE}
+                                                    {typeToKor(
+                                                        item.beaconTYPE!
+                                                    )}
+                                                    {item.beaconId}
                                                 </div>
                                                 <img src={IconUser} alt="" />
                                                 <div
