@@ -54,9 +54,9 @@ class _NavigationPageState extends State<NavigationPage> {
   // 경로에 따른 text 설정
   String getTextFromRoute() {
     // beaconId 테스트용
-    // if (_routeController.currentRoute.isEmpty) {
-    //   return _beaconController.beaconId.value;
-    // }
+    if (_routeController.currentRoute.isEmpty) {
+      return _beaconController.beaconId.value;
+    }
     var curRoute = _routeController.currentRoute;
     var curIdx = _routeController.currentRouteIndex.value;
     var curDist = _routeController.currentRoute[curIdx]['distance'];
@@ -83,9 +83,9 @@ class _NavigationPageState extends State<NavigationPage> {
   // 경로에 따른 이미지 설정
   String getImageFromRoute() {
     // 비콘 id 테스트용
-    // if (_routeController.currentRoute.isEmpty) {
-    //   return 'assets/images/navigation/left.png';
-    // }
+    if (_routeController.currentRoute.isEmpty) {
+      return 'assets/images/navigation/left.png';
+    }
     var curIdx = _routeController.currentRouteIndex.value;
     var curRoute = _routeController.currentRoute;
 

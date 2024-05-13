@@ -19,6 +19,7 @@ class SosPageWait extends StatefulWidget {
 }
 
 void getSessionId(String beaconId) async {
+  SessionController sessionController = Get.find<SessionController>();
   try {
     Dio dio = Dio();
     final response = await dio.get(
@@ -27,7 +28,7 @@ void getSessionId(String beaconId) async {
 
     print(response);
     var sessionId = response.data['object']['sessionId'];
-    SessionController().setSessionId(sessionId);
+    sessionController.setSessionId(sessionId);
   } catch (error) {
     print(error);
   }
@@ -54,9 +55,9 @@ class _SosPageWaitState extends State<SosPageWait> {
     });
 
     // controller 등록
-    Get.put(SessionController());
-    Get.put(BeaconController());
+
     BeaconController beaconController = Get.find<BeaconController>();
+    SessionController sessionController = Get.find<SessionController>();
     // beaconId -> 가장 까운거 넣어주기
     String beaconId = beaconController.beaconId.value;
     getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
@@ -65,7 +66,7 @@ class _SosPageWaitState extends State<SosPageWait> {
     sendMessage(MessageDto(
       type: "ENTER",
       beaconId: beaconId,
-      sessionId: "b",
+      sessionId: sessionId,
       uuId: "1234",
       // count:
     ));
@@ -73,7 +74,7 @@ class _SosPageWaitState extends State<SosPageWait> {
     sendMessage(MessageDto(
       type: "SOS",
       beaconId: beaconId,
-      sessionId: "b",
+      sessionId: sessionId,
       uuId: "1234",
       // count: 1
     ));
@@ -101,17 +102,16 @@ class _SosPageWaitState extends State<SosPageWait> {
     print("여기다");
     // JSON 문자열을 파싱하여 Map으로 변환
     Map<String, dynamic> dataMap = jsonDecode(data);
-    print('$dataMap');
+    print('dataMap: $dataMap');
     MessageDto messageDto = MessageDto.fromJson(dataMap);
-    print(Get.find<SessionController>().sessionId.value);
+    print('세션 id: ${Get.find<SessionController>().sessionId.value}');
     // api 요청으로 받아오기
-    print(Get.find<BeaconController>()
-        .beaconId
-        .value); // beaconId -> bluetooth로 받아오기
-    print(messageDto.type);
-    print(Get.find<SessionController>().sessionId.value);
-    print(Get.find<BeaconController>().beaconId.value);
-    print(messageDto.sessionId);
+    print(
+        'Beacon id: ${Get.find<BeaconController>().beaconId.value}'); // beaconId -> bluetooth로 받아오기
+    print('messageDto type: ${messageDto.type}');
+    print('세션 id: ${Get.find<SessionController>().sessionId.value}');
+    print('비콘 id: ${Get.find<BeaconController>().beaconId.value}');
+    print('messageDto 세션 id: ${messageDto.sessionId}');
     // 만약 SOS_ACCEPT
     if (messageDto.type == "SOS_ACCEPT"
         // messageDto.sessionId == Get.find<BeaconController>().beaconId.value &&
@@ -144,10 +144,10 @@ class _SosPageWaitState extends State<SosPageWait> {
                 borderRadius: BorderRadius.circular(25),
               ),
               width: double.infinity,
-              child: Center(
+              child: const Center(
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       '도움을',
                       style: TextStyle(
                         color: Colors.white,
@@ -155,7 +155,7 @@ class _SosPageWaitState extends State<SosPageWait> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const Text(
+                    Text(
                       '요청중입니다',
                       style: TextStyle(
                         color: Colors.white,

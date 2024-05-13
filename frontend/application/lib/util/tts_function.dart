@@ -68,7 +68,7 @@ class ClovaTTSManager {
       'speaker': 'mijin', // -> 물어보고 뭐가 제일 나은지 정하기
       'text': text,
       'volume': '5', // -> 해보면서 조정
-      'speed': '0', // -> 해보면서 조정
+      'speed': '-2', // -> 해보면서 조정
       'pitch': '0', // -> 해보면서 조정
       'format': 'mp3',
     };

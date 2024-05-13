@@ -19,12 +19,35 @@ class _SosPageState extends State<SosPage> {
     return Scaffold(
       appBar: const TitleBar(),
       body: Center(
-        child: Obx(() => Text(
-              beaconController.beaconId.value,
-              style: const TextStyle(
-                fontSize: 30,
-                color: Colors.black,
-              ),
+        child: Obx(() => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      beaconController.setBeaconId('');
+                    },
+                    child: Text(
+                      '비콘 아이디 리셋',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      beaconController.setBeaconId('CA:8D:AC:9C:63:64');
+                    },
+                    child: Text(
+                      '비콘 아이디 변경',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                    )),
+                Text(
+                  beaconController.beaconId.value,
+                  style: const TextStyle(
+                    fontSize: 30,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             )),
       ),
     );

@@ -17,11 +17,11 @@ class BeaconScanner {
     isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
       isScanning = state;
     });
-    print('BeaconScanner init');
+    // print('BeaconScanner init');
   }
 
   Future<void> startScan() async {
-    print('비콘 탐지 시작 (in BeaconScanner)!');
+    // print('비콘 탐지 시작 (in BeaconScanner)!');
 
     if (await requestPermissions()) {
       scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
@@ -31,11 +31,11 @@ class BeaconScanner {
           }
           updateHighestRssiAdminBeacon();
           // 스캔 결과가 갱신될 때마다 콜백 호출
-          String? macAddress = getHighestRssiAdminBeaconMacAddress();
-          if (macAddress != null) {
-            onScanResultChanged
-                ?.call(macAddress); // Only call if macAddress is not null
-          }
+          // String? macAddress = getHighestRssiAdminBeaconMacAddress();
+          // if (macAddress != null) {
+          //   onScanResultChanged
+          //       ?.call(macAddress); // Only call if macAddress is not null
+          // }
         }
       });
       FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
@@ -46,8 +46,13 @@ class BeaconScanner {
 
   void stopTimer() {
     restartScanTimer?.cancel(); // Cancel existing timer
-    restartScanTimer =
-        Timer(const Duration(seconds: 5, milliseconds: 300), stopScan);
+    restartScanTimer = Timer(const Duration(seconds: 5, milliseconds: 300), () {
+      stopScan();
+      String? macAddress = getHighestRssiAdminBeaconMacAddress();
+      if (macAddress != null) {
+        onScanResultChanged?.call(macAddress); // MAC 주소가 null이 아닐 때만 콜백 호출
+      }
+    });
   }
 
   void stopScan() {
