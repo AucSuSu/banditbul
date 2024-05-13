@@ -66,11 +66,19 @@ public class SOSService { // 세션 관리 및 생성 로직 처리
 
     public void updateUserBeacon(String userId, String newBeaconId) {
         String lastBeaconId = userLastBeacon.get(userId);
-        if (lastBeaconId != null && !lastBeaconId.equals(newBeaconId)) {
-            decrementUserCount(lastBeaconId);
+        if (lastBeaconId != null) {
+            if (!lastBeaconId.equals(newBeaconId)) {
+                // 사용자가 이전 비콘에서 새 비콘으로 이동한 경우, 이전 비콘의 사용자 수를 감소시키고 새 비콘의 사용자 수를 증가시킵니다.
+                decrementUserCount(lastBeaconId);
+                incrementUserCount(newBeaconId);
+                userLastBeacon.put(userId, newBeaconId);
+            }
+            // 만약 같은 비콘에 재입장하는 경우는 카운트 변경을 하지 않습니다.
+        } else {
+            // lastBeaconId가 null인 경우는 사용자가 처음 비콘에 접속한 상황입니다.
+            incrementUserCount(newBeaconId);
+            userLastBeacon.put(userId, newBeaconId);
         }
-        incrementUserCount(newBeaconId);
-        userLastBeacon.put(userId, newBeaconId);
     }
 
     public void incrementUserCount(String beaconId) {
