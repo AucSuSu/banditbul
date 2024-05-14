@@ -24,13 +24,18 @@ import IconStationTtile from "../assets/iconStationTitle.png";
 import Icon from "../assets/IconDownArrow.svg";
 import IconDelete from "../assets/IconDelete.svg";
 import IconUser from "../assets/IconUser.svg";
-import IconElevator from "../assets/IconElevator.svg";
-import IconEscalator from "../assets/IconEscalator.svg";
-import IconExit from "../assets/IconExit.svg";
-import IconStair from "../assets/IconStair.svg";
-import IconInfo from "../assets/IconInfo.svg";
-import IconGate from "../assets/IconGate.svg";
-
+// import IconElevator from "../assets/IconElevator.svg";
+// import IconEscalator from "../assets/IconEscalator.svg";
+// import IconExit from "../assets/IconExit.svg";
+// import IconStair from "../assets/IconStair.svg";
+// import IconInfo from "../assets/IconInfo.svg";
+// import IconGate from "../assets/IconGate.svg";
+import IconElevatorWhite from "../assets/IconElevatorWhite.svg";
+import IconEscalatorWhite from "../assets/IconEscalatorWhite.svg";
+import IconExitWhite from "../assets/IconExitWhite.svg";
+import IconStairWhite from "../assets/IconStairWhite.svg";
+import IconInfoWhite from "../assets/IconInfoWhite.svg";
+import IconGateWhite from "../assets/IconGateWhite.svg";
 const types = [
     "미선택",
     "화장실",
@@ -43,12 +48,12 @@ const types = [
 ];
 
 const picIcons = [
-    { type: "엘리베이터", img: IconElevator },
-    { type: "에스컬레이터", img: IconEscalator },
-    { type: "출구", img: IconExit },
-    { type: "개찰구", img: IconGate },
-    { type: "관리실", img: IconInfo },
-    { type: "계단", img: IconStair },
+    { type: "엘리베이터", img: IconElevatorWhite },
+    { type: "에스컬레이터", img: IconEscalatorWhite },
+    { type: "출구", img: IconExitWhite },
+    { type: "개찰구", img: IconGateWhite },
+    { type: "관리실", img: IconInfoWhite },
+    { type: "계단", img: IconStairWhite },
 ];
 
 const Map: React.FC = () => {
@@ -534,12 +539,19 @@ const Map: React.FC = () => {
                                     src={data.img}
                                     alt=""
                                 />
-                                <div>{data.type}</div>
+                                <div className={styles.typeName}>
+                                    {data.type}
+                                </div>
                             </div>
                         ))}
                     </div>
                     <div className={styles.rightContainer}>
-                        <div className={styles.beaconList}>
+                        <div
+                            className={styles.beaconList}
+                            style={{
+                                height: modalshow ? "100%" : "90%",
+                            }}
+                        >
                             {modalshow ? (
                                 <>
                                     <div className={styles.addContentContainer}>
