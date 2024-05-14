@@ -528,7 +528,7 @@ const Map: React.FC = () => {
                     </div>
                     <div className={styles.picContainer}>
                         {picIcons.map((data, index) => (
-                            <div className={styles.picItem}>
+                            <div className={styles.picItem} key={index}>
                                 <img
                                     className={styles.pic}
                                     src={data.img}
