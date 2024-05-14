@@ -158,11 +158,7 @@ const Map: React.FC = () => {
                     console.log(sosBeaconIdList);
                 }
             } else if (d.type == "CANCEL") {
-                if (!sosBeaconIdList.has(event.data.beaconId)) {
-                    const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
-                    newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
-                    setSosBeaconIdList(newSosBeaconIdList);
-                } else {
+                if (sosBeaconIdList.has(event.data.beaconId)) {
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
                     newSosBeaconIdList.delete(event.data.beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
                     console.log(newSosBeaconIdList);
@@ -512,36 +508,36 @@ const Map: React.FC = () => {
                             );
                         })}
 
-                        <div
-                            className={styles.picContainer}
-                            style={{ backgroundColor: "white" }}
-                        >
-                            {beacons.map((point, index) => (
-                                <div key={index}>
-                                    <img
-                                        key={index}
-                                        src={
-                                            point.beaconId == clickedId
-                                                ? blueBeacon
-                                                : defaultBeacon
-                                        }
-                                        className={styles.beaconItem}
-                                        style={{
-                                            left: `${point.x}px`,
-                                            top: `${point.y}px`,
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        {beacons.map((point, index) => (
+                            <div key={index}>
+                                <img
+                                    key={index}
+                                    src={
+                                        point.beaconId == clickedId
+                                            ? blueBeacon
+                                            : defaultBeacon
+                                    }
+                                    className={styles.beaconItem}
+                                    style={{
+                                        left: `${point.x}px`,
+                                        top: `${point.y}px`,
+                                    }}
+                                />
+                            </div>
+                        ))}
                     </div>
-                    {picIcons.map((data, index) => (
-                        <div>
-                            <img src={data.img} alt="" />
-                            <div>{data.type}</div>
-                        </div>
-                    ))}
-                    picIcons
+                    <div className={styles.picContainer}>
+                        {picIcons.map((data, index) => (
+                            <div className={styles.picItem}>
+                                <img
+                                    className={styles.pic}
+                                    src={data.img}
+                                    alt=""
+                                />
+                                <div>{data.type}</div>
+                            </div>
+                        ))}
+                    </div>
                     <div className={styles.rightContainer}>
                         <div className={styles.beaconList}>
                             {modalshow ? (
