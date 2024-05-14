@@ -25,6 +25,11 @@ void main() async {
   Get.put(SessionController());
   runApp(
     GetMaterialApp(
+      // 전체 폰트 적용
+      theme: ThemeData(
+        fontFamily: 'SBaggro',
+      ),
+
       // MaterialApp 대신 GetMaterialApp 사용 GetX 적용 하기 위함
       home: Scaffold(
         appBar: AppBar(

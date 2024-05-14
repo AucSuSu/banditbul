@@ -123,10 +123,12 @@ class _MainPageState extends State<MainPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Image.asset(
-                                      'assets/images/search_road.png',
-                                      width: phoneHeight * 0.8,
-                                      height: phoneHeight * 0.6,
+                                    Container(
+                                      child: Image.asset(
+                                        'assets/images/search_road.png',
+                                        width: phoneHeight * 0.8,
+                                        height: phoneHeight * 0.6,
+                                      ),
                                     ),
                                     // 이미지와 텍스트 사이의 간격(10%
                                     const Text(
@@ -164,7 +166,7 @@ class _MainPageState extends State<MainPage> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.only(top: 10),
+                                      padding: const EdgeInsets.only(top: 20),
                                       child: Image.asset(
                                         'assets/images/search_toilet.png',
                                         width: phoneHeight * 0.6,
