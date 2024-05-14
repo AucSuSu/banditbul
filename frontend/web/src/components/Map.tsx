@@ -36,6 +36,9 @@ import IconExitWhite from "../assets/IconExitWhite.svg";
 import IconStairWhite from "../assets/IconStairWhite.svg";
 import IconInfoWhite from "../assets/IconInfoWhite.svg";
 import IconGateWhite from "../assets/IconGateWhite.svg";
+import {stationStore} from '../store';
+
+
 const types = [
     "미선택",
     "화장실",
@@ -58,6 +61,7 @@ const picIcons = [
 
 const Map: React.FC = () => {
     const axios = Axios();
+    const stationData = stationStore(state => state.stationData)
     const [floor, _] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
@@ -419,7 +423,9 @@ const Map: React.FC = () => {
                         style={{
                             backgroundImage: `url(${IconStationTtile})`,
                         }}
-                    ></div>
+                    >
+                        <p className={styles.stationInfo}>{stationData.line}     {stationData.stationName}</p>
+                    </div>
                 </div>
 
                 <div className={styles.des_container}>

@@ -1,9 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface StationStore {
+interface TestDataStore {
     testData: string;
     setTestData: (newData: string) => void;
+}
+
+interface StationDataStore {
+    stationData: { line: string, stationName: string };
+    setStationData: (data: { line: string, stationName: string }) => void;
 }
 
 interface WebSocketStore {
@@ -11,15 +16,32 @@ interface WebSocketStore {
     setWebSocket: (ws: WebSocket) => void;
 }
 
-export const stationStore = create<StationStore>()(
+export const testDataStore = create<TestDataStore>()(
     persist(
         (set) => ({
             testData: "arim",
             setTestData: (newData) => set(() => ({ testData: newData })),
         }),
+        { name: "testDataStore" }
+    )
+);
+
+export const stationStore = create<StationDataStore>()(
+    persist(
+        (set) => ({
+            stationData: { line: '', stationName: '' },
+            setStationData: (data) => set(() => ({ stationData: data })),
+        }),
         { name: "stationStore" }
     )
 );
+
+const useWebSocketStore = create<WebSocketStore>((set) => ({
+    webSocket: null,
+    setWebSocket: (ws) => set(() => ({ webSocket: ws })),
+}));
+
+export default useWebSocketStore
 
 // export const getMapFunc = async (floor: number): Promise<MapInfo> => {
 //     const axios = Axios();
@@ -36,10 +58,3 @@ export const stationStore = create<StationStore>()(
 //         throw error;
 //     }
 // };
-
-const useWebSocketStore = create<WebSocketStore>((set) => ({
-    webSocket: null,
-    setWebSocket: (ws) => set({ webSocket: ws }),
-}));
-
-export default useWebSocketStore;
