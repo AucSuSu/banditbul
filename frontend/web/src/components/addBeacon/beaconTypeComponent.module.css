@@ -9,8 +9,8 @@
     /* height: 80%; */
     border-radius: 8px;
     gap: 20px;
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: black;
     padding-bottom: 30px;
 }
 
@@ -23,6 +23,7 @@
     text-align: center;
     justify-content: center;
     margin-bottom: 10px;
+    color: black;
 }
 
 .column {
@@ -36,23 +37,21 @@
     justify-content: center;
     padding: 10px;
     border-radius: 10px;
-    color: white;
+    color: black;
 }
 
 /* 입력 필드 스타일 */
-input[type="text"],
-input[type="number"] {
+.inputBox {
     width: 80%;
+    height: 90%;
     padding: 8px;
-    border: 1px solid white;
+    border: 2px solid #565656;
     border-radius: 50px;
     box-sizing: border-box;
-    outline: none;
-    background-color: transparent;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus {
+.inputBox:focus {
     font-weight: bold;
 }
 
@@ -60,7 +59,7 @@ input[type="number"]:focus {
 
 .dropdownInBox {
     width: 80%;
-    height: 80%;
+    height: 90%;
     cursor: pointer;
     padding: 8px;
     position: relative;
@@ -74,6 +73,7 @@ input[type="number"]:focus {
     background-color: rgba(52, 52, 52, 1);
     color: white;
     justify-content: space-between;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 .dropdownContainer .dropdownItem {

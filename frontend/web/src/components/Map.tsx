@@ -35,9 +35,9 @@ import IconExitWhite from "../assets/IconExitWhite.svg";
 import IconStairWhite from "../assets/IconStairWhite.svg";
 import IconInfoWhite from "../assets/IconInfoWhite.svg";
 import IconGateWhite from "../assets/IconGateWhite.svg";
-import {stationStore} from '../store';
-import Header from './header.tsx';
-
+import { stationStore } from "../store";
+import Header from "./header.tsx";
+import BgImage from "../assets/mainBackground.png";
 
 const types = [
     "미선택",
@@ -61,7 +61,7 @@ const picIcons = [
 
 const Map: React.FC = () => {
     const axios = Axios();
-    const stationData = stationStore(state => state.stationData)
+    const stationData = stationStore((state) => state.stationData);
     const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
@@ -80,8 +80,6 @@ const Map: React.FC = () => {
     );
     const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
     const [mapImgaeUrl, setMapImageUrl] = useState<string>();
-
-
 
     // websocket
     const ws = useRef<WebSocket | null>(null); // ws 객체
@@ -121,7 +119,7 @@ const Map: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log('floor 바뀜 : ', floor)
+        console.log("floor 바뀜 : ", floor);
         getMapInfo(floor);
         //websocket 객체 연결
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
@@ -161,8 +159,10 @@ const Map: React.FC = () => {
                     ...d.count, // 여러 비콘의 카운트를 한 번에 업데이트
                 }));
             } else if (d.type == "SOS") {
-                const result = beacons.some(e => e.beaconId === event.data.beaconId)
-                if(!result) setFloor(floor === -1? -2 : -1)
+                const result = beacons.some(
+                    (e) => e.beaconId === event.data.beaconId
+                );
+                if (!result) setFloor(floor === -1 ? -2 : -1);
 
                 if (!sosBeaconIdList.has(event.data.beaconId)) {
                     console.log("sosbeacon등록");
@@ -183,44 +183,6 @@ const Map: React.FC = () => {
             }
             console.log(sosBeaconIdList);
         };
-
-        // 수락 메세지를 보낸 경우 sosBeaconList에서 수락한 비콘 삭제하기
-
-        // websocket ==
-        // const resizeBeacon = () => {
-        //     console.log("resize");
-        //     const parentTarget = document.querySelector(
-        //         "#model"
-        //     ) as HTMLElement;
-        //     const parentElement = parentTarget.parentElement;
-        //     if (!parentElement) return;
-        //     // 부모 요소의 너비와 높이 가져오삼
-        //     const parentWidth = parentElement.offsetWidth;
-        //     const parentHeight = parentElement.offsetHeight;
-        //     // 백분율 계산
-        //     const newX = (x / parentWidth) * parentWidth;
-        //     const newY = (y / parentHeight) * parentHeight;
-        //     // 상대적인 위치를 상태로 업데이트
-        //     setX(newX);
-        //     setY(newY);
-        //     // 비콘의 위치 업데이트
-        //     const updatedBeacons = beacons.map((beacon) => ({
-        //         ...beacon,
-        //         coord: {
-        //             // 기존 parentWidth로 바꿔주기
-        //             x: (beacon.x / parentWidth) * 100,
-        //             y: (beacon.y / parentHeight) * 100,
-        //         },
-        //     }));
-        //     console.log(updatedBeacons);
-        //     setBeacons(updatedBeacons);
-        // };
-        // resizeBeacon();
-        // window.addEventListener("resize", resizeBeacon);
-        // return () => {
-        //     setNewBeacon(null);
-        //     window.removeEventListener("resize", resizeBeacon);
-        // };
     }, [floor, addEdgeState]);
 
     useEffect(() => {
@@ -361,18 +323,6 @@ const Map: React.FC = () => {
 
     const handleDrag = (e: DraggableEvent, ui: DraggableData) => {
         if (!e.target) return;
-
-        // 상대 위치 계산
-        // const parentTarget = document.querySelector(".model") as HTMLElement;
-        // const parentElement = parentTarget.parentElement;
-        // if (!parentElement) return; // 예외 처리: 부모 요소가 없는 경우
-        // // 부모 요소의 너비와 높이 가져오기
-        // const parentWidth = parentElement.offsetWidth;
-        // const parentHeight = parentElement.offsetHeight;
-        // // 드래그된 요소의 위치 계산
-        // const relativeX = (ui.x / parentWidth) * 100;
-        // const relativeY = (ui.y / parentHeight) * 100;
-
         setX(ui.x);
         setY(ui.y);
     };
@@ -421,17 +371,19 @@ const Map: React.FC = () => {
         setDeleteSelectBeacon(null);
     };
 
-
     return (
         <>
-            <div className={styles.mainContainer}>
-                <Header line={stationData.line} name={stationData.stationName}/>
-                {/* <div className={styles.titleContainer}>
-                    
-                    <div className={styles.titleImage} style={{ backgroundImage: `url(${IconStationTtile})`}}>
-                        <p className={styles.stationInfo}>{stationData.line}     {stationData.stationName}</p>
-                    </div>
-                </div> */}
+            <div
+                className={styles.mainContainer}
+                style={{
+                    backgroundImage: `url(${BgImage})`,
+                }}
+            >
+                <Header
+                    line={stationData.line}
+                    name={stationData.stationName}
+                />
+
                 <div className={styles.contentContainer}>
                     <div
                         className={styles.model}
@@ -517,26 +469,31 @@ const Map: React.FC = () => {
                                 />
                             </div>
                         ))}
-                    </div>
-                    <div className={styles.picContainer}>
-                        {picIcons.map((data, index) => (
-                            <div className={styles.picItem} key={index}>
-                                <img
-                                    className={styles.pic}
-                                    src={data.img}
-                                    alt=""
-                                />
-                                <div className={styles.typeName}>
-                                    {data.type}
+
+                        <div className={styles.picContainer}>
+                            {picIcons.map((data, index) => (
+                                <div className={styles.picItem} key={index}>
+                                    <img
+                                        className={styles.pic}
+                                        src={data.img}
+                                        alt=""
+                                    />
+                                    <div className={styles.typeName}>
+                                        {data.type}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
+
                     <div className={styles.rightContainer}>
                         <div
                             className={styles.beaconList}
                             style={{
                                 height: modalshow ? "100%" : "90%",
+                                backgroundColor: modalshow
+                                    ? "white"
+                                    : "transparent",
                             }}
                         >
                             {modalshow ? (
@@ -629,7 +586,7 @@ const Map: React.FC = () => {
                                                     className={
                                                         styles.information
                                                     }
-                                                    style={{ color: "white" }}
+                                                    style={{ color: "black" }}
                                                 >
                                                     우측 반딧불 아이콘을 원하는
                                                     위치에 드래그하세요! 모든
@@ -801,7 +758,6 @@ const Map: React.FC = () => {
                                                     {typeToKor(
                                                         item.beaconTYPE!
                                                     )}
-                                                    {item.beaconId}
                                                 </div>
                                                 <img src={IconUser} alt="" />
                                                 <div

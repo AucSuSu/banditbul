@@ -82,13 +82,7 @@ input[type="number"] {
 
 input[type="text"],
 input[type="number"] {
-    width: 80%;
-    padding: 8px;
-    border: 1px solid white;
-    border-radius: 50px;
-    box-sizing: border-box;
     outline: none;
-    background-color: transparent;
 }
 
 input[type="text"]:focus,

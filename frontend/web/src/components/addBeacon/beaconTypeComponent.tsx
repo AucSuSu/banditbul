@@ -98,6 +98,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -107,6 +108,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -116,6 +118,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -123,7 +126,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                     />
                 </div>
                 <div className={styles.column}>
-                    <div className={styles.question}>남자 화장실 위치</div>
+                    <div className={styles.question}>남자 화장실</div>
                     <ul
                         className={styles.dropdownInBox}
                         onClick={() => {
@@ -189,7 +192,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
                     </ul>
                 </div>
                 <div className={styles.column}>
-                    <div className={styles.question}>여자 화장실 위치</div>
+                    <div className={styles.question}>여자 화장실</div>
                     <ul
                         className={styles.dropdownInBox}
                         onClick={() => {
@@ -318,6 +321,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -327,6 +331,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -336,6 +341,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -656,6 +662,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소</div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -665,6 +672,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -674,6 +682,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -683,6 +692,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>출구 번호 </div>
                     <input
+                        className={styles.inputBox}
                         name="exitNumber"
                         type="number"
                         min="1"
@@ -900,6 +910,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>랜드 마크 정보</div>
                     <input
+                        className={styles.inputBox}
                         name="exitNumber"
                         type="text"
                         placeholder="ex) 롯데백화점, CGV"
@@ -959,6 +970,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -968,6 +980,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -977,6 +990,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -1072,6 +1086,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -1081,6 +1096,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -1090,6 +1106,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -1184,6 +1201,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -1193,6 +1211,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -1202,6 +1221,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -1297,6 +1317,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
                     <input
+                        className={styles.inputBox}
                         name="macAddress"
                         type="text"
                         placeholder="ex) 00:00:00:00"
@@ -1306,6 +1327,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
+                        className={styles.inputBox}
                         name="latitude"
                         type="number"
                         placeholder="ex) 35.000000"
@@ -1315,6 +1337,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="longitude"
                         placeholder="ex) 127.000000"
@@ -1324,6 +1347,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
                 <div className={styles.column}>
                     <div className={styles.question}>방면</div>
                     <input
+                        className={styles.inputBox}
                         type="text"
                         name="direction"
                         placeholder="ex) 000방면 n-n"
