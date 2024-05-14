@@ -40,6 +40,19 @@ body {
     background-repeat: no-repeat;
     width: 320px; /* 부모 요소에 맞게 너비를 100%로 설정 */
     height: 90%; /* 부모 요소에 맞게 높이를 100%로 설정 */
+    color: black;
+    font-size: xx-large;
+    white-space: pre-wrap;
+}
+
+.stationInfo {
+    width: inherit;
+    height: inherit;
+    /* text-align: center; */
+    /* justify-content: center; */
+    align-items: center;
+    display: flex;
+    padding-left: 17.5%;
 }
 
 .horizontalLine {
@@ -345,6 +358,10 @@ body {
 
 .deleteDes {
     height: 40%;
+}
+
+.stationInfo {
+
 }
 
 @keyframes sos {

@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = 'https://banditbul.co.kr/api';
 
@@ -7,7 +6,6 @@ axios.defaults.withCredentials = true;
 
 // formData
 const Auth = (): AxiosInstance => {
-  const navigate = useNavigate()
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -23,7 +21,6 @@ const Auth = (): AxiosInstance => {
     async (error) => {
       if (error.response.status === 401) {
         alert('로그인 만료')
-        navigate('/')
       }
 
       return Promise.reject(error);
@@ -37,7 +34,6 @@ export default Auth;
 
 // 기본
 export const Axios = (): AxiosInstance => {
-  const navigate = useNavigate()
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -50,7 +46,6 @@ export const Axios = (): AxiosInstance => {
     async (error) => {
       if (error.response.status === 401) {
         alert('로그인 만료')
-        navigate('/')
       }
 
       return Promise.reject(error);
