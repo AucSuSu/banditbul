@@ -57,7 +57,7 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
     border: solid 3px #c2bbbb;
 
     &:after {
-        content: '${({ isChecked }) => isChecked ? "승강장" : "대합실"}';
+        content: '${({ isChecked }) => isChecked ? "대합실" : "승강장"}';
         position: absolute;
         width: 80px;
         height: 40px;

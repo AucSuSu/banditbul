@@ -20,7 +20,6 @@ import styles from "./map.module.css";
 import { Axios } from "../util/axios.ts";
 import ToggleButton from "./slideToggle/toggle.tsx";
 import addBeaconInfo from "../assets/addBeaconInfo.png";
-import IconStationTtile from "../assets/iconStationTitle.png";
 import Icon from "../assets/IconDownArrow.svg";
 import IconDelete from "../assets/IconDelete.svg";
 import IconUser from "../assets/IconUser.svg";
@@ -37,6 +36,7 @@ import IconStairWhite from "../assets/IconStairWhite.svg";
 import IconInfoWhite from "../assets/IconInfoWhite.svg";
 import IconGateWhite from "../assets/IconGateWhite.svg";
 import {stationStore} from '../store';
+import Header from './header.tsx';
 
 
 const types = [
@@ -81,6 +81,8 @@ const Map: React.FC = () => {
     const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
     const [mapImgaeUrl, setMapImageUrl] = useState<string>();
 
+
+
     // websocket
     const ws = useRef<WebSocket | null>(null); // ws 객체
     // test 용
@@ -105,6 +107,7 @@ const Map: React.FC = () => {
             console.log("진입 시도");
             const response = await axios.get(`/beaconlist/${floor}`);
             const data = response.data.object;
+
             if (data != undefined) {
                 setBeacons(data.beaconList);
                 setEdgeList(data.edgeList);
@@ -118,6 +121,7 @@ const Map: React.FC = () => {
     };
 
     useEffect(() => {
+        console.log('floor 바뀜 : ', floor)
         getMapInfo(floor);
         //websocket 객체 연결
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
@@ -157,6 +161,9 @@ const Map: React.FC = () => {
                     ...d.count, // 여러 비콘의 카운트를 한 번에 업데이트
                 }));
             } else if (d.type == "SOS") {
+                const result = beacons.some(e => e.beaconId === event.data.beaconId)
+                if(!result) setFloor(floor === -1? -2 : -1)
+
                 if (!sosBeaconIdList.has(event.data.beaconId)) {
                     console.log("sosbeacon등록");
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
@@ -415,20 +422,16 @@ const Map: React.FC = () => {
     };
 
 
-    // const floorType = [{title : '승강장', floor : -1}, {title : '대합실', floor : -2}]
     return (
         <>
             <div className={styles.mainContainer}>
-                <div className={styles.titleContainer}>
+                <Header line={stationData.line} name={stationData.stationName}/>
+                {/* <div className={styles.titleContainer}>
                     
                     <div className={styles.titleImage} style={{ backgroundImage: `url(${IconStationTtile})`}}>
                         <p className={styles.stationInfo}>{stationData.line}     {stationData.stationName}</p>
                     </div>
-                </div>
-
-                <div className={styles.des_container}>
-                    
-                </div>
+                </div> */}
                 <div className={styles.contentContainer}>
                     <div
                         className={styles.model}
