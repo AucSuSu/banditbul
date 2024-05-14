@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 @font-face {
+    font-family: "PyeongChangPeace";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChangPeace-Light.woff2")
+        format("woff2");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
     font-family: "Pretendard-semi";
     src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
         format("woff");
@@ -72,7 +80,6 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-
 input[type="text"],
 input[type="number"] {
     width: 80%;
@@ -109,5 +116,3 @@ input[type="number"]:focus {
     background-color: #f1f1f1;
     border-radius: 50px;
 }
-
-
