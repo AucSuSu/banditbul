@@ -81,7 +81,6 @@ const Login = () => {
                             로그인
                         </button>
                     </form>
-                    <p>문의사항 : www.banditbul.com</p>
                 </div>
             </div>
         </div>

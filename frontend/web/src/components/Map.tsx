@@ -18,7 +18,7 @@ import {
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
 import { Axios } from "../util/axios.ts";
-// import ToggleButton from "./slideToggle/toggle.tsx";
+import ToggleButton from "./slideToggle/toggle.tsx";
 import addBeaconInfo from "../assets/addBeaconInfo.png";
 import IconStationTtile from "../assets/iconStationTitle.png";
 import Icon from "../assets/IconDownArrow.svg";
@@ -62,7 +62,7 @@ const picIcons = [
 const Map: React.FC = () => {
     const axios = Axios();
     const stationData = stationStore(state => state.stationData)
-    const [floor, _] = useState<number>(-1);
+    const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
     const [edgeList, setEdgeList] = useState<Edge[]>([]);
@@ -414,43 +414,20 @@ const Map: React.FC = () => {
         setDeleteSelectBeacon(null);
     };
 
+
+    // const floorType = [{title : '승강장', floor : -1}, {title : '대합실', floor : -2}]
     return (
         <>
             <div className={styles.mainContainer}>
                 <div className={styles.titleContainer}>
-                    <div
-                        className={styles.titleImage}
-                        style={{
-                            backgroundImage: `url(${IconStationTtile})`,
-                        }}
-                    >
+                    
+                    <div className={styles.titleImage} style={{ backgroundImage: `url(${IconStationTtile})`}}>
                         <p className={styles.stationInfo}>{stationData.line}     {stationData.stationName}</p>
                     </div>
                 </div>
 
                 <div className={styles.des_container}>
-                    {/* {floorType.map((e, index) => (
-                        <div
-                            key={index}
-                            onClick={() => setFloor(e.floor)}
-                            style={{
-                                cursor: "pointer",
-                                backgroundColor:
-                                    floor == index ? "navy" : "ivory",
-                            }}
-                        >
-                            {e.title}
-                        </div>
-                    ))} */}
-                    {/* <div
-                        style={{
-                            backgroundColor: "black",
-                            display: "inline-block",
-                        }}
-                    >
-                        {" "}
-                        <ToggleButton floor={floor} setFloor={setFloor} />
-                    </div> */}
+                    
                 </div>
                 <div className={styles.contentContainer}>
                     <div
@@ -463,6 +440,7 @@ const Map: React.FC = () => {
                             backgroundRepeat: "no-repeat",
                         }}
                     >
+                        <ToggleButton floor={floor} setFloor={setFloor} />
                         {newBeacon && (
                             <Draggable
                                 onStop={(e, ui) => handleDrag(e, ui)}

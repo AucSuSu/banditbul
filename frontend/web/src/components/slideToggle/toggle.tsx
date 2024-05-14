@@ -1,98 +1,84 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-type ToggleType = {
-    isFloor: boolean;
-};
 
 interface ToggleButtonProps {
     floor: number;
     setFloor: React.Dispatch<React.SetStateAction<number>>;
 }
 
+interface SwitchLabelProps {
+    isChecked: boolean;
+}
+
 const ToggleButton: React.FC<ToggleButtonProps> = ({ floor, setFloor }) => {
-    const [isFloor, setIsFloor] = useState<boolean>(floor == -1);
+    const [isFloor, setIsFloor] = useState<boolean>(floor === -1);
 
     const toggleHandler = () => {
-        if (floor == -1) setFloor(-2);
+        if (floor === -1) setFloor(-2);
         else setFloor(-1);
 
         setIsFloor((prev) => !prev);
     };
 
     return (
-        <ButtonContainer>
-            <CheckBox type="checkbox" id="toggleBtn" onChange={toggleHandler} />
-            <ButtonLable htmlFor="toggleBtn" isFloor={isFloor} />
-        </ButtonContainer>
+        <StyledCheckbox>
+            <InputCheckbox type="checkbox" id="toggleBtn" checked={isFloor} onChange={toggleHandler} />
+            <SwitchLabel htmlFor="toggleBtn" isChecked={isFloor}/>
+        </StyledCheckbox>
     );
 };
 
 export default ToggleButton;
 
-const ButtonContainer = styled.div`
-    display: flex;
-    z-index: 0;
+const StyledCheckbox = styled.div`
+    position: relative;
+    display: inline-block;
 `;
 
-const CheckBox = styled.input`
-    display: none;
+const InputCheckbox = styled.input`
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0;
+    cursor: pointer;
 `;
 
-const ButtonLable = styled.label<ToggleType>`
-    z-index: 10;
-    width: 12rem;
-    height: 3rem;
-    border-radius: 2em;
-    background-color : gray;
+const SwitchLabel = styled.label<SwitchLabelProps>`
+    width: 150px;
+    height: 50px;
+    background: #ffffff;
+    position: relative;
+    display: inline-block;
+    border-radius: 50px;
+    transition: background-color 0.4s;
+    border: solid 3px #c2bbbb;
 
-    ::before {
-        display : flex; 
-        position : absolute;
-        content : '대합실'
-        padding-left : 1em; 
-        justify-content : flex-start; 
-        align-items : center;
-        width : 10rem;
-        height : 3rem; 
-        color : white;
-        transition : all 0.2s ease-in-out;
-    }
-
-    ::after {
+    &:after {
+        content: '${({ isChecked }) => isChecked ? "승강장" : "대합실"}';
+        position: absolute;
+        width: 80px;
+        height: 40px;
+        border-radius: 50px;
+        background: #c2bbbb;
+        top: 3.5px;
+        left: 5px;
+        z-index: 2;
+        box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+        transition: left 0.5s, background-color 0.5s;
         display: flex;
-        position: relative;
-        content: '승강장';
-        width: 6rem;
-        height: 3rem;
         justify-content: center;
         align-items: center;
-        right: 0;
-        left : 6rem;
-        color: black;
-        font-size: 1rem;
-        font-weight: bold;
-        border-radius: 2rem;
-        box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.16);
-        background: white;
-        transition: all 0.2s ease-in-out;
+
     }
 
-    ${(props) =>
-        props.isFloor &&
-        `
-         &::before {
-            content : '승강장';
-            padding-right : 1rem; 
-            justify-content : flex-end;
-         };
-
-         &::after {
-            content : '대합실'
-            width: 6rem;
-            height : 3rem; 
-            left : 0rem;
-            justify-content : flex-start;
-         }
-
-        `}
+    ${InputCheckbox}:checked + & {
+        border: solid 3px #487751;
+        &:after {
+            left: calc(100% - 85px);
+            background: #487751;
+        }
+    }
 `;
