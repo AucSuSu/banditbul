@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
-import 'package:frontend/store/SessionController.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:frontend/util/tts_function.dart';
 import 'package:get/get.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
-import 'package:dio/dio.dart';
-import 'package:frontend/util/websocket.dart';
 
 class Object {
   final sessionId;
