@@ -26,7 +26,7 @@ class _SosPageState extends State<SosPage> {
                     onPressed: () {
                       beaconController.setBeaconId('');
                     },
-                    child: Text(
+                    child: const Text(
                       '비콘 아이디 리셋',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
@@ -35,7 +35,7 @@ class _SosPageState extends State<SosPage> {
                     onPressed: () {
                       beaconController.setBeaconId('CA:8D:AC:9C:63:64');
                     },
-                    child: Text(
+                    child: const Text(
                       '비콘 아이디 변경',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w700),

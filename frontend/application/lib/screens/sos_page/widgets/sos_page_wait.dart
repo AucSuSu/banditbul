@@ -38,6 +38,9 @@ class _SosPageWaitState extends State<SosPageWait> {
   // 페이지 들어오자마자 데이터 계속 받으면서
   late WebSocketChannel _channel =
       IOWebSocketChannel.connect('wss://banditbul.co.kr/socket');
+  // controller 등록
+  BeaconController beaconController = Get.find<BeaconController>();
+  SessionController sessionController = Get.find<SessionController>();
 
   @override
   void initState() {
@@ -54,10 +57,6 @@ class _SosPageWaitState extends State<SosPageWait> {
       print('소켓 통신에 실패했습니다. $error');
     });
 
-    // controller 등록
-
-    BeaconController beaconController = Get.find<BeaconController>();
-    SessionController sessionController = Get.find<SessionController>();
     // beaconId -> 가장 까운거 넣어주기
     String beaconId = beaconController.beaconId.value;
     getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
@@ -97,6 +96,21 @@ class _SosPageWaitState extends State<SosPageWait> {
     }
   }
 
+  void cancelSos() {
+    if (_channel == null) {
+      throw Exception("WebSocket Channle 없음");
+    } else {
+      print("message 전송");
+      String beaconId = beaconController.beaconId.value;
+      String sessionId = Get.find<SessionController>().sessionId.value;
+      print("sessionId" + sessionId);
+      String uuId = "1234";
+      _channel!.sink.add(
+          '{"type" : "CANCEL", "beaconId" : "${beaconId}", "sessionId" : "${sessionId}", "uuId" : "${uuId}"}');
+    }
+    Get.back();
+  }
+
   // data 받기
   void onData(dynamic data) {
     print("여기다");
@@ -112,11 +126,10 @@ class _SosPageWaitState extends State<SosPageWait> {
     print('세션 id: ${Get.find<SessionController>().sessionId.value}');
     print('비콘 id: ${Get.find<BeaconController>().beaconId.value}');
     print('messageDto 세션 id: ${messageDto.sessionId}');
+
     // 만약 SOS_ACCEPT
-    if (messageDto.type == "SOS_ACCEPT"
-        // messageDto.sessionId == Get.find<BeaconController>().beaconId.value &&
-        // messageDto.sessionId == Get.find<SessionController>().sessionId.value
-        ) {
+    if (messageDto.type == "SOS_ACCEPT" &&
+        messageDto.beaconId == Get.find<BeaconController>().beaconId.value) {
       // 관리자가 승인했음 -> 승인완료로 돌아가기
       Get.to(() => const SosPageAccept());
     }
@@ -191,10 +204,7 @@ class _SosPageWaitState extends State<SosPageWait> {
               borderColor: const Color(0xff33E9E9),
               textColor: Colors.black,
               onPressed: () {
-                // Get.back();
-
-                // test mode ---
-                Get.to(() => const SosPageAccept());
+                cancelSos();
               },
             )
           ],
