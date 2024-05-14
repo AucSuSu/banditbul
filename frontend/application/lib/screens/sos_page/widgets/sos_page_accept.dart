@@ -15,7 +15,7 @@ class SosPageAccept extends StatefulWidget {
 class _SosPageAcceptState extends State<SosPageAccept> {
   @override
   void initState() {
-    _playManagerAcceptVoice();
+    // _playManagerAcceptVoice();
     super.initState();
   }
 
@@ -63,20 +63,13 @@ class _SosPageAcceptState extends State<SosPageAccept> {
                 child: Column(
                   children: [
                     Text(
-                      '관리자가',
+                      '관리자가 \n접수하였습니다',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
                         fontWeight: FontWeight.w700,
                       ),
-                    ),
-                    Text(
-                      '접수하였습니다',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),

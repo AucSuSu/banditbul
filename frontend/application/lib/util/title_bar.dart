@@ -9,18 +9,15 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       centerTitle: true, // 제목이 가운데 오도록 함
       iconTheme: const IconThemeData(color: Colors.white), // 뒤로가기 버튼 하얀색
-      title: const Text(
-        // 제목
-        '반딧불',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 30,
-        ),
+      title: Image.asset(
+        'assets/images/bandi_bug.png',
+        height: 40,
       ),
       automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight); // AppBar의 표준 높이 제공
+  Size get preferredSize =>
+      const Size.fromHeight(kToolbarHeight); // AppBar의 표준 높이 제공
 }

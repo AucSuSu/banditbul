@@ -8,7 +8,6 @@ import 'package:frontend/screens/navigation_page/navigation_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
-import 'package:frontend/util/dotted_border_text.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
 
@@ -94,7 +93,7 @@ class _MainPageState extends State<MainPage> {
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.black,
                       ),
                       margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -188,7 +187,7 @@ class _MainPageState extends State<MainPage> {
                           GestureDetector(
                             onTap: () {
                               // 버튼을 클릭했을 때 수행하는 동작
-                              Get.to(() => SosPageWait());
+                              Get.to(() => const SosPageWait());
                             },
                             child: Container(
                               decoration: BoxDecoration(

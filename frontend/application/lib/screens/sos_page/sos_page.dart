@@ -47,9 +47,9 @@ class _SosPageState extends State<SosPage> {
                     color: Colors.black,
                   ),
                 ),
-                Text(
+                const Text(
                   '폰트 테스트',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontSize: 30,
                     color: Colors.black,

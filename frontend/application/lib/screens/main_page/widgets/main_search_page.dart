@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frontend/screens/search_page/search_page.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
-import 'package:frontend/util/dotted_border_text.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +23,7 @@ class MainSearchPage extends StatelessWidget {
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black,
                     ),
                     child: Column(
@@ -116,7 +114,7 @@ class MainSearchPage extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             // 버튼을 클릭했을 때 수행하는 동작
-                            Get.to(() => SosPageWait());
+                            Get.to(() => const SosPageWait());
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -133,7 +131,7 @@ class MainSearchPage extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.only(top: 10),
+                                    padding: const EdgeInsets.only(top: 10),
                                     child: Image.asset(
                                       'assets/images/sos.png',
                                       width: phoneHeight * 0.6,

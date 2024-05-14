@@ -36,7 +36,7 @@ void getSessionId(String beaconId) async {
 
 class _SosPageWaitState extends State<SosPageWait> {
   // 페이지 들어오자마자 데이터 계속 받으면서
-  late WebSocketChannel _channel =
+  late final WebSocketChannel _channel =
       IOWebSocketChannel.connect('wss://banditbul.co.kr/socket');
   // controller 등록
   BeaconController beaconController = Get.find<BeaconController>();
@@ -83,31 +83,23 @@ class _SosPageWaitState extends State<SosPageWait> {
   void startConnection() async {}
 
   void sendMessage(MessageDto dto) {
-    if (_channel == null) {
-      throw Exception("WebSocket Channle 없음");
-    } else {
-      print("message 전송");
+    print("message 전송");
 
-      // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket',
-      //     headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
+    // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket',
+    //     headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
 
-      _channel!.sink.add(
-          '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "uuId" : "${dto.uuId}"}');
-    }
+    _channel.sink.add(
+        '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "uuId" : "${dto.uuId}"}');
   }
 
   void cancelSos() {
-    if (_channel == null) {
-      throw Exception("WebSocket Channle 없음");
-    } else {
-      print("message 전송");
-      String beaconId = beaconController.beaconId.value;
-      String sessionId = Get.find<SessionController>().sessionId.value;
-      print("sessionId" + sessionId);
-      String uuId = "1234";
-      _channel!.sink.add(
-          '{"type" : "CANCEL", "beaconId" : "${beaconId}", "sessionId" : "${sessionId}", "uuId" : "${uuId}"}');
-    }
+    print("message 전송");
+    String beaconId = beaconController.beaconId.value;
+    String sessionId = Get.find<SessionController>().sessionId.value;
+    print("sessionId$sessionId");
+    String uuId = "1234";
+    _channel.sink.add(
+        '{"type" : "CANCEL", "beaconId" : "$beaconId", "sessionId" : "$sessionId", "uuId" : "$uuId"}');
     Get.back();
   }
 
@@ -161,20 +153,13 @@ class _SosPageWaitState extends State<SosPageWait> {
                 child: Column(
                   children: [
                     Text(
-                      '도움을',
+                      '도움을 \n요청 중입니다',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,
                         fontWeight: FontWeight.w700,
                       ),
-                    ),
-                    Text(
-                      '요청중입니다',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),

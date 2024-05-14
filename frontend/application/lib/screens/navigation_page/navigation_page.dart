@@ -136,6 +136,7 @@ class _NavigationPageState extends State<NavigationPage> {
                       fontSize: 27,
                       fontWeight: FontWeight.w700,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
