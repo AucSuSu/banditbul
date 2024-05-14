@@ -21,8 +21,6 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
   bool isEnd = false;
   bool isProcessing = false; // 음성 처리 상태를 추적하는 변수
   final VoiceRecognitionService _voiceService = VoiceRecognitionService();
-  final ScrollController _scrollController =
-      ScrollController(); // ScrollController 추가
 
   @override
   // initState 함수를 사용하여 위젯이 생성될 때 API 요청 함수를 호출
@@ -34,7 +32,6 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
   @override
   void dispose() {
     _voiceService.dispose();
-    _scrollController.dispose(); // ScrollController 해제
     super.dispose();
   }
 
@@ -45,18 +42,13 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
     });
   }
 
-  // 메시지 리스트 관리
+  // 메시지 개수를 3개 이하로 유지
   void manageMessageList(Map<String, dynamic> newMessage) {
     setState(() {
+      if (messages.length >= 3) {
+        messages.removeAt(0); // 오래된 메시지 삭제
+      }
       messages.add(newMessage); // 새 메시지 추가
-    });
-    // 새로운 메시지가 추가될 때마다 리스트 끝으로 스크롤
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
     });
   }
 
@@ -123,7 +115,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         if (e.response?.statusCode == 404) {
           // 역 이름 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다. \na역 b번 출구 형태로 입력해주세요',
             'isUser': false,
           };
           setState(() {
@@ -132,7 +124,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         } else if (e.response?.statusCode == 403) {
           // 출구 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다. \na역 b번 출구 형태로 입력해주세요',
             'isUser': false,
           };
           setState(() {
@@ -166,11 +158,13 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
           .stopRecording(); // Assuming this now returns a Future<String>
       if (filePath.isNotEmpty) {
         String text = await _voiceService.convertSpeechToText(filePath);
+        // if (text.isNotEmpty) {
         setState(() {
           isProcessing = false; // 음성 인식 처리 완료
           manageMessageList({'text': text, 'isUser': true});
           findRoute(text);
         });
+        // }
       } else {
         setState(() {
           isProcessing = false; // 파일이 비어있으면 처리 완료
@@ -191,13 +185,12 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
           const TitleBar(),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.only(bottom: 100),
               width: double.infinity,
               color: Colors.black,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: ListView.builder(
-                  controller: _scrollController, // 스크롤 컨트롤러 추가
+                  // messages 리스트에 메시지가 없거나 마지막 메시지의 isUser가 false이고 isEnd가 false일 경우에만 음성입력 버튼을 표시
                   itemCount: messages.isEmpty || messages.last['isUser']
                       ? messages.length
                       : messages.length + 1,

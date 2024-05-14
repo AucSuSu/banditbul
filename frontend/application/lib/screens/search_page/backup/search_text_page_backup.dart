@@ -23,7 +23,6 @@ class _SearchTextPageState extends State<SearchTextPage> {
       TextEditingController(); // 텍스트 입력을 위한 컨트롤러
   FocusNode textFocusNode = FocusNode(); // 텍스트 필드 포커스를 위한 FocusNode 추가
   bool isEnd = false;
-  final ScrollController _scrollController = ScrollController();
 
   @override
   // initState 함수를 사용하여 위젯이 생성될 때 API 요청 함수를 호출
@@ -39,7 +38,6 @@ class _SearchTextPageState extends State<SearchTextPage> {
   @override
   void dispose() {
     textFocusNode.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -53,14 +51,10 @@ class _SearchTextPageState extends State<SearchTextPage> {
   // 메시지 개수를 3개이하로 유지
   void manageMessageList(Map<String, dynamic> newMessage) {
     setState(() {
+      if (messages.length >= 3) {
+        messages.removeAt(0); // 오래된 메시지 삭제
+      }
       messages.add(newMessage); // 새 메시지 추가
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
     });
   }
 
@@ -128,7 +122,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
         if (e.response?.statusCode == 404) {
           // 역 이름 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다. \na역 b번 출구 형태로 입력해주세요.',
             'isUser': false,
           };
           setState(() {
@@ -137,7 +131,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
         } else if (e.response?.statusCode == 403) {
           // 출구 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다. \na역 b번 출구 형태로 입력해주세요.',
             'isUser': false,
           };
           setState(() {
@@ -175,13 +169,12 @@ class _SearchTextPageState extends State<SearchTextPage> {
             const TitleBar(),
             Expanded(
               child: Container(
-                padding: const EdgeInsets.only(bottom: 100),
                 width: double.infinity,
                 color: Colors.black,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: ListView.builder(
-                    controller: _scrollController,
+                    // messages 리스트에 메시지가 없거나 마지막 메시지의 isUser가 false이고 isEnd가 false일 경우에만 TextField를 추가합니다.
                     itemCount: messages.isEmpty || messages.last['isUser']
                         ? messages.length
                         : messages.length + 1,
