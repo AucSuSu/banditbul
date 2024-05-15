@@ -37,12 +37,12 @@ const Login = () => {
         <div className="flex-cc h-screen w-full font-jamsil bg-white text-black">
             <div className="flex-c w-full h-full ">
                 <img
-                    className="h-[100%] w-[50%] object-cover"
+                    className="h-[100%] w-[60%] object-cover"
                     src={subway}
                     alt=""
                 />
-                <div className="h-[60%] w-[50%] flex-cc">
-                    <div className="flex items-center flex-col">
+                <div className="h-[60%] w-[40%] flex-cc pe-40">
+                    <div className="flex items-center flex-col ">
                         <div
                             className="font-PyeongChangPeaceBold text-7xl"
                             style={{
@@ -59,7 +59,7 @@ const Login = () => {
                         className="flex-cc h-full w-full mt-20"
                         onSubmit={handleLogin}
                     >
-                        <div className="flex items-center h-[15%] w-[50%] border-basic m-2.5">
+                        <div className="flex items-center h-[15%] w-[70%] border-basic m-2.5">
                             <img
                                 className="w-[5%] object-cover mx-5"
                                 src={idImage}
@@ -69,11 +69,11 @@ const Login = () => {
                                 className="w-[60%] h-[80%] pl-2.5 mr-2"
                                 type="text"
                                 value={loginId}
-                                placeholder="아이디"
+                                placeholder="아이디 입력"
                                 onChange={(e) => setLoginId(e.target.value)}
                             />
                         </div>
-                        <div className="flex items-center h-[15%] w-[50%] border-basic m-2.5">
+                        <div className="flex items-center h-[15%] w-[70%] border-basic m-2.5">
                             <img
                                 className="w-[5%] object-cover mx-5 "
                                 src={passwordImage}
@@ -83,12 +83,12 @@ const Login = () => {
                                 className="w-[60%] h-[80%] pl-2.5 mr-2"
                                 type="password"
                                 value={password}
-                                placeholder="비밀번호"
+                                placeholder="비밀번호 입력"
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
                         <button
-                            className="w-[20%] h-[12.5%] mt-10 border-2
+                            className="w-[20%] h-[15%] mt-10 border-2
                         rounded-full shadow-sm text-white font-bold 
                         hover:scale-105  hover:bg-pos-100"
                             type="submit"
