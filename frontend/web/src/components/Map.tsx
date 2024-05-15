@@ -23,18 +23,18 @@ import addBeaconInfo from "../assets/addBeaconInfo.png";
 import Icon from "../assets/IconDownArrow.svg";
 import IconDelete from "../assets/IconDelete.svg";
 import IconUser from "../assets/IconUser.svg";
-// import IconElevator from "../assets/IconElevator.svg";
-// import IconEscalator from "../assets/IconEscalator.svg";
-// import IconExit from "../assets/IconExit.svg";
-// import IconStair from "../assets/IconStair.svg";
-// import IconInfo from "../assets/IconInfo.svg";
-// import IconGate from "../assets/IconGate.svg";
-import IconElevatorWhite from "../assets/IconElevatorWhite.svg";
-import IconEscalatorWhite from "../assets/IconEscalatorWhite.svg";
-import IconExitWhite from "../assets/IconExitWhite.svg";
-import IconStairWhite from "../assets/IconStairWhite.svg";
-import IconInfoWhite from "../assets/IconInfoWhite.svg";
-import IconGateWhite from "../assets/IconGateWhite.svg";
+import IconElevator from "../assets/IconElevator.svg";
+import IconEscalator from "../assets/IconEscalator.svg";
+import IconExit from "../assets/IconExit.svg";
+import IconStair from "../assets/IconStair.svg";
+import IconInfo from "../assets/IconInfo.svg";
+import IconGate from "../assets/IconGate.svg";
+// import IconElevatorWhite from "../assets/IconElevatorWhite.svg";
+// import IconEscalatorWhite from "../assets/IconEscalatorWhite.svg";
+// import IconExitWhite from "../assets/IconExitWhite.svg";
+// import IconStairWhite from "../assets/IconStairWhite.svg";
+// import IconInfoWhite from "../assets/IconInfoWhite.svg";
+// import IconGateWhite from "../assets/IconGateWhite.svg";
 import { stationStore } from "../store";
 import Header from "./header.tsx";
 import BgImage from "../assets/mainBackground.png";
@@ -51,12 +51,12 @@ const types = [
 ];
 
 const picIcons = [
-    { type: "엘리베이터", img: IconElevatorWhite },
-    { type: "에스컬레이터", img: IconEscalatorWhite },
-    { type: "출구", img: IconExitWhite },
-    { type: "개찰구", img: IconGateWhite },
-    { type: "관리실", img: IconInfoWhite },
-    { type: "계단", img: IconStairWhite },
+    { type: "엘리베이터", img: IconElevator },
+    { type: "에스컬레이터", img: IconEscalator },
+    { type: "출구", img: IconExit },
+    { type: "개찰구", img: IconGate },
+    { type: "관리실", img: IconInfo },
+    { type: "계단", img: IconStair },
 ];
 
 const Map: React.FC = () => {
@@ -494,6 +494,9 @@ const Map: React.FC = () => {
                                 backgroundColor: modalshow
                                     ? "white"
                                     : "transparent",
+                                boxShadow: modalshow
+                                    ? "0px 4px 16px rgba(0, 0, 0, 0.2)"
+                                    : "",
                             }}
                         >
                             {modalshow ? (
@@ -589,8 +592,8 @@ const Map: React.FC = () => {
                                                     style={{ color: "black" }}
                                                 >
                                                     우측 반딧불 아이콘을 원하는
-                                                    위치에 드래그하세요! 모든
-                                                    위치는 바라보는 방향
+                                                    위치에 드래그하세요! <br />
+                                                    모든 위치는 바라보는 방향
                                                     기준으로 지정해주세요.
                                                 </div>
                                             </div>
