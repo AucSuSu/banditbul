@@ -99,7 +99,7 @@ const Map: React.FC = () => {
 
     const getMapInfo = async (floor: number) => {
         //     const axios = Axios();
-
+        console.log("check");
         try {
             console.log("진입 시도");
             const response = await axios.get(`/beaconlist/${floor}`);
@@ -312,6 +312,8 @@ const Map: React.FC = () => {
     // 저장이 완료 되었거나 완료하지 않고 닫은 경우
     const closeAddModal = () => {
         // 리스트 새로 받아오기 ===
+
+        console.log("closeModal");
         setNewBeacon(null); // 없애야함
         getMapInfo(floor);
         setModalshow(false);

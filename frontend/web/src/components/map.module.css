@@ -122,9 +122,14 @@ body {
     background-color: rgba(34, 34, 34, 1);
 }
 
+.beaconListItem:hover {
+    background-color: #6565ff;
+}
+
 .beaconListItem:hover,
 .sosbeaconListItem:hover {
     transition: 0.3s;
+    background-color: #6565ff;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
 }
 
