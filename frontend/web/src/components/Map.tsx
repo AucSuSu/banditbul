@@ -257,6 +257,7 @@ const Map: React.FC = () => {
         }
         // 각 비콘 선택 가능하게 하기
         setAddEdgeState(!addEdgeState);
+        getMapInfo(floor);
         // setSelectedEdges([]);
         // 버튼은 저장하기로 바꾸기
     };
@@ -312,6 +313,7 @@ const Map: React.FC = () => {
     const closeAddModal = () => {
         // 리스트 새로 받아오기 ===
         setNewBeacon(null); // 없애야함
+        getMapInfo(floor);
         setModalshow(false);
         setSelectType(0);
     };
