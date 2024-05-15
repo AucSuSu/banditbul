@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from "axios";
 
 const BASE_URL = "https://banditbul.co.kr/api";
 
@@ -8,7 +8,7 @@ axios.defaults.withCredentials = true;
 const Auth = (): AxiosInstance => {
     const axiosInstance = axios.create({
         baseURL: BASE_URL,
-        withCredentials: true
+        withCredentials: true,
     });
 
     axiosInstance.interceptors.response.use(
@@ -29,7 +29,7 @@ const Auth = (): AxiosInstance => {
 // Axios 함수 수정
 export const Axios = (): AxiosInstance => {
     const axiosInstance = axios.create({
-        baseURL: BASE_URL
+        baseURL: BASE_URL,
     });
 
     axiosInstance.interceptors.response.use(

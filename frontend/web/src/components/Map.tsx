@@ -98,7 +98,6 @@ const Map: React.FC = () => {
     ]);
 
     const getMapInfo = async (floor: number) => {
-        //     const axios = Axios();
         console.log("check");
         try {
             console.log("진입 시도");
@@ -109,11 +108,9 @@ const Map: React.FC = () => {
                 setBeacons(data.beaconList);
                 setEdgeList(data.edgeList);
                 setMapImageUrl(data.mapImageUrl);
-                // alert("성공");
             }
         } catch (error) {
             console.log(error);
-            // alert("실패");
         }
     };
 
@@ -246,18 +243,17 @@ const Map: React.FC = () => {
                     });
                     console.log(response);
                     // getMapInfo(floor);
-                    alert("성공");
+                    // 각 비콘 선택 가능하게 하기
+                    setAddEdgeState(!addEdgeState);
+                    getMapInfo(floor);
                 } catch (error) {
                     console.error(error);
-                    alert("실패");
                 }
             } else {
                 alert("간선을 두개 선택해주세요");
             }
         }
-        // 각 비콘 선택 가능하게 하기
-        setAddEdgeState(!addEdgeState);
-        getMapInfo(floor);
+
         // setSelectedEdges([]);
         // 버튼은 저장하기로 바꾸기
     };
@@ -312,7 +308,6 @@ const Map: React.FC = () => {
     // 저장이 완료 되었거나 완료하지 않고 닫은 경우
     const closeAddModal = () => {
         // 리스트 새로 받아오기 ===
-
         console.log("closeModal");
         setNewBeacon(null); // 없애야함
         getMapInfo(floor);
@@ -352,8 +347,6 @@ const Map: React.FC = () => {
 
     // 예 버튼 클릭 시 실행 함수
     const handleConfirm = async () => {
-        // 여기에 예 버튼을 눌렀을 때 실행할 함수를 호출하거나 코드를 작성하세요.
-        alert("삭제 함수 실행"); // 예시로 경고창을 띄움
         closeModal(); // 모달 닫기
         if (deleteSelectBeacon) {
             try {
@@ -366,7 +359,6 @@ const Map: React.FC = () => {
                 getMapInfo(floor);
             } catch (error) {
                 console.log(error);
-                // alert("실패");
             }
         } else {
             console.log("삭제 오류");

@@ -69,7 +69,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
         });
     };
 
-    const saveBeacon = () => {
+    const saveBeacon = async () => {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
             range: 2,
@@ -84,7 +84,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
         };
 
         console.log(data);
-        addBeaconRequest(data);
+        await addBeaconRequest(data);
         props.closeModal();
     };
 
