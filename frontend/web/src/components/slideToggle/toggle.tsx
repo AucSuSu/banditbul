@@ -21,9 +21,14 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({ floor, setFloor }) => {
     };
 
     return (
-        <StyledCheckbox>
-            <InputCheckbox type="checkbox" id="toggleBtn" checked={isFloor} onChange={toggleHandler} />
-            <SwitchLabel htmlFor="toggleBtn" isChecked={isFloor}/>
+        <StyledCheckbox style={{ paddingLeft: "1%", paddingTop: "1%" }}>
+            <InputCheckbox
+                type="checkbox"
+                id="toggleBtn"
+                checked={isFloor}
+                onChange={toggleHandler}
+            />
+            <SwitchLabel htmlFor="toggleBtn" isChecked={isFloor} />
         </StyledCheckbox>
     );
 };
@@ -57,7 +62,7 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
     border: solid 3px #c2bbbb;
 
     &:after {
-        content: '${({ isChecked }) => isChecked ? "대합실" : "승강장"}';
+        content: "${({ isChecked }) => (isChecked ? "대합실" : "승강장")}";
         position: absolute;
         width: 80px;
         height: 40px;
@@ -66,12 +71,11 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
         top: 3.5px;
         left: 5px;
         z-index: 2;
-        box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         transition: left 0.5s, background-color 0.5s;
         display: flex;
         justify-content: center;
         align-items: center;
-
     }
 
     ${InputCheckbox}:checked + & {

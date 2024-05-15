@@ -40,11 +40,8 @@ const addBeaconRequest = async (data: RequestAddBeacon) => {
     try {
         const response = await axios.post(`/beacon`, data);
         console.log(response);
-        alert("성공");
-        getMapInfo(data.floor);
     } catch (error) {
-        console.error(error);
-        alert("실패");
+        console.log(error);
     }
 };
 

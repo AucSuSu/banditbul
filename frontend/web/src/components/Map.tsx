@@ -380,106 +380,110 @@ const Map: React.FC = () => {
                 />
 
                 <div className={styles.contentContainer}>
-                    <div
-                        className={styles.model}
-                        id="model"
-                        style={{
-                            backgroundImage: `url(${mapImgaeUrl})`,
-                            backgroundSize: "contain",
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat",
-                        }}
-                    >
+                    <div className={styles.leftContainer}>
                         <ToggleButton floor={floor} setFloor={setFloor} />
-                        {newBeacon && (
-                            <Draggable
-                                onStop={(e, ui) => handleDrag(e, ui)}
-                                key={newBeacon.beaconId}
-                                position={{
-                                    x: x,
-                                    y: y,
-                                }}
-                                bounds="parent" // 부모 내에서만 이동할 수 있게 하기 !
-                                disabled={!locateIng}
-                            >
-                                <img
+                        <div
+                            className={styles.model}
+                            id="model"
+                            style={{
+                                backgroundImage: `url(${mapImgaeUrl})`,
+                                backgroundSize: "contain",
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat",
+                            }}
+                        >
+                            {newBeacon && (
+                                <Draggable
+                                    onStop={(e, ui) => handleDrag(e, ui)}
                                     key={newBeacon.beaconId}
-                                    src={yellowBeacon}
-                                    className={styles.newBeaconItem}
-                                    style={{
-                                        cursor: locateIng ? "grab" : "default",
+                                    position={{
+                                        x: x,
+                                        y: y,
                                     }}
-                                />
-                            </Draggable>
-                        )}
-
-                        {edgeList.map((edge, index) => {
-                            const beacon1 = edge.beacon1;
-                            const beacon2 = edge.beacon2;
-                            const startPoint = beacons.find(
-                                (point) => point.beaconId === beacon1
-                            )!;
-                            const endPoint = beacons.find(
-                                (point) => point.beaconId === beacon2
-                            )!;
-
-                            return (
-                                <svg
-                                    key={`line-${index}`}
-                                    className={styles.edge}
-                                    style={{
-                                        height: "1px",
-                                    }}
+                                    bounds="parent" // 부모 내에서만 이동할 수 있게 하기 !
+                                    disabled={!locateIng}
                                 >
-                                    <line
-                                        x1={startPoint.x + 15}
-                                        y1={startPoint.y + 15}
-                                        x2={endPoint.x + 15}
-                                        y2={endPoint.y + 15}
+                                    <img
+                                        key={newBeacon.beaconId}
+                                        src={yellowBeacon}
+                                        className={styles.newBeaconItem}
                                         style={{
-                                            height: "1px",
-                                            zIndex: 999,
-                                            stroke: "black",
-                                            strokeWidth: 2,
+                                            cursor: locateIng
+                                                ? "grab"
+                                                : "default",
                                         }}
                                     />
-                                </svg>
-                            );
-                        })}
+                                </Draggable>
+                            )}
 
-                        {beacons.map((point, index) => (
-                            <div key={index}>
-                                <img
-                                    key={index}
-                                    src={
-                                        sosBeaconIdList.has(point.beaconId)
-                                            ? redBeacon
-                                            : point.beaconId == clickedId
-                                            ? blueBeacon
-                                            : defaultBeacon
-                                    }
-                                    className={styles.beaconItem}
-                                    style={{
-                                        left: `${point.x}px`,
-                                        top: `${point.y}px`,
-                                    }}
-                                />
-                            </div>
-                        ))}
+                            {edgeList.map((edge, index) => {
+                                const beacon1 = edge.beacon1;
+                                const beacon2 = edge.beacon2;
+                                const startPoint = beacons.find(
+                                    (point) => point.beaconId === beacon1
+                                )!;
+                                const endPoint = beacons.find(
+                                    (point) => point.beaconId === beacon2
+                                )!;
 
-                        <div className={styles.picContainer}>
-                            {picIcons.map((data, index) => (
-                                <div className={styles.picItem} key={index}>
+                                return (
+                                    <svg
+                                        key={`line-${index}`}
+                                        className={styles.edge}
+                                        style={{
+                                            height: "1px",
+                                        }}
+                                    >
+                                        <line
+                                            x1={startPoint.x + 15}
+                                            y1={startPoint.y + 15}
+                                            x2={endPoint.x + 15}
+                                            y2={endPoint.y + 15}
+                                            style={{
+                                                height: "1px",
+                                                zIndex: 999,
+                                                stroke: "black",
+                                                strokeWidth: 2,
+                                            }}
+                                        />
+                                    </svg>
+                                );
+                            })}
+
+                            {beacons.map((point, index) => (
+                                <div key={index}>
                                     <img
-                                        className={styles.pic}
-                                        src={data.img}
-                                        alt=""
+                                        key={index}
+                                        src={
+                                            sosBeaconIdList.has(point.beaconId)
+                                                ? redBeacon
+                                                : point.beaconId == clickedId
+                                                ? blueBeacon
+                                                : defaultBeacon
+                                        }
+                                        className={styles.beaconItem}
+                                        style={{
+                                            left: `${point.x}px`,
+                                            top: `${point.y}px`,
+                                        }}
                                     />
-                                    <div className={styles.typeName}>
-                                        {data.type}
-                                    </div>
                                 </div>
                             ))}
+
+                            <div className={styles.picContainer}>
+                                {picIcons.map((data, index) => (
+                                    <div className={styles.picItem} key={index}>
+                                        <img
+                                            className={styles.pic}
+                                            src={data.img}
+                                            alt=""
+                                        />
+                                        <div className={styles.typeName}>
+                                            {data.type}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
