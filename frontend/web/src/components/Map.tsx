@@ -1,11 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import React from "react";
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-// import redBeacon from "../assets/redBeacon.gif";
-import blueBeacon from "../assets/blueBeacon.gif";
-import defaultBeacon from "../assets/defaultBeacon.gif";
-import yellowBeacon from "../assets/yellowBeacon.gif";
-// import testBg from "../assets/testBg.png";
+import redBeacon from "../assets/red.gif";
+import blueBeacon from "../assets/blue.gif";
+import defaultBeacon from "../assets/default.gif";
+import yellowBeacon from "../assets/yellow.gif";
 import { Beacon, Edge, BeaconCounts, typeToKor } from "../util/type.tsx";
 import {
     ScreenDoor,
@@ -457,7 +456,9 @@ const Map: React.FC = () => {
                                 <img
                                     key={index}
                                     src={
-                                        point.beaconId == clickedId
+                                        sosBeaconIdList.has(point.beaconId)
+                                            ? redBeacon
+                                            : point.beaconId == clickedId
                                             ? blueBeacon
                                             : defaultBeacon
                                     }

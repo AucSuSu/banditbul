@@ -195,18 +195,15 @@ body {
 
 .newBeaconItem {
     position: absolute;
-    height: 30px;
-    width: 30px;
-    border-radius: 100%;
+    height: 100px;
+    width: 100px;
     z-index: 999;
 }
 
 .beaconItem {
     position: absolute;
-    height: 30px;
-    width: 30px;
-    /* background-color: black; */
-    border-radius: 100%;
+    height: 100px;
+    width: 100px;
 }
 
 .edge {
