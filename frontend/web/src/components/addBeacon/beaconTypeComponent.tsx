@@ -2,8 +2,6 @@ import { useState } from "react";
 import React from "react";
 import styles from "./beaconTypeComponent.module.css";
 import { RequestAddBeacon } from "../../util/type";
-import getMapInfo from "../Map";
-// import axios from "axios";
 import { Axios } from "../../util/axios";
 import Icon from "../../assets/IconDownArrow.svg";
 
