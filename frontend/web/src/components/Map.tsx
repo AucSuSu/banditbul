@@ -64,7 +64,12 @@ const Map: React.FC = () => {
     const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
-    const [edgeList, setEdgeList] = useState<Edge[]>([]);
+    const [edgeList, setEdgeList] = useState<Edge[]>([
+        {
+            beacon1: "11:22:34",
+            beacon2: "11:11:34",
+        },
+    ]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
     const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
@@ -93,6 +98,12 @@ const Map: React.FC = () => {
             beaconTYPE: "TOILET",
             beaconId: "11:22:34",
             x: 40,
+            y: 30,
+        },
+        {
+            beaconTYPE: "TOILET",
+            beaconId: "11:11:34",
+            x: 100,
             y: 30,
         },
     ]);
@@ -432,18 +443,14 @@ const Map: React.FC = () => {
                                     <svg
                                         key={`line-${index}`}
                                         className={styles.edge}
-                                        style={{
-                                            height: "1px",
-                                        }}
                                     >
                                         <line
-                                            x1={startPoint.x + 15}
-                                            y1={startPoint.y + 15}
-                                            x2={endPoint.x + 15}
-                                            y2={endPoint.y + 15}
+                                            x1={startPoint.x + 50}
+                                            y1={startPoint.y + 65}
+                                            x2={endPoint.x + 50}
+                                            y2={endPoint.y + 65}
                                             style={{
                                                 height: "1px",
-                                                zIndex: 999,
                                                 stroke: "black",
                                                 strokeWidth: 2,
                                             }}
