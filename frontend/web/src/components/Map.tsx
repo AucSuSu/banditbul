@@ -232,30 +232,32 @@ const Map: React.FC = () => {
     };
 
     const addEdgeModal = async () => {
-        if (addEdgeState) {
-            console.log(selectedEdges.length);
-            if (selectedEdges.length == 2) {
-                // 간선 axios
-                try {
-                    const response = await axios.post(`edge`, {
-                        beacon1: selectedEdges[0],
-                        beacon2: selectedEdges[1],
-                    });
-                    console.log(response);
-                    // getMapInfo(floor);
-                    // 각 비콘 선택 가능하게 하기
-                    setAddEdgeState(!addEdgeState);
-                    getMapInfo(floor);
-                } catch (error) {
-                    console.error(error);
+        if (!addEdgeState) {
+            setAddEdgeState((prev) => !prev);
+        } else {
+            if (addEdgeState) {
+                console.log(selectedEdges.length);
+                if (selectedEdges.length == 2) {
+                    // 간선 axios
+                    try {
+                        const response = await axios.post(`edge`, {
+                            beacon1: selectedEdges[0],
+                            beacon2: selectedEdges[1],
+                        });
+                        console.log(response);
+                        // getMapInfo(floor);
+                        // 각 비콘 선택 가능하게 하기
+                        setAddEdgeState(!addEdgeState);
+                        getMapInfo(floor);
+                        setSelectedEdges([]);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                } else {
+                    alert("간선을 두개 선택해주세요");
                 }
-            } else {
-                alert("간선을 두개 선택해주세요");
             }
         }
-
-        // setSelectedEdges([]);
-        // 버튼은 저장하기로 바꾸기
     };
 
     const sendAcceptMessage = (beaconId: string) => {
