@@ -135,7 +135,16 @@ public class EdgeService {
             resultList.add(new CheckPointDto(destBeacon.getId(), 0, formatGateInfo(destGate)));
         }
         else if (beacons.size() > 1) {
-            resultList.add(new CheckPointDto(beacons.get(0).getId(), 10,"직진"));
+
+            Beacon beacon1 = beacons.get(0);
+            Beacon beacon2 = beacons.get(1);
+
+            Edge edge = edgeRepository.findByBeacon1AndBeacon2(beacon1, beacon2);
+            if(edge == null){
+                edge = edgeRepository.findByBeacon1AndBeacon2(beacon2, beacon1);
+            }
+
+            resultList.add(new CheckPointDto(beacons.get(0).getId(), edge.getDistance(),"직진"));
         }
         for (int i = 1; i < beacons.size() - 1; i++) {
             Beacon current = beacons.get(i);
@@ -206,7 +215,14 @@ public class EdgeService {
             resultList2.add(new CheckPointDto(destExit.getId(), 0,formatExitInfo(exit)));
         }
         else if (beaconsList.size() > 1) {
-            resultList2.add(new CheckPointDto(beaconsList.get(0).getId(), 10,"직진"));
+            Beacon beacon1 = beaconsList.get(0);
+            Beacon beacon2 = beaconsList.get(1);
+
+            Edge edge = edgeRepository.findByBeacon1AndBeacon2(beacon1, beacon2);
+            if(edge == null){
+                edge = edgeRepository.findByBeacon1AndBeacon2(beacon2, beacon1);
+            }
+            resultList2.add(new CheckPointDto(beacon1.getId(), edge.getDistance(),"직진"));
         }
         for (int i = 1; i < beaconsList.size() - 1; i++) {
             Beacon current = beaconsList.get(i);
@@ -257,7 +273,7 @@ public class EdgeService {
 
         for( String bId : beaconIdList){
             Beacon toiletBeacon = beaconRepository.findById(bId)
-                    .orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 비콘이 없습니다."));
             Toilet toilet = toiletRepository.findByBeacon(toiletBeacon).orElseThrow(() -> new EntityNotFoundException("해당하는 화장실이 없습니다."));
             toiletList.add(toilet);
         }
@@ -295,7 +311,15 @@ public class EdgeService {
             resultList.add(new CheckPointDto(destBeacon.getId(), 0,formatToiletInfo(destToilet)));
         }
         else if (beacons.size() > 1) {
-            resultList.add(new CheckPointDto(beacons.get(0).getId(), 10,"직진"));
+
+            Beacon beacon1 = beacons.get(0);
+            Beacon beacon2 = beacons.get(1);
+
+            Edge edge = edgeRepository.findByBeacon1AndBeacon2(beacon1, beacon2);
+            if(edge == null){
+                edge = edgeRepository.findByBeacon1AndBeacon2(beacon2, beacon1);
+            }
+            resultList.add(new CheckPointDto(beacons.get(0).getId(), edge.getDistance(),"직진"));
         }
         for (int i = 1; i < beacons.size() - 1; i++) {
             Beacon current = beacons.get(i);
@@ -428,7 +452,7 @@ public class EdgeService {
             Beacon C = beacons.get(i + 1);
             // CCW 공식 적용
             double ccw = (B.getY() - A.getY()) * (C.getX() - A.getX()) -
-                    (B.getX() - A.getX()) * (C.getY() - A.getY());
+                (B.getX() - A.getX()) * (C.getY() - A.getY());
 
             if (ccw > 0) {
                 directions.add("왼쪽");
