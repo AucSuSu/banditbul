@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/util/neon_border_button.dart';
 import 'package:frontend/util/title_bar.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:frontend/util/tts_function.dart';
 import 'package:get/get.dart';
 
 class SosPageAccept extends StatefulWidget {
@@ -13,18 +13,18 @@ class SosPageAccept extends StatefulWidget {
 }
 
 class _SosPageAcceptState extends State<SosPageAccept> {
+  final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
+
   @override
   void initState() {
-    // _playManagerAcceptVoice();
+    _playManagerAcceptVoice();
     super.initState();
   }
 
   void _playManagerAcceptVoice() async {
-    print("재생하기");
-    AudioPlayer audioPlayer = AudioPlayer();
     try {
       // await audioPlayer.setSourceUrl(AssetSource(path))
-      await audioPlayer.play(AssetSource('voice/accept.mp3'));
+      clovaTTSManager.getTTS('관리자가 접수하였습니다. 자리에서 대기해주세요.');
       print("재생 완료");
     } catch (error) {
       print(error);
