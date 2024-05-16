@@ -70,7 +70,7 @@ class _MainPageState extends State<MainPage> {
               now.difference(currentPress!) > const Duration(seconds: 2)) {
             currentPress = now;
             Fluttertoast.showToast(
-              msg: "다시 한번 눌러주세요",
+              msg: "앱을 종료 하시려면 \n다시 한번 눌러주세요",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
             );

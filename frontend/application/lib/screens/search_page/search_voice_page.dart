@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,18 +24,26 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
   final VoiceRecognitionService _voiceService = VoiceRecognitionService();
   final ScrollController _scrollController =
       ScrollController(); // ScrollController 추가
+  final AudioPlayer _audioPlayer = AudioPlayer(); // AudioPlayer 인스턴스 추가
+  final FocusNode _focusNode = FocusNode(); // 포커스 노드 추가
 
   @override
-  // initState 함수를 사용하여 위젯이 생성될 때 API 요청 함수를 호출
+  // 역이름 받아온 다음 렌더링
   void initState() {
+    _initializeAsyncDependencies();
     super.initState();
-    fetchStationNames();
+  }
+
+  Future<void> _initializeAsyncDependencies() async {
+    await fetchStationNames();
+    setState(() {});
   }
 
   @override
   void dispose() {
     _voiceService.dispose();
     _scrollController.dispose(); // ScrollController 해제
+    _focusNode.dispose(); // 포커스 노드 해제
     super.dispose();
   }
 
@@ -57,50 +66,45 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
+      // 메시지가 추가된 후 마지막 메시지로 포커스 이동
+      FocusScope.of(context).requestFocus(_focusNode);
     });
   }
 
   // API 요청 함수, Dio를 사용하여 역 이름을 가져오고 메시지 형식으로 가공
   Future<void> fetchStationNames() async {
-    Dio dio = Dio(); // Dio 인스턴스 생성
-    var tmpBeaconId =
-        Get.find<BeaconController>().beaconId.value; // 비콘 ID 전역 가져오기
-    try {
-      var response =
-          await dio.get('${dotenv.env['BASE_URL']}/stationinfo/$tmpBeaconId');
-      if (response.statusCode == 200) {
-        var tmpStation = response.data['object'];
-        var newMessages = {
-          'text': '현재역은 $tmpStation 입니다 \n도착역을 말씀해주세요',
-          'isUser': false
-        };
+    var tmpStation = Get.find<BeaconController>().stationName.value;
+    var newMessages = {
+      'text': '현재역은 $tmpStation 입니다 \n목적지역과 출구를 함께 말해주세요',
+      'isUser': false
+    };
 
-        setState(() {
-          manageMessageList(newMessages);
-        });
-      }
-    } catch (e) {
-      print('역안내 api 에러 : $e');
-    }
+    setState(() {
+      manageMessageList(newMessages);
+    });
+  }
 
-    // // 임시 데이터
-    // var newMessage = {'text': '현재 역은 하단역입니다 \n도착역을 말씀해주세요', 'isUser': false};
-
-    // setState(() {
-    //   manageMessageList(newMessage);
-    // });
+  // 정규식을 사용하여 올바른 띄어쓰기로 수정
+  String correctSpacing(String input) {
+    // 공백 제거 후 정규식을 사용하여 올바른 띄어쓰기로 수정
+    input = input.replaceAll(RegExp(r'\s+'), ''); // 모든 공백 제거
+    final regex = RegExp(r'(\S+역)(\d+번)출구');
+    return input.replaceAllMapped(regex, (match) {
+      return '${match.group(1)} ${match.group(2)} 출구';
+    });
   }
 
   // API 요청 함수, 입력한 데이터를 가지고 길찾기를 요청함
   Future findRoute(String stationName) async {
     Dio dio = Dio(); // Dio 인스턴스 생성
+    String correctedStationName = correctSpacing(stationName); // 띄어쓰기 수정
 
     try {
       var response = await dio.get(
         '${dotenv.env['BASE_URL']}/navigation',
         queryParameters: {
           'beaconId': Get.find<BeaconController>().beaconId.value,
-          'destStation': stationName,
+          'destStation': correctedStationName,
         },
       );
 
@@ -109,7 +113,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         rc.setRoute1(response.data['object']['result1']);
         rc.setRoute2(response.data['object']['result2']);
         var newMessage = {
-          'text': '잠시 후 $stationName로 안내합니다',
+          'text': '잠시 후 $correctedStationName로 안내합니다',
           'isUser': false,
         };
         setState(() {
@@ -123,7 +127,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         if (e.response?.statusCode == 404) {
           // 역 이름 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다 \na역 b번 출구 라고 입력해보세요',
             'isUser': false,
           };
           setState(() {
@@ -132,7 +136,7 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         } else if (e.response?.statusCode == 403) {
           // 출구 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다 \na역 b번 출구 라고 입력해보세요',
             'isUser': false,
           };
           setState(() {
@@ -157,11 +161,22 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
     // });
   }
 
+  Future<void> playStartSound() async {
+    // 시작 비프음 재생 함수
+    await _audioPlayer.play(AssetSource('sounds/start_beep.mp3'));
+  }
+
+  Future<void> playStopSound() async {
+    // 종료 비프음 재생 함수
+    await _audioPlayer.play(AssetSource('sounds/stop_beep.mp3'));
+  }
+
   void toggleRecording() async {
     if (_voiceService.isRecording) {
       setState(() {
         isProcessing = true; // 음성 인식 처리 시작
       });
+      await playStopSound(); // 종료 비프음 재생
       String filePath = await _voiceService
           .stopRecording(); // Assuming this now returns a Future<String>
       if (filePath.isNotEmpty) {
@@ -177,89 +192,117 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
         });
       }
     } else {
-      await _voiceService
-          .startRecording(); // Ensure this function starts recording and does not need to return anything
+      setState(() {
+        isProcessing = true; // 음성 인식 처리 시작
+      });
+      await playStartSound(); // 시작 비프음 재생
+      await _voiceService.startRecording(); //녹음 시작
     }
     setState(() {}); // UI 갱신
   }
 
   @override
   Widget build(BuildContext context) {
+    final double phoneHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Column(
         children: [
           const TitleBar(),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.only(bottom: 100),
+              padding: const EdgeInsets.only(bottom: 30),
               width: double.infinity,
               color: Colors.black,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: ListView.builder(
-                  controller: _scrollController, // 스크롤 컨트롤러 추가
+                  controller: _scrollController,
                   itemCount: messages.isEmpty || messages.last['isUser']
                       ? messages.length
                       : messages.length + 1,
                   itemBuilder: (context, index) {
                     if (index < messages.length) {
-                      // 일반 메시지 처리
+                      if (messages[index]['text'] == '') {
+                        return ChatBubble(
+                          text: '입력된 값이 없습니다 \n다시 입력해주세요',
+                          isUser: messages[index]['isUser'],
+                        );
+                      }
+                      if (messages[index]['isUser']) {
+                        String correctedText =
+                            correctSpacing(messages[index]['text']);
+                        return ChatBubble(
+                          text: correctedText,
+                          isUser: messages[index]['isUser'],
+                        );
+                      }
                       return ChatBubble(
                         text: messages[index]['text'],
                         isUser: messages[index]['isUser'],
+                        focusNode: (index == messages.length - 1 &&
+                                !messages[index]['isUser'])
+                            ? _focusNode
+                            : null, // 역순으로 두 번째 메시지에 포커스 노드 연결
                       );
                     } else if (messages.isNotEmpty &&
                         !messages.last['isUser'] &&
                         !isEnd) {
-                      // 마지막 메시지의 isUser가 false이고 isEnd가 false인 경우, 마지막 아이템으로 button 추가
-                      // 버튼 텍스트 조건부 설정
-                      String buttonText = isProcessing
-                          ? '음성 분석중'
-                          : _voiceService.isRecording
-                              ? '입력 완료'
-                              : '음성 입력';
-                      return Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xffFCF207),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: isProcessing ? null : toggleRecording,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  buttonText,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      return const ChatBubble(
+                        text: '화면 하단의 버튼을 눌러 \n음성검색을 진행해주세요',
+                        isUser: true,
                       );
                     } else {
-                      // 조건에 따라 TextField를 표시하지 않는 경우 여기에 로직 추가
-                      return Container(); // 아무 것도 표시하지 않음
+                      return Container();
                     }
                   },
                 ),
               ),
             ),
           ),
+          isProcessing
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        toggleRecording();
+                      },
+                      child: Container(
+                        child: Image.asset(
+                          'assets/images/voice_recording.gif',
+                          width: 180,
+                          height: 180,
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 27),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        toggleRecording();
+                      },
+                      child: Semantics(
+                        label: '음성 검색 버튼',
+                        excludeSemantics: true,
+                        child: Container(
+                          child: Image.asset(
+                            'assets/images/voice_button.png',
+                            width: 140,
+                            height: 140,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                  ],
+                ),
         ],
       ),
     );

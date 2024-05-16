@@ -49,7 +49,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   // 경로에 따른 text 설정
-  String getTextFromRoute() {
+  String getTextFromRoute(bool isTalkBackMode) {
     // beaconId 테스트용
     if (_routeController.currentRoute.isEmpty) {
       return _beaconController.beaconId.value;
@@ -63,16 +63,22 @@ class _NavigationPageState extends State<NavigationPage> {
 
     if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
       var text = '좌회전 후 \n${curDist}m 이동하세요'; // text 설정
-      clovaTTSManager.getTTS(text); // TTS
+      if (!isTalkBackMode) {
+        clovaTTSManager.getTTS(text); // TTS
+      }
       return text;
     } else if (_routeController.currentRoute[curIdx]['directionInfo'] ==
         '오른쪽') {
       var text = '우회전 후 \n${curDist}m 이동하세요';
-      clovaTTSManager.getTTS(text);
+      if (!isTalkBackMode) {
+        clovaTTSManager.getTTS(text); // TTS
+      }
       return text;
     } else {
       var text = '다음 안내까지 \n${curDist}m 직진입니다.';
-      clovaTTSManager.getTTS(text);
+      if (!isTalkBackMode) {
+        clovaTTSManager.getTTS(text); // TTS
+      }
       return text;
     }
   }
@@ -102,6 +108,9 @@ class _NavigationPageState extends State<NavigationPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTalkBackMode = WidgetsBinding
+        .instance.window.accessibilityFeatures.accessibleNavigation;
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: const TitleBar(),
@@ -130,7 +139,7 @@ class _NavigationPageState extends State<NavigationPage> {
                 ),
                 child: Center(
                   child: Text(
-                    getTextFromRoute(), // 이부분이 나중에는 동적으로 바뀌어야 할 것
+                    getTextFromRoute(isTalkBackMode), // 이부분이 나중에는 동적으로 바뀌어야 할 것
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 27,
@@ -153,7 +162,12 @@ class _NavigationPageState extends State<NavigationPage> {
                     borderColor: const Color(0xff33e9e9),
                     textColor: Colors.black,
                     onPressed: () {
-                      rePlay();
+                      if (!isTalkBackMode) {
+                        rePlay();
+                      } else {
+                        clovaTTSManager
+                            .getTTS(getTextFromRoute(isTalkBackMode));
+                      }
                     },
                   ),
                   const SizedBox(height: 40),

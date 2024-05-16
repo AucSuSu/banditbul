@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 class BeaconController extends GetxController {
   // 가장 가까운 비콘 아이디 -> 계속 업데이트됨
   var beaconId = 'CA:8D:AC:9C:63:64'.obs;
+  // 비콘 아이디를 통해 저장될 역 명
+  var stationName = ''.obs;
 
   final RouteController routeController = Get.find<RouteController>();
   ClovaTTSManager clovaTTSManager = ClovaTTSManager();
@@ -54,8 +56,8 @@ class BeaconController extends GetxController {
               (routeController.route2.isNotEmpty &&
                   beaconId.value == routeController.route2.last['beaconId'])) {
             clovaTTSManager.getTTS(text);
-            Future.delayed(const Duration(seconds: 5), () {
-              Get.to(() => const ArrivePage()); // TTS 재생 후 5초 기다린 다음 페이지 이동
+            Future.delayed(const Duration(seconds: 10), () {
+              Get.to(() => const ArrivePage()); // TTS 재생 후 10초 기다린 다음 페이지 이동
             });
           } else {
             // print(text);
@@ -66,6 +68,10 @@ class BeaconController extends GetxController {
         }
       }
     }
+  }
+
+  void setStationName(String name) {
+    stationName.value = name;
   }
 
   void startBeaconScanning() {

@@ -1,123 +1,111 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/screens/arrive_page/arrive_page.dart';
+import 'package:frontend/navigation_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
-import 'package:frontend/screens/navigation_page/navigation_page.dart';
-import 'package:frontend/screens/search_page/search_page.dart';
-import 'package:frontend/screens/sos_page/sos_page.dart';
-import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
-import 'package:frontend/screens/sos_page/widgets/sos_page_wait.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/store/SessionController.dart';
-import 'package:frontend/test_page.dart';
-import 'package:frontend/util/stt_function.dart';
-import 'package:frontend/util/tts_function.dart';
-import 'package:frontend/util/websocket.dart';
-import 'package:frontend/scanBeacon/scan_screen.dart';
+import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:android_intent_plus/android_intent.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   // 전역 관리를 위한 컨트롤러
   Get.put(RouteController());
   Get.put(BeaconController());
   Get.put(SessionController());
-  runApp(
-    GetMaterialApp(
-      // 전체 폰트 적용
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isBluetoothOn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToBluetoothState();
+  }
+
+  void _listenToBluetoothState() {
+    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
+      setState(() {
+        _isBluetoothOn = (state == BluetoothAdapterState.on);
+      });
+
+      if (state == BluetoothAdapterState.on) {
+        // Bluetooth is turned on, proceed to the main page
+        Get.offAll(() => TestNavigatePage());
+      } else if (state == BluetoothAdapterState.off) {
+        // Bluetooth is turned off, open the Bluetooth settings
+        _openBluetoothSettings();
+      }
+    });
+  }
+
+  void _openBluetoothSettings() async {
+    final intent = const AndroidIntent(
+      action: 'android.settings.BLUETOOTH_SETTINGS',
+    );
+    await intent.launch();
+    // Check Bluetooth state again after returning from settings
+    _checkBluetoothState();
+  }
+
+  void _checkBluetoothState() async {
+    final state = await FlutterBluePlus.adapterState.first;
+    if (state == BluetoothAdapterState.off) {
+      // If Bluetooth is still off, show the prompt again
+      Get.offAll(() => BluetoothOffPage());
+    } else {
+      // If Bluetooth is on, navigate to the main page
+      Get.offAll(() => TestNavigatePage());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
       theme: ThemeData(
         fontFamily: 'SBaggro',
       ),
+      home: _isBluetoothOn ? TestNavigatePage() : BluetoothOffPage(),
+    );
+  }
+}
 
-      // MaterialApp 대신 GetMaterialApp 사용 GetX 적용 하기 위함
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('페이지 네비게이션'),
-          backgroundColor: Colors.blue,
-          centerTitle: true,
-        ),
-        // GetX 네비게이션으로 페이지 링크 걸어두고 각 페이지를 완성한 다음에 모을 예정!
+class BluetoothOffPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        // Open Bluetooth settings when the user tries to pop the screen
+        final intent = const AndroidIntent(
+          action: 'android.settings.BLUETOOTH_SETTINGS',
+        );
+        await intent.launch();
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: TitleBar(),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Get.offAll(() => const MainPage());
-                },
-                child: const Text('Main Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SearchPage());
-                },
-                child: const Text('Search Nav Bar'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const NavigationPage());
-                },
-                child: const Text('Navigation Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const ArrivePage());
-                },
-                child: const Text('Arrive Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SosPageWait());
-                },
-                child: const Text('SosWait Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SosPageAccept());
-                },
-                child: const Text('SosAccept Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => TTSFunction());
-                },
-                child: const Text('TTSFunction Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const VoiceToTextPage());
-                },
-                child: const Text('STTFunction Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SOSClient());
-                },
-                child: const Text('SOSClient Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const SosPage());
-                },
-                child: const Text('SOS Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const ScanScreen());
-                },
-                child: const Text('ScanScreen Page'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Get.to(() => const TestPage());
-                },
-                child: const Text('Test Page'),
-              ),
-            ],
+          child: Text(
+            '블루투스를 켜주세요',
+            style: TextStyle(
+              fontSize: 45,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

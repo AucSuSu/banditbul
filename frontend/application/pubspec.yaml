@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^11.3.1
   stomp_dart_client: ^2.0.0
   flutter_blue_plus: ^1.32.5
+  android_intent_plus: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,10 @@ flutter:
     - assets/images/bandi_bug_light.png
     - assets/images/bandi_bug_light_red.png
     - assets/voice/accept.mp3
+    - assets/images/voice_button.png
+    - assets/images/voice_recording.gif
+    - assets/sounds/start_beep.mp3
+    - assets/sounds/stop_beep.mp3
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -9,9 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 class SearchTextPage extends StatefulWidget {
-  const SearchTextPage({super.key, required this.toggleFloatingActionButton});
-
-  final Function(bool) toggleFloatingActionButton;
+  const SearchTextPage({super.key});
 
   @override
   _SearchTextPageState createState() => _SearchTextPageState();
@@ -26,14 +24,18 @@ class _SearchTextPageState extends State<SearchTextPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  // initState 함수를 사용하여 위젯이 생성될 때 API 요청 함수를 호출
+  // 역이름 받아온 다음 렌더링
   void initState() {
+    _initializeAsyncDependencies();
     super.initState();
-    fetchStationNames();
+  }
+
+  Future<void> _initializeAsyncDependencies() async {
+    await fetchStationNames();
     textFocusNode.addListener(() {
       print("Focus status: ${textFocusNode.hasFocus}");
-      widget.toggleFloatingActionButton(!textFocusNode.hasFocus);
     });
+    setState(() {});
   }
 
   @override
@@ -50,7 +52,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
     });
   }
 
-  // 메시지 개수를 3개이하로 유지
+  // 메시지 추가 로직
   void manageMessageList(Map<String, dynamic> newMessage) {
     setState(() {
       messages.add(newMessage); // 새 메시지 추가
@@ -61,32 +63,23 @@ class _SearchTextPageState extends State<SearchTextPage> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
+      // if (messages.isNotEmpty && !messages.last['isUser'] && !isEnd) {
+      //   textFocusNode.requestFocus();
+      // }
     });
   }
 
   // API 요청 함수, Dio를 사용하여 역 이름을 가져오고 메시지 형식으로 가공
   Future<void> fetchStationNames() async {
-    Dio dio = Dio(); // Dio 인스턴스 생성
-    var tmpBeaconId =
-        Get.find<BeaconController>().beaconId.value; // 비콘 ID 전역 가져오기
-    try {
-      print(tmpBeaconId);
-      var response =
-          await dio.get('${dotenv.env['BASE_URL']}/stationinfo/$tmpBeaconId');
-      if (response.statusCode == 200) {
-        var tmpStation = response.data['object'];
-        var newMessages = {
-          'text': '현재역은 $tmpStation 입니다 \n도착역을 말씀해주세요',
-          'isUser': false
-        };
+    var tmpStation = Get.find<BeaconController>().stationName.value;
+    var newMessages = {
+      'text': '현재역은 $tmpStation 입니다 \n목적지역과 출구를 함께 말해주세요',
+      'isUser': false
+    };
 
-        setState(() {
-          manageMessageList(newMessages);
-        });
-      }
-    } catch (e) {
-      print('역안내 api 에러 : $e');
-    }
+    setState(() {
+      manageMessageList(newMessages);
+    });
 
     // // 임시 데이터
     // var newMessage = {'text': '현재 역은 하단역입니다 \n도착역을 말씀해주세요', 'isUser': false};
@@ -96,16 +89,27 @@ class _SearchTextPageState extends State<SearchTextPage> {
     // });
   }
 
+  // 정규식을 사용하여 올바른 띄어쓰기로 수정
+  String correctSpacing(String input) {
+    // 공백 제거 후 정규식을 사용하여 올바른 띄어쓰기로 수정
+    input = input.replaceAll(RegExp(r'\s+'), ''); // 모든 공백 제거
+    final regex = RegExp(r'(\S+역)(\d+번)출구');
+    return input.replaceAllMapped(regex, (match) {
+      return '${match.group(1)} ${match.group(2)} 출구';
+    });
+  }
+
   // API 요청 함수, 입력한 데이터를 가지고 길찾기를 요청함
   Future findRoute(String stationName) async {
     Dio dio = Dio(); // Dio 인스턴스 생성
-
+    String correctedStationName = correctSpacing(stationName);
+    print('수정된 단어 : $correctedStationName');
     try {
       var response = await dio.get(
         '${dotenv.env['BASE_URL']}/navigation',
         queryParameters: {
           'beaconId': Get.find<BeaconController>().beaconId.value,
-          'destStation': stationName,
+          'destStation': correctedStationName,
         },
       );
 
@@ -114,7 +118,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
         rc.setRoute1(response.data['object']['result1']);
         rc.setRoute2(response.data['object']['result2']);
         var newMessage = {
-          'text': '잠시 후 $stationName로 안내합니다',
+          'text': '잠시 후 $correctedStationName로 안내합니다',
           'isUser': false,
         };
         setState(() {
@@ -128,7 +132,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
         if (e.response?.statusCode == 404) {
           // 역 이름 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다 \na역 b번 출구 라고 입력해보세요',
             'isUser': false,
           };
           setState(() {
@@ -137,7 +141,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
         } else if (e.response?.statusCode == 403) {
           // 출구 체크
           var newMessage = {
-            'text': '올바르지 않은 입력입니다. \na역 b번 출구 라고 입력해보세요.',
+            'text': '올바르지 않은 입력입니다 \na역 b번 출구 라고 입력해보세요',
             'isUser': false,
           };
           setState(() {
@@ -175,7 +179,7 @@ class _SearchTextPageState extends State<SearchTextPage> {
             const TitleBar(),
             Expanded(
               child: Container(
-                padding: const EdgeInsets.only(bottom: 100),
+                padding: const EdgeInsets.only(bottom: 30),
                 width: double.infinity,
                 color: Colors.black,
                 child: Padding(
@@ -188,6 +192,22 @@ class _SearchTextPageState extends State<SearchTextPage> {
                     itemBuilder: (context, index) {
                       if (index < messages.length) {
                         // 일반 메시지 처리
+                        // 빈 텍스트 입력시 처리
+                        if (messages[index]['text'] == '') {
+                          return ChatBubble(
+                            text: '입력된 값이 없습니다 \n다시 입력해주세요',
+                            isUser: messages[index]['isUser'],
+                          );
+                        }
+                        // 내가 친 채팅에 대해서는 띄어쓰기 수정
+                        if (messages[index]['isUser']) {
+                          String correctedText =
+                              correctSpacing(messages[index]['text']);
+                          return ChatBubble(
+                            text: correctedText,
+                            isUser: messages[index]['isUser'],
+                          );
+                        }
                         return ChatBubble(
                           text: messages[index]['text'],
                           isUser: messages[index]['isUser'],
@@ -207,38 +227,44 @@ class _SearchTextPageState extends State<SearchTextPage> {
                               color: const Color(0xffFCF207),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: TextField(
-                              focusNode: textFocusNode,
-                              controller: textController,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: "대화 입력",
-                                hintStyle: const TextStyle(
+                            // TextField에 sematics 추가
+                            child: Semantics(
+                              label: '목적지 입력',
+                              excludeSemantics: true,
+                              textField: true,
+                              child: TextField(
+                                focusNode: textFocusNode,
+                                controller: textController,
+                                style: const TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.circular(12),
+                                decoration: InputDecoration(
+                                  hintText: "목적지 입력",
+                                  hintStyle: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
+                                onSubmitted: (value) {
+                                  // 입력한 메시지 처리 로직
+                                  print('입력한 메시지: ${textController.text}');
+                                  var newMessage = {
+                                    'text': textController.text,
+                                    'isUser': true
+                                  };
+                                  setState(() {
+                                    manageMessageList(newMessage);
+                                    findRoute(textController.text); // 길찾기 요청
+                                    textController.clear(); // 입력 필드 초기화
+                                  });
+                                },
                               ),
-                              onSubmitted: (value) {
-                                // 입력한 메시지 처리 로직
-                                print(textController.text);
-                                var newMessage = {
-                                  'text': textController.text,
-                                  'isUser': true
-                                };
-                                setState(() {
-                                  manageMessageList(newMessage);
-                                  findRoute(textController.text); // 길찾기 요청
-                                  textController.clear(); // 입력 필드 초기화
-                                });
-                              },
                             ),
                           ),
                         );
