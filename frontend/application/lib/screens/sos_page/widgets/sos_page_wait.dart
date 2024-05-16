@@ -7,31 +7,15 @@ import 'package:get/get.dart';
 import 'dart:convert'; // jsonDecode 함수를 사용하기 위해 필요
 import 'package:frontend/util/websocket.dart';
 import 'package:frontend/screens/sos_page/widgets/sos_page_accept.dart';
-import 'package:dio/dio.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:frontend/store/MainController.dart';
 
 class SosPageWait extends StatefulWidget {
   const SosPageWait({super.key});
 
   @override
   _SosPageWaitState createState() => _SosPageWaitState();
-}
-
-void getSessionId(String beaconId) async {
-  SessionController sessionController = Get.find<SessionController>();
-  try {
-    Dio dio = Dio();
-    final response = await dio.get(
-      "https://banditbul.co.kr/api/sos/$beaconId",
-    );
-
-    print(response);
-    var sessionId = response.data['object']['sessionId'];
-    sessionController.setSessionId(sessionId);
-  } catch (error) {
-    print(error);
-  }
 }
 
 class _SosPageWaitState extends State<SosPageWait> {
@@ -59,7 +43,7 @@ class _SosPageWaitState extends State<SosPageWait> {
 
     // beaconId -> 가장 까운거 넣어주기
     String beaconId = beaconController.beaconId.value;
-    getSessionId(beaconId); // -> 여기에 실제 탐지한 비콘 id가 들어가야됨 !!!!!!
+    Get.find<MainController>().getSessionId(beaconId);
     String sessionId = Get.find<SessionController>().sessionId.value;
 
     sendMessage(MessageDto(
@@ -84,9 +68,6 @@ class _SosPageWaitState extends State<SosPageWait> {
 
   void sendMessage(MessageDto dto) {
     print("message 전송");
-
-    // _channel = IOWebSocketChannel.connect('ws://10.0.2.2:8080/socket',
-    //     headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
 
     _channel.sink.add(
         '{"type" : "${dto.type}", "beaconId" : "${dto.beaconId}", "sessionId" : "${dto.sessionId}", "uuId" : "${dto.uuId}"}');

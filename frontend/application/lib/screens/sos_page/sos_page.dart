@@ -33,7 +33,7 @@ class _SosPageState extends State<SosPage> {
                     )),
                 TextButton(
                     onPressed: () {
-                      beaconController.setBeaconId('CA:8D:AC:9C:63:64');
+                      beaconController.setBeaconId('D0:41:AE:8E:5C:0A');
                     },
                     child: const Text(
                       '비콘 아이디 변경',
