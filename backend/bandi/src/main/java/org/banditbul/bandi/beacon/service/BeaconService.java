@@ -141,7 +141,7 @@ public class BeaconService {
         List<IndvEdge> indvEdges = new ArrayList<>();
         for(Edge edge:edges){
             if (indvBeacons.contains(new IndvBeacon(edge.getBeacon1().getId(), edge.getBeacon1().getX(), edge.getBeacon1().getY(), edge.getBeacon1().getBeaconType())) && indvBeacons.contains(new IndvBeacon(edge.getBeacon2().getId(), edge.getBeacon2().getX(), edge.getBeacon2().getY(), edge.getBeacon2().getBeaconType()))){
-                indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId()));
+                indvEdges.add(new IndvEdge(edge.getBeacon1().getId(), edge.getBeacon2().getId(), edge.getId(), edge.getBeacon1().getBeaconType(), edge.getBeacon2().getBeaconType()));
             }
         }
 
