@@ -107,18 +107,6 @@ const Map: React.FC = () => {
 
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
-        {
-            beaconTYPE: "TOILET",
-            beaconId: "11:22:34",
-            x: 40,
-            y: 30,
-        },
-        {
-            beaconTYPE: "TOILET",
-            beaconId: "11:11:34",
-            x: 100,
-            y: 30,
-        },
     ]);
 
     const getMapInfo = async (floor: number) => {
@@ -182,8 +170,8 @@ const Map: React.FC = () => {
                 const result = beacons.some(
                     (e) => e.beaconId === event.data.beaconId
                 );
-                console.log('SOS 요청 왔음', '@ beacons : ', beacons, '@ 데이터 : ', event.data)
-                if (!result) setFloor(floor === -1 ? -2 : -1);
+                console.log('SOS 요청 왔음 : ', result, '@ beacons : ', beacons, '@ 데이터 : ', event.data.beaconId)
+                if (!result) {setFloor(floor === -1 ? -2 : -1)};
 
                 if (!sosBeaconIdList.has(event.data.beaconId)) {
                     console.log("sosbeacon등록");
