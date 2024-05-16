@@ -102,7 +102,7 @@ const Map: React.FC = () => {
     const ws = useRef<WebSocket | null>(null); // ws 객체
     // test 용
     const [sosBeaconIdList, setSosBeaconIdList] = useState<Set<string>>(
-        new Set([])
+        new Set(["11:22:35"])
     );
 
     // 이후에 backend로 받아오기
@@ -182,6 +182,7 @@ const Map: React.FC = () => {
                 const result = beacons.some(
                     (e) => e.beaconId === event.data.beaconId
                 );
+                console.log('SOS 요청 왔음', '@ beacons : ', beacons, '@ 데이터 : ', event.data)
                 if (!result) setFloor(floor === -1 ? -2 : -1);
 
                 if (!sosBeaconIdList.has(event.data.beaconId)) {
