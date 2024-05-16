@@ -1,0 +1,83 @@
+import React from "react";
+import styled from "styled-components";
+
+interface ToggleButtonProps {
+    state: boolean;
+    setState: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface SwitchLabelProps {
+    isChecked: boolean;
+}
+
+const ToggleButton: React.FC<ToggleButtonProps> = ({ state, setState }) => {
+    const toggleHandler = () => {
+        setState(!state);
+    };
+
+    return (
+        <StyledCheckbox>
+            <InputCheckbox
+                type="checkbox"
+                id="toggleBtn"
+                checked={state}
+                onChange={toggleHandler}
+            />
+            <SwitchLabel htmlFor="toggleBtn" isChecked={state} />
+        </StyledCheckbox>
+    );
+};
+
+export default ToggleButton;
+
+const StyledCheckbox = styled.div`
+    position: relative;
+    display: inline-block;
+`;
+
+const InputCheckbox = styled.input`
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0;
+    cursor: pointer;
+`;
+
+const SwitchLabel = styled.label<SwitchLabelProps>`
+    width: 150px;
+    height: 50px;
+    background: #ffffff;
+    position: relative;
+    display: inline-block;
+    border-radius: 50px;
+    transition: background-color 0.4s;
+    border: solid 3px #c2bbbb;
+
+    &:after {
+        content: "${({ isChecked }) => (isChecked ? "비콘" : "경로")}";
+        position: absolute;
+        width: 80px;
+        height: 40px;
+        border-radius: 50px;
+        background: #c2bbbb;
+        top: 2.5px;
+        left: 5px;
+        z-index: 2;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: left 0.5s, background-color 0.5s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    ${InputCheckbox}:checked + & {
+        border: solid 3px #487751;
+        &:after {
+            left: calc(100% - 85px);
+            background: #487751;
+        }
+    }
+`;

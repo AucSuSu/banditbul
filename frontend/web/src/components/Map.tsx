@@ -37,7 +37,8 @@ import IconGate from "../assets/IconGate.svg";
 import { stationStore } from "../store";
 import Header from "./header.tsx";
 import BgImage from "../assets/mainBackground.png";
-
+import EdgeToggle from "../components/slideToggle/EdgeToggle.tsx";
+import IconArrowPrev from "../assets/IconArrowPrev.svg";
 const types = [
     "미선택",
     "화장실",
@@ -65,15 +66,18 @@ const Map: React.FC = () => {
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
     const [edgeList, setEdgeList] = useState<Edge[]>([
-        {
-            beacon1: "11:22:34",
-            beacon2: "11:11:34",
-        },
+        // {
+        //     edgeId: 1,
+        //     beacon1: "11:22:34",
+        //     beacon2: "11:11:34",
+        //     beacon1Type: "TOILET",
+        //     beacon2Type: "TOILET",
+        // },
     ]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
     const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
-    const [clickedId, setClickedId] = useState<string>("-1");
+    const [clickedBeacon, setClickedBeacon] = useState<string>("-1");
     const [selectType, setSelectType] = useState<number>(0);
     const [locateIng, setLocateIng] = useState<boolean>(false);
     const [modalshow, setModalshow] = useState<boolean>(false);
@@ -82,8 +86,13 @@ const Map: React.FC = () => {
     const [deleteSelectBeacon, setDeleteSelectBeacon] = useState<string | null>(
         null
     );
-    const [selectedEdges, setSelectedEdges] = useState<string[]>([]);
+    const [deleteSelectEdge, setDeleteSelectEdge] = useState<number | null>(
+        null
+    );
+    const [clickedEdge, setClickedEdge] = useState<number>(-1);
+    const [selectedEdges, setSelectedEdges] = useState<Beacon[]>([]);
     const [mapImgaeUrl, setMapImageUrl] = useState<string>();
+    const [state, setState] = useState<boolean>(true);
 
     // websocket
     const ws = useRef<WebSocket | null>(null); // ws 객체
@@ -205,11 +214,15 @@ const Map: React.FC = () => {
 
     // 간선 연결하기
     const handleRadioChange = (beaconId: string) => {
-        // 이미 연결되어 있는 거면 취소
-        if (selectedEdges.includes(beaconId)) {
-            console.log("지우기");
+        console.log(beaconId);
+        var isIdNotPresent = selectedEdges.some(function (element) {
+            return element.beaconId == beaconId;
+        });
+
+        // 갖고 있다면 true
+        if (isIdNotPresent) {
             const updatedItems = selectedEdges.filter(
-                (item) => item !== beaconId
+                (item) => item.beaconId !== beaconId
             );
             setSelectedEdges(updatedItems);
             // 연결 안되어 있는 거면 넣어주기
@@ -218,12 +231,16 @@ const Map: React.FC = () => {
                 alert("두개의 포인트만 연결할 수 있습니다.");
                 return;
             }
-            console.log("추가하기");
-            setSelectedEdges((prev) => [...prev, beaconId]);
+            alert(beaconId);
+            const newBeacon = beacons.find(
+                (item) => item.beaconId === beaconId
+            );
+            setSelectedEdges((prev) => [...prev, newBeacon!]);
         }
     };
 
     const addBeaconModal = () => {
+        setState(true);
         setAddEdgeState(false);
         setModalshow(true);
 
@@ -243,6 +260,7 @@ const Map: React.FC = () => {
     };
 
     const addEdgeModal = async () => {
+        setState(true);
         if (!addEdgeState) {
             setAddEdgeState((prev) => !prev);
         } else {
@@ -252,8 +270,8 @@ const Map: React.FC = () => {
                     // 간선 axios
                     try {
                         const response = await axios.post(`edge`, {
-                            beacon1: selectedEdges[0],
-                            beacon2: selectedEdges[1],
+                            beacon1: selectedEdges[0].beaconId,
+                            beacon2: selectedEdges[1].beaconId,
                         });
                         console.log(response);
                         // getMapInfo(floor);
@@ -338,13 +356,22 @@ const Map: React.FC = () => {
         setY(ui.y);
     };
 
-    const handleMouseOver = (beaconId: string) => {
+    const beaconHandleMouseOver = (beaconId: string) => {
         console.log(beaconId);
-        setClickedId(beaconId);
+        setClickedBeacon(beaconId);
     };
 
-    const handleMouseOut = () => {
-        setClickedId("-1");
+    const beaconHandleMouseOut = () => {
+        setClickedBeacon("-1");
+    };
+
+    const edgeHandleMouseOver = (edgeId: number) => {
+        console.log(edgeId);
+        setClickedEdge(edgeId);
+    };
+
+    const edgeHandleMouseOut = () => {
+        setClickedEdge(-1);
     };
 
     // 삭제 컴포넌트 열기
@@ -356,12 +383,13 @@ const Map: React.FC = () => {
     const closeModal = () => {
         setModalOpen(false);
         setDeleteSelectBeacon(null);
+        setDeleteSelectEdge(null);
     };
 
-    // 예 버튼 클릭 시 실행 함수
-    const handleConfirm = async () => {
+    // 예 버튼 클릭 시 실행 함수 -> 비콘 삭제
+    const handleBeaconDeleteConfirm = async () => {
         closeModal(); // 모달 닫기
-        if (deleteSelectBeacon) {
+        if (deleteSelectBeacon != "-1") {
             try {
                 console.log("삭제");
                 const response = await axios.delete(
@@ -377,6 +405,27 @@ const Map: React.FC = () => {
             console.log("삭제 오류");
         }
         setDeleteSelectBeacon(null);
+    };
+
+    // 예 버튼 클릭 시 실행 함수 -> edge 삭제
+    const handleEdgeDeleteConfirm = async () => {
+        closeModal(); // 모달 닫기
+        if (deleteSelectEdge != -1) {
+            try {
+                console.log("삭제");
+                const response = await axios.delete(
+                    `/edge/${deleteSelectEdge}`
+                );
+                const data = response.data.object;
+                console.log(data);
+                getMapInfo(floor);
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            console.log("삭제 오류");
+        }
+        setDeleteSelectEdge(null);
     };
 
     return (
@@ -446,6 +495,21 @@ const Map: React.FC = () => {
                             )}
 
                             <svg className={styles.edge}>
+                                {selectedEdges.length == 2 && (
+                                    <>
+                                        <line
+                                            x1={selectedEdges[0].x + 50}
+                                            y1={selectedEdges[0].y + 65}
+                                            x2={selectedEdges[1].x + 50}
+                                            y2={selectedEdges[1].y + 65}
+                                            style={{
+                                                height: "1px",
+                                                stroke: "#6565ff",
+                                                strokeWidth: 3,
+                                            }}
+                                        />
+                                    </>
+                                )}
                                 {edgeList.map((edge, index) => {
                                     const beacon1 = edge.beacon1;
                                     const beacon2 = edge.beacon2;
@@ -465,8 +529,11 @@ const Map: React.FC = () => {
                                             y2={endPoint.y + 65}
                                             style={{
                                                 height: "1px",
-                                                stroke: "black",
-                                                strokeWidth: 2,
+                                                stroke:
+                                                    edge.edgeId == clickedEdge
+                                                        ? "#6565ff"
+                                                        : "black",
+                                                strokeWidth: 3,
                                             }}
                                         />
                                     );
@@ -480,7 +547,8 @@ const Map: React.FC = () => {
                                         src={
                                             sosBeaconIdList.has(point.beaconId)
                                                 ? redBeacon
-                                                : point.beaconId == clickedId
+                                                : point.beaconId ==
+                                                  clickedBeacon
                                                 ? blueBeacon
                                                 : defaultBeacon
                                         }
@@ -496,10 +564,13 @@ const Map: React.FC = () => {
                     </div>
 
                     <div className={styles.rightContainer}>
+                        {!modalshow && (
+                            <EdgeToggle state={state} setState={setState} />
+                        )}
                         <div
                             className={styles.beaconList}
                             style={{
-                                height: modalshow ? "100%" : "90%",
+                                height: modalshow ? "100%" : "80%",
                                 backgroundColor: modalshow
                                     ? "white"
                                     : "transparent",
@@ -588,6 +659,14 @@ const Map: React.FC = () => {
                                                 >
                                                     등록
                                                 </div>
+                                                <img
+                                                    src={IconArrowPrev}
+                                                    alt=""
+                                                    onClick={closeAddModal}
+                                                    style={{
+                                                        cursor: "pointer",
+                                                    }}
+                                                />
                                             </div>
                                             <div
                                                 className={styles.addBeaconDes}
@@ -619,187 +698,315 @@ const Map: React.FC = () => {
                                 </>
                             ) : (
                                 <div className={styles.beaconScroll}>
-                                    {beacons.map((item, index) =>
-                                        sosBeaconIdList.has(item.beaconId) ? (
-                                            <div
-                                                className={
-                                                    styles.sosbeaconListItem
-                                                }
-                                                key={index}
-                                                onMouseOver={() =>
-                                                    handleMouseOver(
-                                                        item.beaconId
-                                                    )
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.sosBeaconContent
-                                                    }
-                                                >
-                                                    <p
-                                                        className={
-                                                            styles.sosBeaconTitle
-                                                        }
-                                                    >
-                                                        SOS 신호가
-                                                        발생되었습니다
-                                                        <br />
-                                                        {/* 위치를 확인하고 도움을
-                                                    주세요 */}
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.yesNoContainer
-                                                    }
-                                                >
-                                                    <span
-                                                        className={
-                                                            styles.sosAcceptButton
-                                                        }
-                                                        onClick={() => {
-                                                            sendAcceptMessage(
-                                                                item.beaconId
-                                                            );
-                                                        }}
-                                                    >
-                                                        수락
-                                                    </span>
-                                                    <span
-                                                        className={
-                                                            styles.sosDenyButton
-                                                        }
-                                                        onClick={() => {
-                                                            sendNoMessage(
-                                                                item.beaconId
-                                                            );
-                                                        }}
-                                                    >
-                                                        거부
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        ) : deleteSelectBeacon ==
-                                          item.beaconId ? (
-                                            <>
-                                                <div
-                                                    className={
-                                                        styles.beaconListItem
-                                                    }
-                                                    key={index}
-                                                    onMouseOver={() =>
-                                                        handleMouseOver(
-                                                            item.beaconId
-                                                        )
-                                                    }
-                                                    onMouseOut={handleMouseOut}
-                                                >
-                                                    {" "}
+                                    {state ? (
+                                        <>
+                                            {beacons.map((item, index) =>
+                                                sosBeaconIdList.has(
+                                                    item.beaconId
+                                                ) ? (
                                                     <div
                                                         className={
-                                                            styles.deleteModalContent
+                                                            styles.sosbeaconListItem
+                                                        }
+                                                        key={index}
+                                                        onMouseOver={() =>
+                                                            beaconHandleMouseOver(
+                                                                item.beaconId
+                                                            )
                                                         }
                                                     >
-                                                        <p
+                                                        <div
                                                             className={
-                                                                styles.deleteDes
+                                                                styles.sosBeaconContent
                                                             }
                                                         >
-                                                            삭제하시겠습니까?
-                                                        </p>
+                                                            <p
+                                                                className={
+                                                                    styles.sosBeaconTitle
+                                                                }
+                                                            >
+                                                                SOS 신호가
+                                                                발생되었습니다
+                                                                <br />
+                                                                {/* 위치를 확인하고 도움을
+                                                    주세요 */}
+                                                            </p>
+                                                        </div>
                                                         <div
                                                             className={
                                                                 styles.yesNoContainer
                                                             }
                                                         >
                                                             <span
-                                                                onClick={
-                                                                    handleConfirm
-                                                                }
                                                                 className={
-                                                                    styles.ModaldeleteButton
+                                                                    styles.sosAcceptButton
                                                                 }
+                                                                onClick={() => {
+                                                                    sendAcceptMessage(
+                                                                        item.beaconId
+                                                                    );
+                                                                }}
                                                             >
-                                                                예
+                                                                수락
                                                             </span>
                                                             <span
                                                                 className={
-                                                                    styles.deleteModalCloseButton
+                                                                    styles.sosDenyButton
                                                                 }
-                                                                onClick={
-                                                                    closeModal
-                                                                }
+                                                                onClick={() => {
+                                                                    sendNoMessage(
+                                                                        item.beaconId
+                                                                    );
+                                                                }}
                                                             >
-                                                                아니오
+                                                                거부
                                                             </span>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <div
-                                                className={
-                                                    styles.beaconListItem
-                                                }
-                                                key={index}
-                                                onMouseOver={() =>
-                                                    handleMouseOver(
-                                                        item.beaconId
-                                                    )
-                                                }
-                                                onMouseOut={handleMouseOut}
-                                            >
-                                                {addEdgeState && (
-                                                    <input
-                                                        type="radio"
-                                                        id={`option-${index}`}
-                                                        checked={selectedEdges.includes(
-                                                            item.beaconId
-                                                        )}
-                                                        onClick={() =>
-                                                            handleRadioChange(
+                                                ) : deleteSelectBeacon ==
+                                                  item.beaconId ? (
+                                                    <>
+                                                        <div
+                                                            className={
+                                                                styles.beaconListItem
+                                                            }
+                                                            key={index}
+                                                            onMouseOver={() =>
+                                                                beaconHandleMouseOver(
+                                                                    item.beaconId
+                                                                )
+                                                            }
+                                                            onMouseOut={
+                                                                beaconHandleMouseOut
+                                                            }
+                                                        >
+                                                            {" "}
+                                                            <div
+                                                                className={
+                                                                    styles.deleteModalContent
+                                                                }
+                                                            >
+                                                                <p
+                                                                    className={
+                                                                        styles.deleteDes
+                                                                    }
+                                                                >
+                                                                    삭제하시겠습니까?
+                                                                </p>
+                                                                <div
+                                                                    className={
+                                                                        styles.yesNoContainer
+                                                                    }
+                                                                >
+                                                                    <span
+                                                                        onClick={
+                                                                            handleBeaconDeleteConfirm
+                                                                        }
+                                                                        className={
+                                                                            styles.ModaldeleteButton
+                                                                        }
+                                                                    >
+                                                                        예
+                                                                    </span>
+                                                                    <span
+                                                                        className={
+                                                                            styles.deleteModalCloseButton
+                                                                        }
+                                                                        onClick={
+                                                                            closeModal
+                                                                        }
+                                                                    >
+                                                                        아니오
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            styles.beaconListItem
+                                                        }
+                                                        key={index}
+                                                        onMouseOver={() =>
+                                                            beaconHandleMouseOver(
                                                                 item.beaconId
                                                             )
                                                         }
-                                                    />
-                                                )}
-                                                <div
-                                                    className={styles.beaconId}
-                                                >
-                                                    {typeToKor(
-                                                        item.beaconTYPE!
-                                                    )}
-                                                </div>
-                                                <img src={IconUser} alt="" />
-                                                <div
-                                                    className={
-                                                        styles.numberOfUser
-                                                    }
-                                                >
-                                                    {beaconCounts[item.beaconId]
-                                                        ? ` ${
-                                                              beaconCounts[
-                                                                  item.beaconId
-                                                              ]
-                                                          }`
-                                                        : "0"}
-                                                </div>
-                                                <img
-                                                    src={IconDelete}
-                                                    alt=""
-                                                    className={
-                                                        styles.beaconDeleteButton
-                                                    }
-                                                    onClick={() => {
-                                                        openModal();
-                                                        setDeleteSelectBeacon(
-                                                            item.beaconId
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                        )
+                                                        onMouseOut={
+                                                            beaconHandleMouseOut
+                                                        }
+                                                    >
+                                                        {addEdgeState && (
+                                                            <input
+                                                                type="radio"
+                                                                id={`option-${index}`}
+                                                                checked={selectedEdges.some(
+                                                                    (data) =>
+                                                                        data.beaconId ===
+                                                                        item.beaconId
+                                                                )}
+                                                                onClick={() =>
+                                                                    handleRadioChange(
+                                                                        item.beaconId
+                                                                    )
+                                                                }
+                                                            />
+                                                        )}
+                                                        <div
+                                                            className={
+                                                                styles.beaconId
+                                                            }
+                                                        >
+                                                            {typeToKor(
+                                                                item.beaconTYPE!
+                                                            )}
+                                                        </div>
+                                                        <img
+                                                            src={IconUser}
+                                                            alt=""
+                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.numberOfUser
+                                                            }
+                                                        >
+                                                            {beaconCounts[
+                                                                item.beaconId
+                                                            ]
+                                                                ? ` ${
+                                                                      beaconCounts[
+                                                                          item
+                                                                              .beaconId
+                                                                      ]
+                                                                  }`
+                                                                : "0"}
+                                                        </div>
+                                                        <img
+                                                            src={IconDelete}
+                                                            alt=""
+                                                            className={
+                                                                styles.beaconDeleteButton
+                                                            }
+                                                            onClick={() => {
+                                                                openModal();
+                                                                setDeleteSelectBeacon(
+                                                                    item.beaconId
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {edgeList.map((item, index) =>
+                                                deleteSelectEdge ==
+                                                item.edgeId ? (
+                                                    <>
+                                                        <div
+                                                            className={
+                                                                styles.beaconListItem
+                                                            }
+                                                            key={index}
+                                                            onMouseOver={() =>
+                                                                edgeHandleMouseOver(
+                                                                    item.edgeId
+                                                                )
+                                                            }
+                                                            onMouseOut={
+                                                                edgeHandleMouseOut
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.deleteModalContent
+                                                                }
+                                                            >
+                                                                <p
+                                                                    className={
+                                                                        styles.deleteDes
+                                                                    }
+                                                                >
+                                                                    삭제하시겠습니까?
+                                                                </p>
+                                                                <div
+                                                                    className={
+                                                                        styles.yesNoContainer
+                                                                    }
+                                                                >
+                                                                    <span
+                                                                        onClick={
+                                                                            handleEdgeDeleteConfirm
+                                                                        }
+                                                                        className={
+                                                                            styles.ModaldeleteButton
+                                                                        }
+                                                                    >
+                                                                        예
+                                                                    </span>
+                                                                    <span
+                                                                        className={
+                                                                            styles.deleteModalCloseButton
+                                                                        }
+                                                                        onClick={
+                                                                            closeModal
+                                                                        }
+                                                                    >
+                                                                        아니오
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <div
+                                                            className={
+                                                                styles.beaconListItem
+                                                            }
+                                                            key={index}
+                                                            onMouseOver={() =>
+                                                                edgeHandleMouseOver(
+                                                                    item.edgeId
+                                                                )
+                                                            }
+                                                            onMouseOut={
+                                                                edgeHandleMouseOut
+                                                            }
+                                                        >
+                                                            <div
+                                                                className={
+                                                                    styles.beaconId
+                                                                }
+                                                            >
+                                                                {typeToKor(
+                                                                    item.beacon1Type!
+                                                                )}
+                                                                -
+                                                                {typeToKor(
+                                                                    item.beacon2Type!
+                                                                )}
+                                                            </div>
+                                                            <img
+                                                                src={IconDelete}
+                                                                alt=""
+                                                                className={
+                                                                    styles.beaconDeleteButton
+                                                                }
+                                                                onClick={() => {
+                                                                    openModal();
+                                                                    setDeleteSelectEdge(
+                                                                        item.edgeId
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )
+                                            )}
+                                        </>
                                     )}
                                 </div>
                             )}
@@ -815,13 +1022,26 @@ const Map: React.FC = () => {
                                         ? "저장하기"
                                         : "경로 등록하기"}
                                 </div>
-                                <div
-                                    className={styles.floatingButton}
-                                    onClick={addBeaconModal}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    비콘 추가 하기
-                                </div>
+                                {addEdgeState ? (
+                                    <div
+                                        className={styles.floatingButton}
+                                        onClick={() => {
+                                            setAddEdgeState(false);
+                                            setSelectedEdges([]);
+                                        }}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        취소하기
+                                    </div>
+                                ) : (
+                                    <div
+                                        className={styles.floatingButton}
+                                        onClick={addBeaconModal}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        비콘 추가 하기
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

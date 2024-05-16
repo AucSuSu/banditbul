@@ -11,8 +11,11 @@ export type Beacon = {
 };
 
 export type Edge = {
+    edgeId: number;
     beacon1: string;
     beacon2: string;
+    beacon1Type: string;
+    beacon2Type: string;
 };
 
 export type MapInfo = {

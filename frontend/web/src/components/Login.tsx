@@ -25,11 +25,9 @@ const Login = () => {
             const response = await auth.post("/login", formData);
             console.log(response);
             setData(response.data.object);
-            alert("성공");
             navigate("./map");
         } catch (error) {
             console.error(error);
-            alert("실패");
         }
     };
 
