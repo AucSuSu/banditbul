@@ -19,6 +19,7 @@ class SearchVoicePage extends StatefulWidget {
 
 class _SearchVoicePageState extends State<SearchVoicePage> {
   List<Map<String, dynamic>> messages = []; // 메시지를 저장할 리스트
+  bool isLoading = false;
   bool isEnd = false;
   bool isProcessing = false; // 음성 처리 상태를 추적하는 변수
   final VoiceRecognitionService _voiceService = VoiceRecognitionService();
@@ -179,14 +180,19 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
       String filePath = await _voiceService
           .stopRecording(); // Assuming this now returns a Future<String>
       await playStopSound(); // 종료 비프음 재생
+      setState(() {
+        isLoading = true;
+      });
       if (filePath.isNotEmpty) {
         String text = await _voiceService.convertSpeechToText(filePath);
         setState(() {
+          isLoading = false;
           manageMessageList({'text': text, 'isUser': true});
           findRoute(text);
         });
       } else {
         setState(() {
+          isLoading = false;
           isProcessing = false; // 파일이 비어있으면 처리 완료
         });
       }
@@ -247,8 +253,10 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
                     } else if (messages.isNotEmpty &&
                         !messages.last['isUser'] &&
                         !isEnd) {
-                      return const ChatBubble(
-                        text: '화면 하단의 버튼을 눌러 \n음성검색을 진행해주세요',
+                      return ChatBubble(
+                        text: isLoading
+                            ? '음성 분석 중입니다 \n잠시만 기다려주세요'
+                            : '화면 하단의 버튼을 눌러 \n음성검색을 진행해주세요',
                         isUser: true,
                       );
                     } else {
