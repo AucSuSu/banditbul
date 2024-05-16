@@ -102,7 +102,7 @@ const Map: React.FC = () => {
     const ws = useRef<WebSocket | null>(null); // ws 객체
     // test 용
     const [sosBeaconIdList, setSosBeaconIdList] = useState<Set<string>>(
-        new Set(["11:22:35"])
+        new Set([])
     );
 
     // 이후에 backend로 받아오기
