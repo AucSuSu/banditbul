@@ -14,6 +14,7 @@ import {
     Stair,
     Elevator,
     Escalator,
+    Point,
 } from "./addBeacon/beaconTypeComponent.tsx";
 import styles from "./map.module.css";
 import { Axios } from "../util/axios.ts";
@@ -48,6 +49,7 @@ const types = [
     "엘리베이터",
     "에스컬레이터",
     "스크린도어",
+    "교차로",
 ];
 
 const picIcons = [
@@ -643,9 +645,6 @@ const Map: React.FC = () => {
                                                                         >
                                                                             {
                                                                                 data
-                                                                            }{" "}
-                                                                            {
-                                                                                index
                                                                             }
                                                                         </li>
                                                                     )
@@ -1101,6 +1100,11 @@ function Options(
                     floor={floor}
                     closeModal={closeAddModal}
                 />
+            );
+
+        case 8:
+            return (
+                <Point x={x} y={y} floor={floor} closeModal={closeAddModal} />
             );
     }
 }

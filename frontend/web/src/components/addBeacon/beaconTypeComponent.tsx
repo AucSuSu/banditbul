@@ -43,6 +43,81 @@ const addBeaconRequest = async (data: RequestAddBeacon) => {
     }
 };
 
+export const Point: React.FC<IScreenDoorProps> = (props) => {
+    const [formData, setFormData] = useState({
+        macAddress: "",
+        longitude: 0,
+        latitude: 0,
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const saveBeacon = () => {
+        const data = {
+            macAddress: formData.macAddress,
+            range: 2,
+            longitude: formData.longitude,
+            latitude: formData.latitude,
+            x: props.x,
+            y: props.y,
+            beaconType: "POINT",
+            floor: props.floor,
+        };
+
+        console.log(data);
+        addBeaconRequest(data);
+        props.closeModal();
+    };
+
+    const cancel = () => {
+        props.closeModal();
+    };
+
+    return (
+        <>
+            <div className={styles.inputContainer}>
+                <div className={styles.column}>
+                    <div className={styles.question}>Mac 주소 </div>
+                    <input
+                        className={styles.inputBox}
+                        name="macAddress"
+                        type="text"
+                        placeholder="ex) 00:00:00:00"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>위도 </div>
+                    <input
+                        className={styles.inputBox}
+                        name="latitude"
+                        type="number"
+                        placeholder="ex) 35.000000"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className={styles.column}>
+                    <div className={styles.question}>경도 </div>
+                    <input
+                        className={styles.inputBox}
+                        type="text"
+                        name="longitude"
+                        placeholder="ex) 127.000000"
+                        onChange={handleChange}
+                    />
+                </div>
+            </div>
+            <ButtonContainer save={saveBeacon} cancel={cancel} />
+        </>
+    );
+};
+
 // 화장실
 export const Toilet: React.FC<IScreenDoorProps> = (props) => {
     const [boySelectShow, setBoySelectShow] = useState<boolean>(false);
