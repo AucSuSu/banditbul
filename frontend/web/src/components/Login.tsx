@@ -2,7 +2,6 @@ import { useState, FormEvent } from "react";
 import Auth from "../util/axios";
 import idImage from "../assets/id.png";
 import passwordImage from "../assets/pw.png";
-import subway from "../assets/loginBg.png";
 import { stationStore } from "../store";
 import { useNavigate } from "react-router-dom";
 import { useLoginStore } from "../store"; // Zustand 스토어 import
@@ -11,13 +10,13 @@ const Login = () => {
     const auth = Auth();
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
+    const [isFailed, setIsFailed] = useState(false)
     const setData = stationStore((state) => state.setStationData);
     const navigate = useNavigate();
     const setLoginIdGlobal = useLoginStore((state) => state.setLoginId); // Zustand 스토어의 setLoginId 함수 가져오기
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(loginId, password);
 
         const formData = new FormData();
         formData.append("loginId", loginId);
@@ -25,11 +24,12 @@ const Login = () => {
 
         try {
             const response = await auth.post("/login", formData);
-            console.log(response);
             setData(response.data.object);
             setLoginIdGlobal(loginId); // Zustand 스토어에 loginId 저장
+            setIsFailed(false)
             navigate("./map");
         } catch (error) {
+            setIsFailed(true)
             console.error(error);
         }
     };
@@ -39,8 +39,8 @@ const Login = () => {
             <div className="flex-c w-full h-full ">
                 <img
                     className="h-[100%] w-[60%] object-cover"
-                    src={subway}
-                    alt=""
+                    src="https://d3h25rphev0vuf.cloudfront.net/loginBg.png"
+                    alt="로그인 페이지 이미지"
                 />
                 <div className="h-[60%] w-[40%] flex-cc pe-40">
                     <div className="flex items-center flex-col ">
@@ -88,6 +88,7 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+                            {isFailed && <p className="absolute text-red-400 animate-bounce" >아이디와 비밀번호를 확인해주세요!</p>}
                         <button
                             className="w-[20%] h-[15%] mt-10 border-2
                         rounded-full shadow-sm text-white font-bold 
