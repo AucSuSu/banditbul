@@ -16,4 +16,6 @@ public interface EdgeRepository extends JpaRepository<Edge, Integer> {
     boolean existsByBeacon1AndBeacon2OrBeacon2AndBeacon1(Beacon beacon1, Beacon beacon2, Beacon beacon1Reverse, Beacon beacon2Reverse);
 
     List<Edge> findByBeacon1_IdOrBeacon2_Id(String beaconId1, String beaconId2);
+
+    public void deleteById(String edgeId);
 }

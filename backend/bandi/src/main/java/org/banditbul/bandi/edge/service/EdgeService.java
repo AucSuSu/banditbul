@@ -1,6 +1,8 @@
 
 package org.banditbul.bandi.edge.service;
 import java.util.stream.Collectors;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.banditbul.bandi.beacon.entity.Beacon;
 import org.banditbul.bandi.beacon.entity.BeaconTYPE;
@@ -14,6 +16,7 @@ import org.banditbul.bandi.edge.entity.Edge;
 import org.banditbul.bandi.edge.repository.EdgeRepository;
 import org.banditbul.bandi.elevator.entity.Elevator;
 import org.banditbul.bandi.elevator.repository.ElevatorRepository;
+import org.banditbul.bandi.escalator.entity.Escalator;
 import org.banditbul.bandi.exit.entity.Exit;
 import org.banditbul.bandi.exit.repository.ExitRepository;
 import org.banditbul.bandi.gate.entity.Gate;
@@ -43,6 +46,14 @@ public class EdgeService {
     private final ElevatorRepository elevatorRepository;
     private final ScreendoorRepository screendoorRepository;
     private final EdgeRepository edgeRepository;
+
+
+    public void deleteEdge(int edgeId){
+
+        edgeRepository.deleteById(edgeId);
+
+    }
+
     public ResultRouteDto navCurStation(String beaconId, String dest){
         // 0. dest에서 역, 출구로 두개 쪼개기 아마 split 쓸듯?  substring?
 

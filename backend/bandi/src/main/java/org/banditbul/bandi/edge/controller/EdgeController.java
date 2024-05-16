@@ -19,6 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EdgeController {
     private final EdgeService edgeService;
+
+    @DeleteMapping("/edge/{edgeId}")
+    public ResponseEntity<Message> deleteBeacon(@PathVariable(value = "edgeId") int edgeId){
+        edgeService.deleteEdge(edgeId);
+        Message message = new Message(HttpStatusEnum.OK,  "엣지 삭제 완료", edgeId);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
     @GetMapping("/navigation")
     public ResponseEntity<Message> getNavigation(@RequestParam("beaconId") String beaconId,
                                                  @RequestParam("destStation") String destStation){
