@@ -394,7 +394,23 @@ const Map: React.FC = () => {
 
                 <div className={styles.contentContainer}>
                     <div className={styles.leftContainer}>
-                        <ToggleButton floor={floor} setFloor={setFloor} />
+                        <div className={styles.modelTitleContainer}>
+                            <ToggleButton floor={floor} setFloor={setFloor} />
+                            <div className={styles.picContainer}>
+                                {picIcons.map((data, index) => (
+                                    <div className={styles.picItem} key={index}>
+                                        <img
+                                            className={styles.pic}
+                                            src={data.img}
+                                            alt=""
+                                        />
+                                        <div className={styles.typeName}>
+                                            {data.type}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                         <div
                             className={styles.model}
                             id="model"
@@ -476,21 +492,6 @@ const Map: React.FC = () => {
                                     />
                                 </div>
                             ))}
-
-                            <div className={styles.picContainer}>
-                                {picIcons.map((data, index) => (
-                                    <div className={styles.picItem} key={index}>
-                                        <img
-                                            className={styles.pic}
-                                            src={data.img}
-                                            alt=""
-                                        />
-                                        <div className={styles.typeName}>
-                                            {data.type}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                     </div>
 

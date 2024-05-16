@@ -21,13 +21,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({ floor, setFloor }) => {
     };
 
     return (
-        <StyledCheckbox
-            style={{
-                paddingLeft: "1%",
-                paddingTop: "1%",
-                paddingBottom: "1px",
-            }}
-        >
+        <StyledCheckbox>
             <InputCheckbox
                 type="checkbox"
                 id="toggleBtn"
