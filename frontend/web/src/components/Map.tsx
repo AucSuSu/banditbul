@@ -106,7 +106,56 @@ const Map: React.FC = () => {
     );
 
     // 이후에 backend로 받아오기
-    const [beacons, setBeacons] = useState<Beacon[]>([]);
+    const [beacons, setBeacons] = useState<Beacon[]>([
+        {
+            beaconId: "CA:8D:AC:9C:63:64",
+            x: 765,
+            y: 7,
+            beaconTYPE: "TOILET",
+        },
+        {
+            beaconId: "FB:B8:E8:D8:0E:97",
+            x: 763,
+            y: 185,
+            beaconTYPE: "POINT",
+        },
+        {
+            beaconId: "CA:87:66:3E:6E:38",
+            x: 588,
+            y: 185,
+            beaconTYPE: "POINT",
+        },
+        {
+            beaconId: "D0:41:AE:8E:5C:0A",
+            x: 590,
+            y: 300,
+            beaconTYPE: "EXIT",
+        },
+        {
+            beaconId: "DA:B9:B0:9A:CD:76",
+            x: 68,
+            y: 185,
+            beaconTYPE: "STAIR",
+        },
+        {
+            beaconId: "지하 1층 엘리베이터",
+            x: 168,
+            y: 64,
+            beaconTYPE: "ELEVATOR",
+        },
+        {
+            beaconId: "intersection",
+            x: 166,
+            y: 182,
+            beaconTYPE: "POINT",
+        },
+        {
+            beaconId: "D4:5C:67:6A:7A:7A",
+            x: 321,
+            y: 185,
+            beaconTYPE: "GATE",
+        },
+    ]);
 
     const getMapInfo = async (floor: number) => {
         console.log("check");
@@ -122,13 +171,11 @@ const Map: React.FC = () => {
             }
         } catch (error) {
             console.log(error);
+            console.log(beacons);
         }
     };
 
     useEffect(() => {
-        console.log("floor 바뀜 : ", floor);
-        getMapInfo(floor);
-        //websocket 객체 연결
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
 
         // listner
@@ -167,7 +214,7 @@ const Map: React.FC = () => {
                 }));
             } else if (d.type == "SOS") {
                 const result = await Promise.resolve(
-                    beacons.some((e) => e.beaconId === event.data.beaconId)
+                    beacons.find((e) => e.beaconId === d.beaconId)
                 );
                 console.log(
                     result,
@@ -179,6 +226,8 @@ const Map: React.FC = () => {
                 );
                 if (!result) {
                     console.log("층변경=================");
+                    console.log(beacons);
+                    console.log(d.beaconId);
                     setFloor(floor === -1 ? -2 : -1);
                 }
 
@@ -192,15 +241,21 @@ const Map: React.FC = () => {
                     console.log(sosBeaconIdList);
                 }
             } else if (d.type == "CANCEL") {
-                if (sosBeaconIdList.has(event.data.beaconId)) {
+                if (sosBeaconIdList.has(d.beaconId)) {
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
-                    newSosBeaconIdList.delete(event.data.beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
+                    newSosBeaconIdList.delete(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
                     console.log(newSosBeaconIdList);
                     setSosBeaconIdList(newSosBeaconIdList);
                 }
             }
             console.log(sosBeaconIdList);
         };
+    });
+
+    useEffect(() => {
+        console.log("useEffect");
+        getMapInfo(floor);
+        //websocket 객체 연결
     }, [floor, addEdgeState]);
 
     useEffect(() => {
@@ -276,8 +331,7 @@ const Map: React.FC = () => {
                             beacon2: selectedEdges[1].beaconId,
                         });
                         console.log(response);
-                        // getMapInfo(floor);
-                        // 각 비콘 선택 가능하게 하기
+
                         setAddEdgeState(!addEdgeState);
                         getMapInfo(floor);
                         setSelectedEdges([]);
