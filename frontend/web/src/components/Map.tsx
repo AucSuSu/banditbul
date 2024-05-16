@@ -168,12 +168,12 @@ const Map: React.FC = () => {
                 }));
             } else if (d.type == "SOS") {
                 const result = beacons.some(
-                    (e) => e.beaconId === event.data.beaconId
+                    (e) => e.beaconId === d.beaconId
                 );
-                console.log('SOS 요청 왔음 : ', result, '@ beacons : ', beacons, '@ 데이터 : ', event.data.beaconId)
+                console.log('SOS 요청 왔음 : ', result, '@ beacons : ', beacons, '@ 데이터 : ', d.beaconId)
                 if (!result) {setFloor(floor === -1 ? -2 : -1)};
 
-                if (!sosBeaconIdList.has(event.data.beaconId)) {
+                if (!sosBeaconIdList.has(d.beaconId)) {
                     console.log("sosbeacon등록");
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
                     newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
