@@ -81,14 +81,17 @@ input[type="number"] {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="number"] {
     outline: none;
 }
 
 input[type="text"]:focus,
+input[type="password"],
 input[type="number"]:focus {
     font-weight: bold;
 }
+
 
 /* scroll*/
 ::-webkit-scrollbar {

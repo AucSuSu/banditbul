@@ -41,7 +41,7 @@
 }
 
 /* 입력 필드 스타일 */
-.inputBox {
+.inputBox, .inputErrorBox {
     width: 80%;
     height: 90%;
     padding: 8px;
@@ -55,6 +55,9 @@
     font-weight: bold;
 }
 
+.inputErrorBox::placeholder {
+    color: red; /* placeholder의 색상을 회색으로 설정 */
+}
 /* 드롭다운 박스 스타일 */
 
 .dropdownInBox {
@@ -106,7 +109,7 @@
 /* 드롭다운 아이템 컨테이너 스타일 */
 .dropdownContainer {
     display: none;
-    width: 100%;
+    width: 150%;
     position: absolute;
     top: 100%;
     padding-top: 10px;

@@ -49,7 +49,7 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
     const [girSelectShow, setGirlSelectShow] = useState<boolean>(false);
     const [boy, setBoy] = useState<string | null>(null);
     const [girl, setGirl] = useState<string | null>(null);
-
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false})
     const [formData, setFormData] = useState({
         macAddress: "",
         latitude: 0,
@@ -65,24 +65,35 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = async () => {
-        const data: RequestAddBeacon = {
-            macAddress: formData.macAddress,
-            range: 2,
-            longitude: formData.longitude,
-            latitude: formData.latitude,
-            beaconType: "TOILET",
-            x: props.x,
-            y: props.y,
-            floor: props.floor,
-            manDir: boy,
-            womanDir: girl,
-        };
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+            if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                acc[key as keyof typeof formData] = true;
+            }
+            return acc;
+        }, {macAddress : false, latitude : false, longitude : false});
+    
+        if (Object.values(filterData).some(e => e === true)) {
+            setFilterList(prev => ({...prev, ...filterData }))
+        } else {
+            const data: RequestAddBeacon = {
+                macAddress: formData.macAddress,
+                range: 2,
+                longitude: formData.longitude,
+                latitude: formData.latitude,
+                beaconType: "TOILET",
+                x: props.x,
+                y: props.y,
+                floor: props.floor,
+                manDir: boy,
+                womanDir: girl,
+            };
 
-        console.log(data);
-        await addBeaconRequest(data);
-        props.closeModal();
+            console.log(data);
+            await addBeaconRequest(data);
+            props.closeModal();
+        }
     };
-
+    
     const cancel = () => {
         props.closeModal();
     };
@@ -92,32 +103,36 @@ export const Toilet: React.FC<IScreenDoorProps> = (props) => {
             <div className={styles.inputContainer}>
                 <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude ? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude ? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
@@ -270,7 +285,7 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
     const [escalator, setEscalator] = useState<string | null>(null);
     const [elevator, setElevator] = useState<string | null>(null);
     const [stair, setStair] = useState<string | null>(null);
-
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false})
     const [formData, setFormData] = useState({
         macAddress: "",
         longitude: 0,
@@ -285,7 +300,19 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
         });
     };
 
+
     const saveBeacon = () => {
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+                if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                    acc[key as keyof typeof formData] = true;
+                }
+                return acc;
+            }, {macAddress : false, latitude : false, longitude : false});
+        
+            if (Object.values(filterData).some(e => e === true)) {
+                setFilterList(prev => ({...prev, ...filterData }))
+            } else {
+
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
             range: 2,
@@ -304,7 +331,8 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
         console.log(data);
         addBeaconRequest(data);
         props.closeModal();
-    };
+    }
+};
 
     const cancel = () => {
         props.closeModal();
@@ -313,34 +341,38 @@ export const Gate: React.FC<IScreenDoorProps> = (props) => {
     return (
         <>
             <div className={styles.inputContainer}>
-                <div className={styles.column}>
+            <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.latitude? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.longitude? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
@@ -608,7 +640,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
     const [escalator, setEscalator] = useState<string | null>(null);
     const [elevator, setElevator] = useState<string | null>(null);
     const [stair, setStair] = useState<string | null>(null);
-
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false, landmark : false, number: false})
     const [formData, setFormData] = useState({
         macAddress: "",
         longitude: 0,
@@ -626,6 +658,16 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+            if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                acc[key as keyof typeof formData] = true;
+            }
+            return acc;
+        }, {macAddress : false, latitude : false, longitude : false, landmark : false, number : false});
+    
+        if (Object.values(filterData).some(e => e === true)) {
+            setFilterList(prev => ({...prev, ...filterData }))
+        } else {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
             range: 2,
@@ -645,7 +687,8 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
         console.log(data);
         addBeaconRequest(data);
         props.closeModal();
-    };
+    }
+};
 
     const cancel = () => {
         props.closeModal();
@@ -654,45 +697,50 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
     return (
         <>
             <div className={styles.inputContainer}>
-                <div className={styles.column}>
-                    <div className={styles.question}>Mac 주소</div>
+            <div className={styles.column}>
+                    <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.latitude? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.longitude? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>출구 번호 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.number? styles.inputErrorBox : styles.inputBox }
                         name="exitNumber"
                         type="number"
                         min="1"
-                        placeholder="ex) 5"
+                        placeholder={filterList.number? "필수 입력 사항입니다" : "ex) 5"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, number: false}))}
                     />
                 </div>
 
@@ -922,7 +970,7 @@ export const Exit: React.FC<IScreenDoorProps> = (props) => {
 export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
     const [dir, setDir] = useState<string>("내려가는");
-
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false})
     const [formData, setFormData] = useState({
         macAddress: "",
         longitude: 0,
@@ -938,6 +986,16 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+            if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                acc[key as keyof typeof formData] = true;
+            }
+            return acc;
+        }, {macAddress : false, latitude : false, longitude : false});
+    
+        if (Object.values(filterData).some(e => e === true)) {
+            setFilterList(prev => ({...prev, ...filterData }))
+        } else {
         const data: RequestAddBeacon = {
             macAddress: formData.macAddress,
             range: 2,
@@ -953,7 +1011,8 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
         console.log(data);
         addBeaconRequest(data);
         props.closeModal();
-    };
+    }
+};
 
     const cancel = () => {
         props.closeModal();
@@ -962,34 +1021,38 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
     return (
         <>
             <div className={styles.inputContainer}>
-                <div className={styles.column}>
+            <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.latitude? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.longitude? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
@@ -1037,7 +1100,7 @@ export const Elevator: React.FC<IScreenDoorProps> = (props) => {
 export const Stair: React.FC<IScreenDoorProps> = (props) => {
     const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
     const [dir, setDir] = useState<string>("내려가는");
-
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false})
     const [formData, setFormData] = useState({
         macAddress: "",
         longitude: 0,
@@ -1053,6 +1116,16 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+            if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                acc[key as keyof typeof formData] = true;
+            }
+            return acc;
+        }, {macAddress : false, latitude : false, longitude : false});
+    
+        if (Object.values(filterData).some(e => e === true)) {
+            setFilterList(prev => ({...prev, ...filterData }))
+        } else {
         const data = {
             macAddress: formData.macAddress,
 
@@ -1069,8 +1142,8 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
         console.log(data);
         addBeaconRequest(data);
         props.closeModal();
+    }
     };
-
     const cancel = () => {
         props.closeModal();
     };
@@ -1078,34 +1151,38 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
     return (
         <>
             <div className={styles.inputContainer}>
-                <div className={styles.column}>
+            <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.latitude? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.longitude? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
@@ -1153,7 +1230,7 @@ export const Stair: React.FC<IScreenDoorProps> = (props) => {
 export const Escalator: React.FC<IScreenDoorProps> = (props) => {
     const [dirSelectShow, setDirSelectShow] = useState<boolean>(false);
     const [dir, setDir] = useState<string>("내려가는");
-
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false})
     const [formData, setFormData] = useState({
         macAddress: "",
         longitude: 0,
@@ -1169,6 +1246,16 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+            if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                acc[key as keyof typeof formData] = true;
+            }
+            return acc;
+        }, {macAddress : false, latitude : false, longitude : false});
+    
+        if (Object.values(filterData).some(e => e === true)) {
+            setFilterList(prev => ({...prev, ...filterData }))
+        } else {
         const data = {
             macAddress: formData.macAddress,
             range: 2,
@@ -1184,6 +1271,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
         console.log(data);
         addBeaconRequest(data);
         props.closeModal();
+        }
     };
 
     const cancel = () => {
@@ -1193,34 +1281,38 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
     return (
         <>
             <div className={styles.inputContainer}>
-                <div className={styles.column}>
+            <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.latitude? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.longitude? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
@@ -1268,6 +1360,7 @@ export const Escalator: React.FC<IScreenDoorProps> = (props) => {
 
 // 스크린도어
 export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
+    const [filterList, setFilterList] = useState({macAddress : false, latitude : false, longitude : false, direction: false})
     const [formData, setFormData] = useState({
         macAddress: "",
         longitude: 0,
@@ -1284,6 +1377,16 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
     };
 
     const saveBeacon = () => {
+        const filterData = Object.keys(formData).reduce((acc, key) => {
+            if (formData[key as keyof typeof formData] === "" || formData[key as keyof typeof formData] === 0) {
+                acc[key as keyof typeof formData] = true;
+            }
+            return acc;
+        }, {macAddress : false, latitude : false, longitude : false, direction : false});
+    
+        if (Object.values(filterData).some(e => e === true)) {
+            setFilterList(prev => ({...prev, ...filterData }))
+        } else {
         const data = {
             macAddress: formData.macAddress,
 
@@ -1300,6 +1403,7 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
         console.log(data);
         addBeaconRequest(data);
         props.closeModal();
+    }
     };
 
     const cancel = () => {
@@ -1309,44 +1413,49 @@ export const ScreenDoor: React.FC<IScreenDoorProps> = (props) => {
     return (
         <>
             <div className={styles.inputContainer}>
-                <div className={styles.column}>
+            <div className={styles.column}>
                     <div className={styles.question}>Mac 주소 </div>
+                    
                     <input
-                        className={styles.inputBox}
+                        className={filterList.macAddress? styles.inputErrorBox : styles.inputBox }
                         name="macAddress"
                         type="text"
-                        placeholder="ex) 00:00:00:00"
+                        placeholder={filterList.macAddress? "필수 입력 사항입니다" : "ex) 00:00:00:00"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, macAddress: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>위도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.latitude? styles.inputErrorBox : styles.inputBox }
                         name="latitude"
                         type="number"
-                        placeholder="ex) 35.000000"
+                        placeholder={filterList.latitude? "필수 입력 사항입니다" : "ex) 35.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, latitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>경도 </div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.longitude? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="longitude"
-                        placeholder="ex) 127.000000"
+                        placeholder={filterList.longitude? "필수 입력 사항입니다" : "ex) 127.000000"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, longitude: false}))}
                     />
                 </div>
                 <div className={styles.column}>
                     <div className={styles.question}>방면</div>
                     <input
-                        className={styles.inputBox}
+                        className={filterList.direction? styles.inputErrorBox : styles.inputBox }
                         type="text"
                         name="direction"
-                        placeholder="ex) 000방면 n-n"
+                        placeholder={filterList.direction? "필수 입력 사항입니다" : "ex) 000방면 n-n"}
                         onChange={handleChange}
+                        onMouseEnter={() => setFilterList(prev => ({...prev, direction: false}))}
                     />
                 </div>
             </div>
