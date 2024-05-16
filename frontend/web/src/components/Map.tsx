@@ -108,16 +108,52 @@ const Map: React.FC = () => {
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
         {
+            beaconId: "CA:8D:AC:9C:63:64",
+            x: 765,
+            y: 7,
             beaconTYPE: "TOILET",
-            beaconId: "11:22:34",
-            x: 40,
-            y: 30,
         },
         {
-            beaconTYPE: "TOILET",
-            beaconId: "11:11:34",
-            x: 100,
-            y: 30,
+            beaconId: "FB:B8:E8:D8:0E:97",
+            x: 763,
+            y: 185,
+            beaconTYPE: "POINT",
+        },
+        {
+            beaconId: "CA:87:66:3E:6E:38",
+            x: 588,
+            y: 185,
+            beaconTYPE: "POINT",
+        },
+        {
+            beaconId: "D0:41:AE:8E:5C:0A",
+            x: 590,
+            y: 300,
+            beaconTYPE: "EXIT",
+        },
+        {
+            beaconId: "DA:B9:B0:9A:CD:76",
+            x: 68,
+            y: 185,
+            beaconTYPE: "STAIR",
+        },
+        {
+            beaconId: "지하 1층 엘리베이터",
+            x: 168,
+            y: 64,
+            beaconTYPE: "ELEVATOR",
+        },
+        {
+            beaconId: "intersection",
+            x: 166,
+            y: 182,
+            beaconTYPE: "POINT",
+        },
+        {
+            beaconId: "D4:5C:67:6A:7A:7A",
+            x: 321,
+            y: 185,
+            beaconTYPE: "GATE",
         },
     ]);
 
@@ -165,7 +201,7 @@ const Map: React.FC = () => {
             ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         };
 
-        ws.current.onmessage = (event: MessageEvent) => {
+        ws.current.onmessage = async (event: MessageEvent) => {
             console.log("socket 통신 메세지" + event.data); // 메세지 출력하기
             const d = JSON.parse(event.data);
             console.log(d.beaconId);
@@ -179,13 +215,23 @@ const Map: React.FC = () => {
                     ...d.count, // 여러 비콘의 카운트를 한 번에 업데이트
                 }));
             } else if (d.type == "SOS") {
-                const result = beacons.some(
-                    (e) => e.beaconId === event.data.beaconId
+                const result = await Promise.resolve(
+                    beacons.some((e) => e.beaconId === event.data.beaconId)
                 );
-                console.log('SOS 요청 왔음', '@ beacons : ', beacons, '@ 데이터 : ', event.data)
-                if (!result) setFloor(floor === -1 ? -2 : -1);
+                console.log(
+                    result,
+                    "SOS 요청 왔음",
+                    "@ beacons : ",
+                    beacons,
+                    "@ 데이터 : ",
+                    event.data
+                );
+                if (!result) {
+                    console.log("층변경=================");
+                    setFloor(floor === -1 ? -2 : -1);
+                }
 
-                if (!sosBeaconIdList.has(event.data.beaconId)) {
+                if (!sosBeaconIdList.has(d.beaconId)) {
                     console.log("sosbeacon등록");
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
                     newSosBeaconIdList.add(d.beaconId); // 새로운 Set 객체에 새로운 beaconId 추가
@@ -589,26 +635,71 @@ const Map: React.FC = () => {
                                     <div className={styles.addContentContainer}>
                                         <div className={styles.titleBox}>
                                             <div className={styles.optionBox}>
-                                            <div
+                                                <div
                                                     className={styles.typeTitle}
                                                     onClick={closeAddModal}
                                                 >
-                                                <img src={IconArrowPrev} alt="" />
-                                                   back
+                                                    <img
+                                                        src={IconArrowPrev}
+                                                        alt=""
+                                                    />
+                                                    back
                                                 </div>
-                                                <ul className={styles.dropdownInBox}
-                                                    onClick={() => {setDropDownOpen(!dropDownOpen);}}
+                                                <ul
+                                                    className={
+                                                        styles.dropdownInBox
+                                                    }
+                                                    onClick={() => {
+                                                        setDropDownOpen(
+                                                            !dropDownOpen
+                                                        );
+                                                    }}
                                                 >
-                                                    <div className={styles.selectedItem}>
+                                                    <div
+                                                        className={
+                                                            styles.selectedItem
+                                                        }
+                                                    >
                                                         {types[selectType]}
-                                                        <img className={styles.downIcon} src={Icon} alt=""/>
-                                                        <div className={ styles.horizontalLine}></div>
+                                                        <img
+                                                            className={
+                                                                styles.downIcon
+                                                            }
+                                                            src={Icon}
+                                                            alt=""
+                                                        />
+                                                        <div
+                                                            className={
+                                                                styles.horizontalLine
+                                                            }
+                                                        ></div>
                                                     </div>
                                                     {dropDownOpen && (
-                                                        <ul className={styles.dropdownContainer} style={{}}>
-                                                            {types.slice(1) .map(( data, index) => (
-                                                                        <li className={styles.dropdownItem} key={ index}
-                                                                            onClick={() => clickType(  index )}
+                                                        <ul
+                                                            className={
+                                                                styles.dropdownContainer
+                                                            }
+                                                            style={{}}
+                                                        >
+                                                            {types
+                                                                .slice(1)
+                                                                .map(
+                                                                    (
+                                                                        data,
+                                                                        index
+                                                                    ) => (
+                                                                        <li
+                                                                            className={
+                                                                                styles.dropdownItem
+                                                                            }
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            onClick={() =>
+                                                                                clickType(
+                                                                                    index
+                                                                                )
+                                                                            }
                                                                         >
                                                                             {
                                                                                 data
@@ -619,8 +710,6 @@ const Map: React.FC = () => {
                                                         </ul>
                                                     )}
                                                 </ul>
-
-
                                             </div>
                                             <div
                                                 className={styles.addBeaconDes}
@@ -666,7 +755,6 @@ const Map: React.FC = () => {
                                                         onMouseOver={() =>
                                                             beaconHandleMouseOver(
                                                                 item.beaconId
-                                                                
                                                             )
                                                         }
                                                     >
@@ -791,11 +879,21 @@ const Map: React.FC = () => {
                                                         onMouseOut={
                                                             beaconHandleMouseOut
                                                         }
-                                                        onClick={() => handleRadioChange(item.beaconId)}
+                                                        onClick={() =>
+                                                            handleRadioChange(
+                                                                item.beaconId
+                                                            )
+                                                        }
                                                     >
                                                         {addEdgeState && (
-                                                            <input type="radio" id={`option-${index}`}
-                                                                checked={selectedEdges.some((data) => data.beaconId ===item.beaconId)}
+                                                            <input
+                                                                type="radio"
+                                                                id={`option-${index}`}
+                                                                checked={selectedEdges.some(
+                                                                    (data) =>
+                                                                        data.beaconId ===
+                                                                        item.beaconId
+                                                                )}
                                                             />
                                                         )}
                                                         <div
@@ -811,8 +909,21 @@ const Map: React.FC = () => {
                                                             src={IconUser}
                                                             alt=""
                                                         />
-                                                        <div className={ styles.numberOfUser  } >
-                                                            {beaconCounts[item.beaconId] ? ` ${ beaconCounts[item .beaconId]}`: "0"}
+                                                        <div
+                                                            className={
+                                                                styles.numberOfUser
+                                                            }
+                                                        >
+                                                            {beaconCounts[
+                                                                item.beaconId
+                                                            ]
+                                                                ? ` ${
+                                                                      beaconCounts[
+                                                                          item
+                                                                              .beaconId
+                                                                      ]
+                                                                  }`
+                                                                : "0"}
                                                         </div>
                                                         <img
                                                             src={IconDelete}
