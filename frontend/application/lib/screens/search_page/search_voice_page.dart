@@ -174,15 +174,14 @@ class _SearchVoicePageState extends State<SearchVoicePage> {
   void toggleRecording() async {
     if (_voiceService.isRecording) {
       setState(() {
-        isProcessing = true; // 음성 인식 처리 시작
+        isProcessing = false; // 음성 인식 처리 시작
       });
-      await playStopSound(); // 종료 비프음 재생
       String filePath = await _voiceService
           .stopRecording(); // Assuming this now returns a Future<String>
+      await playStopSound(); // 종료 비프음 재생
       if (filePath.isNotEmpty) {
         String text = await _voiceService.convertSpeechToText(filePath);
         setState(() {
-          isProcessing = false; // 음성 인식 처리 완료
           manageMessageList({'text': text, 'isUser': true});
           findRoute(text);
         });
