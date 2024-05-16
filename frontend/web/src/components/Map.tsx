@@ -442,6 +442,7 @@ const Map: React.FC = () => {
 
                                     return (
                                         <line
+                                            key={index}
                                             x1={startPoint.x + 50}
                                             y1={startPoint.y + 65}
                                             x2={endPoint.x + 50}
