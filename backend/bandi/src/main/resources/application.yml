@@ -3,7 +3,7 @@ spring:
     name: bandi
 
   datasource:
-    url: jdbc:postgresql://db-bandi.cpc4uswu8hst.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    url: jdbc:postgresql://db-bandi.cpc4uswu8hst.ap-northeast-2.rds.amazonaws.com:5432/ssafy
     username: postgres
     password: byeoljalie102
     driver-class-name: org.postgresql.Driver
