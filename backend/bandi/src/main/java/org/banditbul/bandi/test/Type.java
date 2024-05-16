@@ -1,7 +1,7 @@
 package org.banditbul.bandi.test;
 
 public enum Type {
-    SOS, ENTER, SOS_ACCEPT, SOS_FAIL, CANCEL, MONITOR, BEACON, CLOSE;
+    SOS, ENTER, SOS_ACCEPT, SOS_FAIL, CANCEL, MONITOR, HEARTBEAT, BEACON, CLOSE;
     // SOS : 도움 요청
         // SOS_ACCPET : 관리자가 요청 수락
         // SOS_FAIL : 관리자가 거부하기
