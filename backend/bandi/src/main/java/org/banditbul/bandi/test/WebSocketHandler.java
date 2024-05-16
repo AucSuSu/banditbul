@@ -66,7 +66,10 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
             sessions.remove(session);
             log.info("uuid: "+messageDto.getUuId()+"방 나감");
         }
-        //그 외에는 그대로 패스
+        else if(messageDto.getType() == Type.HEARTBEAT){
+            //패스
+        }
+        //그 외에는 그대로 전달
         else{
             sendToEachSocket(sessions, message);
         }
