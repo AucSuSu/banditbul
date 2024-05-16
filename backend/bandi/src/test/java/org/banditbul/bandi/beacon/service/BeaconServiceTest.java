@@ -143,13 +143,18 @@ class BeaconServiceTest {
         // Then
         List<IndvBeacon> expectedBeacons = List.of(new IndvBeacon(beacon.getId(), beacon.getX(), beacon.getY(), beacon.getBeaconType()),
                 new IndvBeacon(beacon2.getId(), beacon2.getX(), beacon2.getY(), beacon2.getBeaconType()), new IndvBeacon(beacon3.getId(), beacon3.getX(), beacon3.getY(), beacon3.getBeaconType()));
-        List<IndvEdge> expectedEdges = List.of(new IndvEdge(edge1.getBeacon1().getId(), edge1.getBeacon2().getId()),
-                new IndvEdge(edge2.getBeacon1().getId(), edge2.getBeacon2().getId()));
-        List<IndvEdge> expectedEdges2 = List.of(new IndvEdge(beacon.getId(), beacon2.getId()),
-                        new IndvEdge(beacon.getId(), beacon3.getId()));
+        List<IndvEdge> expectedEdges = List.of(new IndvEdge(edge1.getBeacon1().getId(), edge1.getBeacon2().getId(), edge1.getId(), edge1.getBeacon1().getBeaconType(), edge1.getBeacon2().getBeaconType()),
+                new IndvEdge(edge2.getBeacon1().getId(), edge2.getBeacon2().getId(), edge2.getId(), edge2.getBeacon1().getBeaconType(), edge2.getBeacon2().getBeaconType()));
 
         String expectedImageUrl = "https://d3h25rphev0vuf.cloudfront.net/"+hadanstation.getName()+"1.png";
         assertEquals(expectedBeacons, floorInfoDto.getBeaconList(), "Beacon list should match expected");
+        for (IndvEdge i : expectedEdges) {
+            System.out.println(i.getEdgeId());
+        }
+        System.out.println("================");
+        for (IndvEdge i: floorInfoDto.getEdgeList()){
+            System.out.println(i.getEdgeId());
+        }
         assertEquals(expectedEdges, floorInfoDto.getEdgeList(), "Edge list should match expected");
         assertEquals(expectedImageUrl, floorInfoDto.getMapImageUrl(), "Image URL should match expected");
     }
