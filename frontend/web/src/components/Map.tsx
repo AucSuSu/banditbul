@@ -429,21 +429,18 @@ const Map: React.FC = () => {
                                 </Draggable>
                             )}
 
-                            {edgeList.map((edge, index) => {
-                                const beacon1 = edge.beacon1;
-                                const beacon2 = edge.beacon2;
-                                const startPoint = beacons.find(
-                                    (point) => point.beaconId === beacon1
-                                )!;
-                                const endPoint = beacons.find(
-                                    (point) => point.beaconId === beacon2
-                                )!;
+                            <svg className={styles.edge}>
+                                {edgeList.map((edge, index) => {
+                                    const beacon1 = edge.beacon1;
+                                    const beacon2 = edge.beacon2;
+                                    const startPoint = beacons.find(
+                                        (point) => point.beaconId === beacon1
+                                    )!;
+                                    const endPoint = beacons.find(
+                                        (point) => point.beaconId === beacon2
+                                    )!;
 
-                                return (
-                                    <svg
-                                        key={`line-${index}`}
-                                        className={styles.edge}
-                                    >
+                                    return (
                                         <line
                                             x1={startPoint.x + 50}
                                             y1={startPoint.y + 65}
@@ -455,9 +452,9 @@ const Map: React.FC = () => {
                                                 strokeWidth: 2,
                                             }}
                                         />
-                                    </svg>
-                                );
-                            })}
+                                    );
+                                })}
+                            </svg>
 
                             {beacons.map((point, index) => (
                                 <div key={index}>
