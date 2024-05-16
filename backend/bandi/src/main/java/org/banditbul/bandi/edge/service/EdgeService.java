@@ -50,7 +50,16 @@ public class EdgeService {
 
     public void deleteEdge(int edgeId){
 
-        edgeRepository.deleteById(edgeId);
+        // findById 메소드로 해당 엔티티 존재 여부 확인
+        Optional<Edge> edgeOptional = edgeRepository.findById(edgeId);
+
+        if (edgeOptional.isPresent()) {
+            // 엔티티가 존재하면 삭제 진행
+            edgeRepository.deleteById(edgeId);
+        } else {
+            // 엔티티가 존재하지 않으면 예외 던지기
+            throw new EntityNotFoundException("ID가 " + edgeId + "인 엣지를 찾을 수 없습니다.");
+        }
 
     }
 
