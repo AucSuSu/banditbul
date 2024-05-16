@@ -36,6 +36,7 @@ import IconGate from "../assets/IconGate.svg";
 // import IconInfoWhite from "../assets/IconInfoWhite.svg";
 // import IconGateWhite from "../assets/IconGateWhite.svg";
 import { stationStore } from "../store";
+import { useLoginStore } from "../store"; // Zustand 스토어 import
 import Header from "./header.tsx";
 import BgImage from "../assets/mainBackground.png";
 import EdgeToggle from "../components/slideToggle/EdgeToggle.tsx";
@@ -64,6 +65,7 @@ const picIcons = [
 const Map: React.FC = () => {
     const axios = Axios();
     const stationData = stationStore((state) => state.stationData);
+    const loginId = useLoginStore((state) => state.loginId);
     const [floor, setFloor] = useState<number>(-1);
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
@@ -146,7 +148,7 @@ const Map: React.FC = () => {
         ws.current.onopen = () => {
             console.log("web socket 연결");
             const data = {
-                sessionId: "b",
+                sessionId: loginId,
                 type: "ENTER",
                 beaconId: null,
             };
@@ -206,7 +208,7 @@ const Map: React.FC = () => {
     useEffect(() => {
         return () => {
             const data = {
-                sessionId: "b",
+                sessionId: loginId,
                 type: "CLOSE",
                 beaconId: null,
             };
@@ -294,7 +296,7 @@ const Map: React.FC = () => {
     const sendAcceptMessage = (beaconId: string) => {
         if (ws.current?.OPEN) {
             const data = {
-                sessionId: "b",
+                sessionId: loginId,
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
                 uuId: "test",
@@ -303,7 +305,7 @@ const Map: React.FC = () => {
         } else {
             ws.current = new WebSocket("wss://banditbul.co.kr/socket");
             const data = {
-                sessionId: "b",
+                sessionId: loginId,
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
                 uuId: "test",
@@ -321,7 +323,7 @@ const Map: React.FC = () => {
     const sendNoMessage = (beaconId: string) => {
         if (ws.current?.OPEN) {
             const data = {
-                sessionId: "b",
+                sessionId: loginId,
                 type: "SOS_FAIL",
                 beaconId: beaconId,
                 uuId: "test",

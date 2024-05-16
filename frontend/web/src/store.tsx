@@ -6,6 +6,11 @@ interface TestDataStore {
     setTestData: (newData: string) => void;
 }
 
+interface LoginStore {
+    loginId: string;
+    setLoginId: (id: string) => void;
+}
+
 interface StationDataStore {
     stationData: { line: string, stationName: string };
     setStationData: (data: { line: string, stationName: string }) => void;
@@ -40,6 +45,12 @@ const useWebSocketStore = create<WebSocketStore>((set) => ({
     webSocket: null,
     setWebSocket: (ws) => set(() => ({ webSocket: ws })),
 }));
+
+export const useLoginStore = create<LoginStore>((set) => ({
+    loginId: "",
+    setLoginId: (id) => set({ loginId: id }),
+}));
+
 
 export default useWebSocketStore
 

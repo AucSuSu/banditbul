@@ -5,6 +5,7 @@ import passwordImage from "../assets/pw.png";
 import subway from "../assets/loginBg.png";
 import { stationStore } from "../store";
 import { useNavigate } from "react-router-dom";
+import { useLoginStore } from "../store"; // Zustand 스토어 import
 
 const Login = () => {
     const auth = Auth();
@@ -12,6 +13,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const setData = stationStore((state) => state.setStationData);
     const navigate = useNavigate();
+    const setLoginIdGlobal = useLoginStore((state) => state.setLoginId); // Zustand 스토어의 setLoginId 함수 가져오기
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -25,6 +27,7 @@ const Login = () => {
             const response = await auth.post("/login", formData);
             console.log(response);
             setData(response.data.object);
+            setLoginIdGlobal(loginId); // Zustand 스토어에 loginId 저장
             navigate("./map");
         } catch (error) {
             console.error(error);
