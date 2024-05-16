@@ -5,6 +5,7 @@ import 'package:frontend/screens/main_page/main_page.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/store/SessionController.dart';
+import 'package:frontend/store/MainController.dart';
 import 'package:frontend/util/title_bar.dart';
 import 'package:get/get.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -17,6 +18,7 @@ void main() async {
   Get.put(RouteController());
   Get.put(BeaconController());
   Get.put(SessionController());
+  Get.put(MainController());
   runApp(MyApp());
 }
 
