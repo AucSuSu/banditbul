@@ -209,6 +209,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  fixnum:
+    dependency: transitive
+    description:
+      name: fixnum
+      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -258,26 +266,26 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_sound
-      sha256: "090a4694b11ecc744c2010621c4ffc5fe7c3079d304ea014961a72c7b72cfe6c"
+      sha256: "896682c8ad2fa2463ae6bee3f36ab77d619ad6aafaa3b8b4988022ef4a5ccecd"
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.13"
+    version: "9.4.10"
   flutter_sound_platform_interface:
     dependency: transitive
     description:
       name: flutter_sound_platform_interface
-      sha256: "4537eaeb58a32748c42b621ad6116f7f4c6ee0a8d6ffaa501b165fe1c9df4753"
+      sha256: "0ccc0c3876f8569de1debf6c6966939fae5e2ccf118770bdbda1e44ebc858428"
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.13"
+    version: "9.4.10"
   flutter_sound_web:
     dependency: transitive
     description:
       name: flutter_sound_web
-      sha256: ad4ca92671a1879e1f613e900bbbdb8170b20d57d1e4e6363018fe56b055594f
+      sha256: ef51f3b26efebc7229978e6f4540c4f4901c1a2a2ebd510ae38da130b64dc573
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.13"
+    version: "9.4.10"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -348,10 +356,10 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
+      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.7"
+    version: "0.7.1"
   json_annotation:
     dependency: transitive
     description:
@@ -412,18 +420,18 @@ packages:
     dependency: transitive
     description:
       name: location_web
-      sha256: "15ad7b4c8a9f55abee513373755e093a40c04d7e24fc1b4f89676fe99523d034"
+      sha256: "924da8436db7ded5eef92a7ef3ae6aa3715831a93965376c91738f586302350e"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.1"
+    version: "5.0.0"
   logger:
     dependency: transitive
     description:
       name: logger
-      sha256: "7ad7215c15420a102ec687bb320a7312afd449bac63bfb1c60d9787c27b9767f"
+      sha256: af05cc8714f356fd1f3888fb6741cbe9fbe25cdb6eedbab80e1a6db21047d4a4
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "2.3.0"
   matcher:
     dependency: transitive
     description:
@@ -637,6 +645,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -710,13 +726,13 @@ packages:
     source: hosted
     version: "2.2.2"
   uuid:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: uuid
-      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
+      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.7"
+    version: "4.4.0"
   vector_math:
     dependency: transitive
     description:
