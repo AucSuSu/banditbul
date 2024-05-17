@@ -176,20 +176,32 @@ const Map: React.FC = () => {
         }
     };
 
-    const websocketHandle = async () => {
+    const websocketHandle = () => {
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
 
         // listner
-        ws.current.onopen = async () => {
+        ws.current.onopen = () => {
             console.log("web socket 연결");
 
             const data = {
-                sessionId: loginId,
+                sessionId: "ssafy",
                 type: "ENTER",
                 beaconId: null,
             };
 
-            await ws.current!.send(JSON.stringify(data));
+            // ws.current!.send(JSON.stringify(data));
+
+            if (ws.current!.readyState === WebSocket.OPEN) {
+                ws.current!.send(JSON.stringify(data));
+            } else {
+                // 만약 여전히 CONNECTING 상태라면 일정 시간 후에 다시 시도
+                const checkAndSend = setInterval(() => {
+                    if (ws.current!.readyState === WebSocket.OPEN) {
+                        ws.current!.send(JSON.stringify(data));
+                        clearInterval(checkAndSend);
+                    }
+                }, 100); // 100ms 후에 다시 시도
+            }
         };
 
         ws.current.onclose = () => {
@@ -254,14 +266,15 @@ const Map: React.FC = () => {
 
     useEffect(() => {
         websocketHandle();
-        return () => {
-            const data = {
-                sessionId: loginId,
-                type: "CLOSE",
-                beaconId: null,
-            };
-            ws.current!.send(JSON.stringify(data));
-        };
+        // websocketHandle();
+        // return () => {
+        //     const data = {
+        //         sessionId: loginId,
+        //         type: "CLOSE",
+        //         beaconId: null,
+        //     };
+        //     ws.current!.send(JSON.stringify(data));
+        // };
     });
 
     useEffect(() => {
