@@ -60,6 +60,9 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
             String updatedPayload = objectMapper.writeValueAsString(messageDto); // 업데이트된 messageDto를 JSON 문자열로 변환
             TextMessage newMessage = new TextMessage(updatedPayload); // 새 TextMessage 생성
             sendToEachSocket(sessions, newMessage); // 새로운 메시지를 세션의 모든 소켓에 전송
+
+            log.info("newMessage");
+            log.info(String.valueOf(newMessage));
         }
         else if(messageDto.getType() == Type.SOS){
             if (!sessions.contains(session)) {
