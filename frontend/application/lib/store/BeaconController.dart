@@ -22,7 +22,7 @@ class BeaconController extends GetxController {
 
   Timer? periodicScanner;
 
-  // 전체 페이지에서 백그라운드로 동작하게 코드 설정
+  // 전체 페이지에서 백그라운드로 동작하게 코드 설정.
   @override
   void onInit() {
     super.onInit();
