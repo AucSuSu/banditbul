@@ -8,13 +8,11 @@ import 'package:frontend/util/beacon_scanner.dart';
 import 'package:frontend/util/tts_function.dart';
 import 'package:frontend/util/websocket.dart';
 import 'package:get/get.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:frontend/store/SessionController.dart';
-import 'package:frontend/store/MainController.dart';
 
 class BeaconController extends GetxController {
   // 가장 가까운 비콘 아이디 -> 계속 업데이트됨
-  var beaconId = 'DF:8F:78:F0:06:1F'.obs;
+  var beaconId = ''.obs;
   // 비콘 아이디를 통해 저장될 역 명
   var stationName = ''.obs;
 

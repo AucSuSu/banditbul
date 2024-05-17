@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 
 class MainController extends GetxController {
   // obs -> 관찰 가능한 변수로 만드는 거
-  var uuId = Uuid().obs;
+  var uuId = const Uuid().obs;
 
   void getSessionId(String beaconId) async {
     SessionController sessionController = Get.find<SessionController>();
