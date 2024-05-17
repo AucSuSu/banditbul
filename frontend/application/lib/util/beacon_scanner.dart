@@ -31,11 +31,11 @@ class BeaconScanner {
           }
           updateHighestRssiAdminBeacon();
           // 스캔 결과가 갱신될 때마다 콜백 호출
-          // String? macAddress = getHighestRssiAdminBeaconMacAddress();
-          // if (macAddress != null) {
-          //   onScanResultChanged
-          //       ?.call(macAddress); // Only call if macAddress is not null
-          // }
+          String? macAddress = getHighestRssiAdminBeaconMacAddress();
+          if (macAddress != null) {
+            onScanResultChanged
+                ?.call(macAddress); // Only call if macAddress is not null
+          }
         }
       });
       FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
@@ -48,10 +48,10 @@ class BeaconScanner {
     restartScanTimer?.cancel(); // Cancel existing timer
     restartScanTimer = Timer(const Duration(seconds: 5, milliseconds: 200), () {
       stopScan();
-      String? macAddress = getHighestRssiAdminBeaconMacAddress();
-      if (macAddress != null) {
-        onScanResultChanged?.call(macAddress); // MAC 주소가 null이 아닐 때만 콜백 호출
-      }
+      // String? macAddress = getHighestRssiAdminBeaconMacAddress();
+      // if (macAddress != null) {
+      //   onScanResultChanged?.call(macAddress); // MAC 주소가 null이 아닐 때만 콜백 호출
+      // }
     });
   }
 
