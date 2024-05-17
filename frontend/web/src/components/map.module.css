@@ -129,7 +129,7 @@ body {
 .sosbeaconListItem {
     font-weight: 800;
     width: 95%;
-    height: 77.5px;
+    height: 81px;
     display: flex;
     padding: 20px;
     text-align: center;
@@ -141,14 +141,14 @@ body {
 }
 
 .beaconListItem:hover {
-    background-color: #6565ff;
+    background-color: #AA9FE3;
     cursor: pointer;
 }
 
 .beaconListItem:hover,
 .sosbeaconListItem:hover {
     transition: 0.3s;
-    background-color: #6565ff;
+    background-color: #AA9FE3;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* 그림자 설정 (불투명도 조정) */
 }
 
@@ -159,12 +159,15 @@ body {
     height: 100vh;
     background: #F0EEFB;
 box-shadow: 0px 4px 16px rgba(4, 4, 4, 0.2);
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 .leftContainer {
     /* margin-right: 2%; */
     margin: auto;
-    width: 90%;
+    width: 85%;
     height: 100%;
     position: relative;
     justify-content: center;
@@ -185,19 +188,19 @@ box-shadow: 0px 4px 16px rgba(4, 4, 4, 0.2);
 }
 
 .buttonContainer {
-    width: 95%;
-    height: 10%;
+    width: 92.5%;
+    height: 7.5%;
     display: flex;
     text-align: center;
     justify-content: space-between;
     /* gap: 20px; */
     /* background-color: red; */
-    margin-bottom: 20px  ;
+    margin-bottom: 25px  ;
 }
 
 .addEdgeButton,
 .floatingButton {
-    background-color: rgb(142, 137, 137);
+    background-color: #565656;
     /* color: white; */
     font-weight: 800;
     border-radius: 50px;
@@ -280,6 +283,7 @@ box-shadow: 0px 4px 16px rgba(4, 4, 4, 0.2);
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 2%;
     
 }
 

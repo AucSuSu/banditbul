@@ -21,20 +21,21 @@ const OutRound = styled(FlaxBox)`
     border-radius: 100px;
     background-color: #f68500;
     font-size: xx-large;
+    box-shadow: 3px 6px 3px rgba(0, 0, 0, 0.3);
 `;
 
 const InnerRound = styled(FlaxBox)`
-    height: 90%;
-    width: 96%;
+    height: 85%;
+    width: 94%;
     border-radius: 100px;
     background-color: white;
     color: black;
-    box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const LineBox = styled(FlaxBox)`
-    height: 60px;
-    width: 60px;
+    height: 55px;
+    width: 55px;
     border-radius: 100%;
     margin-left: 20px;
     margin-right: auto;

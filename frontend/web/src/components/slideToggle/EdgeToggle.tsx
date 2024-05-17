@@ -55,7 +55,7 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
     display: inline-block;
     border-radius: 50px;
     transition: background-color 0.4s;
-    border: solid 3px #9f6db6;
+    border: solid 3px #AA9FE3;
     color : black;
 
     &:after {
@@ -76,10 +76,11 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
     }
 
     ${InputCheckbox}:checked + & {
-        border: solid 3px #9f6db6;
+        border: solid 3px #AA9FE3;
         &:after {
             left: calc(100% - 65px);
-            background: #af4597;
+            background: #AA9FE3;
+            color: white;
         }
     }
 `;

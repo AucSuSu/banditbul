@@ -59,7 +59,7 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
     display: inline-block;
     border-radius: 50px;
     transition: background-color 0.4s;
-    border: solid 3px #c2bbbb;
+    border: solid 3px #000000;
 
     &:after {
         content: "${({ isChecked }) => (isChecked ? "대합실" : "승강장")}";
@@ -67,7 +67,7 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
         width: 80px;
         height: 40px;
         border-radius: 50px;
-        background: #c2bbbb;
+        background: #ffffff;
         top: 3.5px;
         left: 5px;
         z-index: 2;
@@ -76,13 +76,15 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
         display: flex;
         justify-content: center;
         align-items: center;
+        color: black;
     }
 
     ${InputCheckbox}:checked + & {
-        border: solid 3px #487751;
+        /* border: solid 3px #000000; */
         &:after {
             left: calc(100% - 85px);
-            background: #487751;
+            background: #000000;
+            color: white;
         }
     }
 `;

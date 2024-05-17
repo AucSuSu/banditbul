@@ -22,6 +22,8 @@ import ToggleButton from "./slideToggle/toggle.tsx";
 import addBeaconInfo from "../assets/addBeaconInfo.png";
 import Icon from "../assets/IconDownArrow.svg";
 import IconDelete from "../assets/IconDelete.svg";
+
+
 import IconUser from "../assets/IconUser.svg";
 import IconElevator from "../assets/IconElevator.svg";
 import IconEscalator from "../assets/IconEscalator.svg";
@@ -69,13 +71,20 @@ const Map: React.FC = () => {
     const [addEdgeState, setAddEdgeState] = useState<boolean>(false);
     const [beaconCounts, setBeaconCounts] = useState<BeaconCounts>({});
     const [edgeList, setEdgeList] = useState<Edge[]>([
-        // {
-        //     edgeId: 1,
-        //     beacon1: "11:22:34",
-        //     beacon2: "11:11:34",
-        //     beacon1Type: "TOILET",
-        //     beacon2Type: "TOILET",
-        // },
+            {
+                beacon1: "CA:8D:AC:9C:63:64",
+                beacon2: "FB:B8:E8:D8:0E:97",
+                edgeId: 8,
+                beacon1Type: "TOILET",
+                beacon2Type: "POINT"
+            },
+            {
+                beacon1: "FB:B8:E8:D8:0E:97",
+                beacon2: "CA:87:66:3E:6E:38",
+                edgeId: 9,
+                beacon1Type: "POINT",
+                beacon2Type: "POINT"
+            }
     ]);
     const [x, setX] = useState<number>(0);
     const [y, setY] = useState<number>(0);
@@ -690,18 +699,6 @@ const Map: React.FC = () => {
                                                                 >
                                                                     수락
                                                                 </span>
-                                                                <span
-                                                                    className={
-                                                                        styles.sosDenyButton
-                                                                    }
-                                                                    onClick={() => {
-                                                                        sendNoMessage(
-                                                                            item.beaconId
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    거부
-                                                                </span>
                                                             </div>
                                                         </div>
                                                     ) : deleteSelectBeacon ==
@@ -1073,10 +1070,10 @@ const Map: React.FC = () => {
                                     return (
                                         <line
                                             key={index}
-                                            x1={startPoint.x + 50}
-                                            y1={startPoint.y + 65}
-                                            x2={endPoint.x + 50}
-                                            y2={endPoint.y + 65}
+                                            x1={startPoint.x + 37.5}
+                                            y1={startPoint.y + 50}
+                                            x2={endPoint.x + 37.5}
+                                            y2={endPoint.y + 50}
                                             style={{
                                                 height: "1px",
                                                 stroke:
