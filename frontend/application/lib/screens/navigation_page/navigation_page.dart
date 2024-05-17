@@ -148,7 +148,7 @@ class _NavigationPageState extends State<NavigationPage> {
                       },
                       child: Text(
                         getTextFromRoute(
-                            isTalkBackMode), // 이 부분이 나중에는 동적으로 바뀌어야 할 것
+                            isTalkBackMode), // 이 부분이 나중에는 동적으로 바뀌어야 할 것1
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 27,
