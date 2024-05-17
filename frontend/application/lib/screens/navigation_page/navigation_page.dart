@@ -32,11 +32,13 @@ class _NavigationPageState extends State<NavigationPage> {
   final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
   final RouteController _routeController = Get.find<RouteController>();
   final BeaconController _beaconController = Get.find<BeaconController>();
+  final FocusNode textFocusNode = FocusNode();
 
   // 메모리 관리를 위한 dispose
   @override
   void dispose() {
     clovaTTSManager.dispose();
+    textFocusNode.dispose();
     super.dispose();
   }
 
@@ -61,26 +63,21 @@ class _NavigationPageState extends State<NavigationPage> {
       return '지하철 탑승 중입니다'; // text 설정
     }
 
+    String text;
     if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
-      var text = '좌회전 후 \n${curDist}m 이동하세요'; // text 설정
-      if (!isTalkBackMode) {
-        clovaTTSManager.getTTS(text); // TTS
-      }
-      return text;
+      text = '좌회전 후 \n${curDist}m 이동하세요'; // text 설정
     } else if (_routeController.currentRoute[curIdx]['directionInfo'] ==
         '오른쪽') {
-      var text = '우회전 후 \n${curDist}m 이동하세요';
-      if (!isTalkBackMode) {
-        clovaTTSManager.getTTS(text); // TTS
-      }
-      return text;
+      text = '우회전 후 \n${curDist}m 이동하세요';
     } else {
-      var text = '다음 안내까지 \n${curDist}m 직진입니다.';
-      if (!isTalkBackMode) {
-        clovaTTSManager.getTTS(text); // TTS
-      }
-      return text;
+      text = '다음 안내까지 \n${curDist}m 직진입니다.';
     }
+
+    if (!isTalkBackMode) {
+      clovaTTSManager.getTTS(text); // TTS
+    }
+
+    return text;
   }
 
   // 경로에 따른 이미지 설정
@@ -116,7 +113,7 @@ class _NavigationPageState extends State<NavigationPage> {
       appBar: const TitleBar(),
       body: Obx(
         () => Padding(
-          // 제일 큰 conatiner를 padding을 넣어서 가로 세로에 여유공간
+          // 제일 큰 container를 padding을 넣어서 가로 세로에 여유공간
           padding: const EdgeInsets.fromLTRB(30, 50, 30, 50),
           child: Column(
             // Container와 button 3개를 묶은 Column을 띄우기 위한 설정
@@ -124,7 +121,7 @@ class _NavigationPageState extends State<NavigationPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                //텍스트의 테두리를 만들기 위한 container
+                // 텍스트의 테두리를 만들기 위한 container
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
                   vertical: 20,
@@ -138,19 +135,33 @@ class _NavigationPageState extends State<NavigationPage> {
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Center(
-                  child: Text(
-                    getTextFromRoute(isTalkBackMode), // 이부분이 나중에는 동적으로 바뀌어야 할 것
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 27,
-                      fontWeight: FontWeight.w700,
+                  child: Semantics(
+                    child: Focus(
+                      focusNode: textFocusNode,
+                      onFocusChange: (hasFocus) {
+                        if (hasFocus && isTalkBackMode) {
+                          // 포커스가 있을 때 TalkBack이 텍스트를 읽도록 함
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            setState(() {}); // 포커스를 재설정하여 텍스트 변경을 감지하게 함
+                          });
+                        }
+                      },
+                      child: Text(
+                        getTextFromRoute(
+                            isTalkBackMode), // 이 부분이 나중에는 동적으로 바뀌어야 할 것
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 27,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
               Image.asset(
-                getImageFromRoute(), // 이것도 api 통신에 따라서 직,좌,우로 바꿔여함
+                getImageFromRoute(), // 이것도 api 통신에 따라서 직,좌,우로 바뀌어야 함
                 width: MediaQuery.of(context).size.width * 0.6,
               ),
               Column(
@@ -165,8 +176,14 @@ class _NavigationPageState extends State<NavigationPage> {
                       if (!isTalkBackMode) {
                         rePlay();
                       } else {
+                        // TTS를 실행하고 포커스를 텍스트로 이동하여 TalkBack이 읽도록 함
                         clovaTTSManager
                             .getTTS(getTextFromRoute(isTalkBackMode));
+                        Future.delayed(Duration(milliseconds: 500), () {
+                          setState(() {
+                            textFocusNode.requestFocus();
+                          });
+                        });
                       }
                     },
                   ),

@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
       Get.offAll(() => const BluetoothOffPage());
     } else {
       // If Bluetooth is on, navigate to the main page
-      Get.offAll(() => const TestNavigatePage());
+      Get.offAll(() => const MainPage());
     }
   }
 
@@ -80,8 +80,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'SBaggro',
       ),
-      home:
-          _isBluetoothOn ? const TestNavigatePage() : const BluetoothOffPage(),
+      home: _isBluetoothOn ? const MainPage() : const BluetoothOffPage(),
     );
   }
 }
