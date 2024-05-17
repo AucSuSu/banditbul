@@ -13,7 +13,7 @@ import 'package:frontend/store/SessionController.dart';
 
 class BeaconController extends GetxController {
   // 가장 가까운 비콘 아이디 -> 계속 업데이트됨
-  var beaconId = 'D0:41:AE:8E:5C:0A'.obs;
+  var beaconId = ''.obs;
   // 비콘 아이디를 통해 저장될 역 명
   var stationName = ''.obs;
 
