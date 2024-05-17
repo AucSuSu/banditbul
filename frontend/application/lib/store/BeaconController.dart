@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/screens/arrive_page/arrive_page.dart';
+import 'package:frontend/screens/navigation_page/navigation_page.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/store/MainController.dart';
 import 'package:frontend/util/beacon_scanner.dart';
@@ -49,6 +50,7 @@ class BeaconController extends GetxController {
       if (routeController.route2.isNotEmpty &&
           beaconId.value == routeController.route2.first['beaconId']) {
         // route2 시작 비콘일 경우 스킵
+        Get.to(() => NavigationPage());
       } else {
         // 비콘 시설물 응답 정보 api
 
