@@ -184,7 +184,7 @@ const Map: React.FC = () => {
             console.log("web socket 연결");
 
             const data = {
-                sessionId: "ssafy",
+                sessionId: loginId,
                 type: "ENTER",
                 beaconId: null,
             };
@@ -221,10 +221,8 @@ const Map: React.FC = () => {
             //앱이 비콘에 입장 시 count 반환
             if (d.type === "MONITOR" && d.count) {
                 console.log("Monitor 업데이트");
-                setBeaconCounts((prevCounts) => ({
-                    ...prevCounts,
-                    ...d.count, // 여러 비콘의 카운트를 한 번에 업데이트
-                }));
+                const newBeaconList = d.count;
+                setBeaconCounts(newBeaconList);
             } else if (d.type == "SOS") {
                 const result = await Promise.resolve(
                     beacons.find((e) => e.beaconId === d.beaconId)
@@ -367,7 +365,7 @@ const Map: React.FC = () => {
                 sessionId: loginId,
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
-                uuId: "test",
+                uuId: loginId,
             };
             ws.current.send(JSON.stringify(data));
         } else {
@@ -376,7 +374,7 @@ const Map: React.FC = () => {
                 sessionId: loginId,
                 type: "SOS_ACCEPT",
                 beaconId: beaconId,
-                uuId: "test",
+                uuId: loginId,
             };
             ws.current.send(JSON.stringify(data));
         }
