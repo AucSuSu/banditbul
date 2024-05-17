@@ -20,11 +20,11 @@ class _ArrivePageState extends State<ArrivePage> {
   void initState() {
     super.initState();
     clovaTTSManager.getTTS(widget.ttsText);
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 10), () {
       clovaTTSManager.getTTS('목적지에 도착 하였습니다. 잠시 후 메인페이지로 이동합니다.');
     });
     // 7초 후 메인페이지로 이동
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 20), () {
       Get.offAll(() => const MainPage());
     });
   }
