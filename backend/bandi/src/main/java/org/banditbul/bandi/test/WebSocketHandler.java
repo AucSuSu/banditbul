@@ -65,8 +65,8 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
             if (!sessions.contains(session)) {
                 sessions.add(session);
                 log.info("uuid: "+messageDto.getUuId()+"방 입장");
-                sendToEachSocket(sessions, message);
             }
+            sendToEachSocket(sessions, message);
         }
         //앱이 나감
         else if(messageDto.getType() == Type.CLOSE){
