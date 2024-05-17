@@ -32,13 +32,12 @@ class _NavigationPageState extends State<NavigationPage> {
   final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
   final RouteController _routeController = Get.find<RouteController>();
   final BeaconController _beaconController = Get.find<BeaconController>();
-  final FocusNode textFocusNode = FocusNode();
+  String currentRouteText = '';
 
   // 메모리 관리를 위한 dispose
   @override
   void dispose() {
     clovaTTSManager.dispose();
-    textFocusNode.dispose();
     super.dispose();
   }
 
@@ -52,7 +51,6 @@ class _NavigationPageState extends State<NavigationPage> {
 
   // 경로에 따른 text 설정
   String getTextFromRoute(bool isTalkBackMode) {
-    // beaconId 테스트용
     if (_routeController.currentRoute.isEmpty) {
       return _beaconController.beaconId.value;
     }
@@ -60,12 +58,12 @@ class _NavigationPageState extends State<NavigationPage> {
     var curIdx = _routeController.currentRouteIndex.value;
     var curDist = _routeController.currentRoute[curIdx]['distance'];
     if (curRoute == _routeController.route2 && curIdx == 0) {
-      return '지하철 탑승 중입니다'; // text 설정
+      return '지하철 탑승 중입니다';
     }
 
     String text;
     if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
-      text = '좌회전 후 \n${curDist}m 이동하세요'; // text 설정
+      text = '좌회전 후 \n${curDist}m 이동하세요';
     } else if (_routeController.currentRoute[curIdx]['directionInfo'] ==
         '오른쪽') {
       text = '우회전 후 \n${curDist}m 이동하세요';
@@ -74,7 +72,7 @@ class _NavigationPageState extends State<NavigationPage> {
     }
 
     if (!isTalkBackMode) {
-      clovaTTSManager.getTTS(text); // TTS
+      clovaTTSManager.getTTS(text);
     }
 
     return text;
@@ -82,7 +80,6 @@ class _NavigationPageState extends State<NavigationPage> {
 
   // 경로에 따른 이미지 설정
   String getImageFromRoute() {
-    // 비콘 id 테스트용
     if (_routeController.currentRoute.isEmpty) {
       return 'assets/images/navigation/left.png';
     }
@@ -90,7 +87,7 @@ class _NavigationPageState extends State<NavigationPage> {
     var curRoute = _routeController.currentRoute;
 
     if (curRoute == _routeController.route2 && curIdx == 0) {
-      return 'assets/images/navigation/subway.png'; // image설정
+      return 'assets/images/navigation/subway.png';
     }
 
     if (_routeController.currentRoute[curIdx]['directionInfo'] == '왼쪽') {
@@ -112,43 +109,39 @@ class _NavigationPageState extends State<NavigationPage> {
       backgroundColor: Colors.black,
       appBar: const TitleBar(),
       body: Obx(
-        () => Padding(
-          // 제일 큰 container를 padding을 넣어서 가로 세로에 여유공간
-          padding: const EdgeInsets.fromLTRB(30, 50, 30, 50),
-          child: Column(
-            // Container와 button 3개를 묶은 Column을 띄우기 위한 설정
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                // 텍스트의 테두리를 만들기 위한 container
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                  horizontal: 10,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color(0xffFFF27A),
-                    width: 2,
+        () {
+          String newRouteText = getTextFromRoute(isTalkBackMode);
+          if (currentRouteText != newRouteText) {
+            setState(() {
+              currentRouteText = newRouteText;
+            });
+          }
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(30, 50, 30, 50),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: 10,
                   ),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Center(
-                  child: Semantics(
-                    child: Focus(
-                      focusNode: textFocusNode,
-                      onFocusChange: (hasFocus) {
-                        if (hasFocus && isTalkBackMode) {
-                          // 포커스가 있을 때 TalkBack이 텍스트를 읽도록 함
-                          Future.delayed(Duration(milliseconds: 100), () {
-                            setState(() {}); // 포커스를 재설정하여 텍스트 변경을 감지하게 함
-                          });
-                        }
-                      },
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xffFFF27A),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Center(
+                    child: Semantics(
+                      key: ValueKey(
+                          currentRouteText), // 변경된 텍스트마다 새로운 키를 설정하여 TalkBack이 인식하게 함
+                      liveRegion: true, // TalkBack이 텍스트 변경 사항을 읽도록 함
                       child: Text(
-                        getTextFromRoute(
-                            isTalkBackMode), // 이 부분이 나중에는 동적으로 바뀌어야 할 것1
+                        currentRouteText,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 27,
@@ -159,59 +152,55 @@ class _NavigationPageState extends State<NavigationPage> {
                     ),
                   ),
                 ),
-              ),
-              Image.asset(
-                getImageFromRoute(), // 이것도 api 통신에 따라서 직,좌,우로 바뀌어야 함
-                width: MediaQuery.of(context).size.width * 0.6,
-              ),
-              Column(
-                // 고정값 버튼 3개를 담은 column
-                children: [
-                  NeonBorderButton(
-                    buttonText: '다시 듣기',
-                    buttonColor: const Color(0xffEEFFBD),
-                    borderColor: const Color(0xff33e9e9),
-                    textColor: Colors.black,
-                    onPressed: () {
-                      if (!isTalkBackMode) {
-                        rePlay();
-                      } else {
-                        // TTS를 실행하고 포커스를 텍스트로 이동하여 TalkBack이 읽도록 함
-                        clovaTTSManager
-                            .getTTS(getTextFromRoute(isTalkBackMode));
-                        Future.delayed(Duration(milliseconds: 500), () {
+                Image.asset(
+                  getImageFromRoute(),
+                  width: MediaQuery.of(context).size.width * 0.6,
+                ),
+                Column(
+                  children: [
+                    NeonBorderButton(
+                      buttonText: '다시 듣기',
+                      buttonColor: const Color(0xffEEFFBD),
+                      borderColor: const Color(0xff33e9e9),
+                      textColor: Colors.black,
+                      onPressed: () {
+                        if (!isTalkBackMode) {
+                          rePlay();
+                        } else {
+                          clovaTTSManager
+                              .getTTS(getTextFromRoute(isTalkBackMode));
                           setState(() {
-                            textFocusNode.requestFocus();
+                            currentRouteText = getTextFromRoute(isTalkBackMode);
                           });
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 40),
-                  NeonBorderButton(
-                    buttonText: '안내 종료',
-                    buttonColor: const Color(0xff9DCAFF),
-                    borderColor: const Color(0xff838fff),
-                    textColor: Colors.black,
-                    onPressed: () {
-                      Get.to(() => const MainPage());
-                    },
-                  ),
-                  const SizedBox(height: 40),
-                  NeonBorderButton(
-                    buttonText: '도움 요청',
-                    buttonColor: const Color(0xffFF9F9F),
-                    borderColor: const Color(0xffFF1C45),
-                    textColor: Colors.black,
-                    onPressed: () {
-                      sos();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    NeonBorderButton(
+                      buttonText: '안내 종료',
+                      buttonColor: const Color(0xff9DCAFF),
+                      borderColor: const Color(0xff838fff),
+                      textColor: Colors.black,
+                      onPressed: () {
+                        Get.offAll(() => const MainPage());
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    NeonBorderButton(
+                      buttonText: '도움 요청',
+                      buttonColor: const Color(0xffFF9F9F),
+                      borderColor: const Color(0xffFF1C45),
+                      textColor: Colors.black,
+                      onPressed: () {
+                        sos();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
