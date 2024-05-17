@@ -47,7 +47,6 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
                 sessions.add(session);
                 log.info("uuid: "+messageDto.getUuId()+"방 입장");
             }
-            sendToEachSocket(sessions, message);
         }
         //앱이 비콘에 들어옴
         else if(messageDto.getType() == Type.BEACON){
@@ -61,6 +60,13 @@ public class WebSocketHandler extends TextWebSocketHandler { // 웹 소켓 연�
             String updatedPayload = objectMapper.writeValueAsString(messageDto); // 업데이트된 messageDto를 JSON 문자열로 변환
             TextMessage newMessage = new TextMessage(updatedPayload); // 새 TextMessage 생성
             sendToEachSocket(sessions, newMessage); // 새로운 메시지를 세션의 모든 소켓에 전송
+        }
+        else if(messageDto.getType() == Type.SOS){
+            if (!sessions.contains(session)) {
+                sessions.add(session);
+                log.info("uuid: "+messageDto.getUuId()+"방 입장");
+                sendToEachSocket(sessions, message);
+            }
         }
         //앱이 나감
         else if(messageDto.getType() == Type.CLOSE){
