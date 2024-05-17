@@ -41,13 +41,14 @@ const LineBox = styled(FlaxBox)`
     background-color: #d2d0d0;
     font-family: TheJamsil5Bold;
     box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.4);
+    font-size: 30px;
 `;
 
 const NameBox = styled(FlaxBox)`
     margin-right: auto;
     margin-left: -20px;
     font-family: TheJamsil5Bold;
-    font-size: 50px;
+    font-size: 30px;
 `;
 
 const Header: React.FC<PropsData> = ({ line, name }) => {

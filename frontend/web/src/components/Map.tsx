@@ -38,7 +38,6 @@ import IconGate from "../assets/IconGate.svg";
 import { stationStore } from "../store";
 import { useLoginStore } from "../store"; // Zustand 스토어 import
 import Header from "./header.tsx";
-import BgImage from "../assets/mainBackground.png";
 import EdgeToggle from "../components/slideToggle/EdgeToggle.tsx";
 import IconArrowPrev from "../assets/IconArrowPrev.svg";
 const types = [
@@ -104,6 +103,12 @@ const Map: React.FC = () => {
     const [sosBeaconIdList, setSosBeaconIdList] = useState<Set<string>>(
         new Set([])
     );
+
+
+    const scrollRef = useRef<Record<string, HTMLDivElement | null>>({});
+
+
+    
 
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
@@ -216,21 +221,14 @@ const Map: React.FC = () => {
                 const result = await Promise.resolve(
                     beacons.find((e) => e.beaconId === d.beaconId)
                 );
-                console.log(
-                    result,
-                    "SOS 요청 왔음",
-                    "@ beacons : ",
-                    beacons,
-                    "@ 데이터 : ",
-                    event.data
-                );
-                if (!result) {
-                    console.log("층변경=================");
-                    console.log(beacons);
-                    console.log(d.beaconId);
-                    setFloor(floor === -1 ? -2 : -1);
+                if (!result) {setFloor(floor === -1 ? -2 : -1)} 
+                else {
+                    const sosBeacon = beacons.filter(e => e.beaconId === d.beaconId);
+                    setBeacons(prev => [sosBeacon[0], ...prev.filter(e => e.beaconId !== sosBeacon[0].beaconId)]);
                 }
-
+                
+                
+                
                 if (!sosBeaconIdList.has(d.beaconId)) {
                     console.log("sosbeacon등록");
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
@@ -489,7 +487,7 @@ const Map: React.FC = () => {
             <div
                 className={styles.mainContainer}
                 style={{
-                    backgroundImage: `url(${BgImage})`,
+                    backgroundImage: `url(https://d3h25rphev0vuf.cloudfront.net/bg.png)`,
                 }}
             >
                 <Header
@@ -876,6 +874,7 @@ const Map: React.FC = () => {
                                                             styles.beaconListItem
                                                         }
                                                         key={index}
+                                                        ref={(el) => (scrollRef.current[index] = el)}
                                                         onMouseOver={() =>
                                                             beaconHandleMouseOver(
                                                                 item.beaconId

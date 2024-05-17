@@ -109,7 +109,7 @@
 /* 드롭다운 아이템 컨테이너 스타일 */
 .dropdownContainer {
     display: none;
-    width: 150%;
+    width: 100%;
     position: absolute;
     top: 100%;
     padding-top: 10px;

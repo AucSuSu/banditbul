@@ -110,7 +110,7 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     height: 90%;
 }
 
@@ -128,6 +128,7 @@ body {
 
 .beaconListItem:hover {
     background-color: #6565ff;
+    cursor: pointer;
 }
 
 .beaconListItem:hover,
@@ -197,6 +198,7 @@ body {
     width: 60vw;
     height: 70vh;
     background-color: white;
+    border-radius: 10%;
 }
 
 .newBeaconItem {
@@ -208,8 +210,8 @@ body {
 
 .beaconItem {
     position: absolute;
-    height: 100px;
-    width: 100px;
+    height: 75px;
+    width: 75px;
 }
 
 .edge {
@@ -230,6 +232,7 @@ body {
 .leftContainer {
     background-color: white;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 2%;
 }
 
 .desContainer {
