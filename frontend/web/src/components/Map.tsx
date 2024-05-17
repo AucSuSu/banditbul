@@ -104,11 +104,7 @@ const Map: React.FC = () => {
         new Set([])
     );
 
-
     const scrollRef = useRef<Record<string, HTMLDivElement | null>>({});
-
-
-    
 
     // 이후에 backend로 받아오기
     const [beacons, setBeacons] = useState<Beacon[]>([
@@ -180,28 +176,28 @@ const Map: React.FC = () => {
         }
     };
 
-    useEffect(() => {
+    const websocketHandle = async () => {
         ws.current = new WebSocket("wss://banditbul.co.kr/socket");
 
         // listner
-        ws.current.onopen = () => {
+        ws.current.onopen = async () => {
             console.log("web socket 연결");
+
             const data = {
                 sessionId: loginId,
                 type: "ENTER",
                 beaconId: null,
             };
-            ws.current!.send(JSON.stringify(data));
+
+            await ws.current!.send(JSON.stringify(data));
         };
 
         ws.current.onclose = () => {
             console.log("web socket 연결 끊어짐");
-            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         };
 
         ws.current.onerror = () => {
             console.log("web socket 에러 발생");
-            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
         };
 
         ws.current.onmessage = async (event: MessageEvent) => {
@@ -221,14 +217,20 @@ const Map: React.FC = () => {
                 const result = await Promise.resolve(
                     beacons.find((e) => e.beaconId === d.beaconId)
                 );
-                if (!result) {setFloor(floor === -1 ? -2 : -1)} 
-                else {
-                    const sosBeacon = beacons.filter(e => e.beaconId === d.beaconId);
-                    setBeacons(prev => [sosBeacon[0], ...prev.filter(e => e.beaconId !== sosBeacon[0].beaconId)]);
+                if (!result) {
+                    setFloor(floor === -1 ? -2 : -1);
+                } else {
+                    const sosBeacon = beacons.filter(
+                        (e) => e.beaconId === d.beaconId
+                    );
+                    setBeacons((prev) => [
+                        sosBeacon[0],
+                        ...prev.filter(
+                            (e) => e.beaconId !== sosBeacon[0].beaconId
+                        ),
+                    ]);
                 }
-                
-                
-                
+
                 if (!sosBeaconIdList.has(d.beaconId)) {
                     console.log("sosbeacon등록");
                     const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
@@ -248,15 +250,10 @@ const Map: React.FC = () => {
             }
             console.log(sosBeaconIdList);
         };
-    });
+    };
 
     useEffect(() => {
-        console.log("useEffect");
-        getMapInfo(floor);
-        //websocket 객체 연결
-    }, [floor, addEdgeState]);
-
-    useEffect(() => {
+        websocketHandle();
         return () => {
             const data = {
                 sessionId: loginId,
@@ -265,7 +262,15 @@ const Map: React.FC = () => {
             };
             ws.current!.send(JSON.stringify(data));
         };
-    }, []);
+    });
+
+    useEffect(() => {
+        console.log("useEffect");
+        getMapInfo(floor);
+        //websocket 객체 연결
+    }, [floor, addEdgeState]);
+
+    useEffect(() => {}, []);
 
     // 간선 연결하기
     const handleRadioChange = (beaconId: string) => {
@@ -874,7 +879,11 @@ const Map: React.FC = () => {
                                                             styles.beaconListItem
                                                         }
                                                         key={index}
-                                                        ref={(el) => (scrollRef.current[index] = el)}
+                                                        ref={(el) =>
+                                                            (scrollRef.current[
+                                                                index
+                                                            ] = el)
+                                                        }
                                                         onMouseOver={() =>
                                                             beaconHandleMouseOver(
                                                                 item.beaconId
