@@ -93,4 +93,12 @@ public class SOSService { // 세션 관리 및 생성 로직 처리
     public Map<String, Integer> getAllBeaconUserCounts() {
         return new ConcurrentHashMap<>(beaconUserCounts);
     }
+
+    // 앱 종료 시 모니터링에 반영
+    public void removeUserFromBeacon(String userId) {
+        String lastBeaconId = userLastBeacon.remove(userId);
+        if (lastBeaconId != null) {
+            decrementUserCount(lastBeaconId);
+        }
+    }
 }
