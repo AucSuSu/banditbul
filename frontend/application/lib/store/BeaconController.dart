@@ -50,7 +50,7 @@ class BeaconController extends GetxController {
       if (routeController.route2.isNotEmpty &&
           beaconId.value == routeController.route2.first['beaconId']) {
         // route2 시작 비콘일 경우 스킵
-        Get.to(() => NavigationPage());
+        Get.to(() => const NavigationPage());
       } else {
         // 비콘 시설물 응답 정보 api
 
@@ -67,14 +67,15 @@ class BeaconController extends GetxController {
                   beaconId.value == routeController.route1.last['beaconId']) ||
               (routeController.route2.isNotEmpty &&
                   beaconId.value == routeController.route2.last['beaconId'])) {
-            clovaTTSManager.getTTS(text);
-            Future.delayed(const Duration(seconds: 10), () {
+            Future.delayed(const Duration(seconds: 1, milliseconds: 500), () {
               WebsocketManager().sendMessage(MessageDto(
                   type: "CLOSE",
                   beaconId: id,
                   sessionId: Get.find<SessionController>().sessionId.value,
                   uuId: Get.find<MainController>().uuId.value.toString()));
-              Get.to(() => const ArrivePage()); // TTS 재생 후 10초 기다린 다음 페이지 이동
+              Get.to(() => ArrivePage(
+                    ttsText: text,
+                  )); // TTS 재생 후 10초 기다린 다음 페이지 이동
             });
           } else {
             // print(text);

@@ -5,7 +5,9 @@ import 'package:frontend/util/tts_function.dart';
 import 'package:get/get.dart';
 
 class ArrivePage extends StatefulWidget {
-  const ArrivePage({super.key});
+  const ArrivePage({super.key, required this.ttsText});
+
+  final String ttsText;
 
   @override
   _ArrivePageState createState() => _ArrivePageState();
@@ -17,7 +19,10 @@ class _ArrivePageState extends State<ArrivePage> {
   @override
   void initState() {
     super.initState();
-    clovaTTSManager.getTTS('목적지에 도착 하였습니다. 잠시 후 메인페이지로 이동합니다.');
+    clovaTTSManager.getTTS(widget.ttsText);
+    Future.delayed(const Duration(seconds: 5), () {
+      clovaTTSManager.getTTS('목적지에 도착 하였습니다. 잠시 후 메인페이지로 이동합니다.');
+    });
     // 7초 후 메인페이지로 이동
     Future.delayed(const Duration(seconds: 10), () {
       Get.offAll(() => const MainPage());

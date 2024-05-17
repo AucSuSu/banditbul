@@ -49,7 +49,9 @@ class TestNavigatePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Get.to(() => const ArrivePage());
+                Get.to(() => const ArrivePage(
+                      ttsText: '비콘 정보가 나올거에요',
+                    ));
               },
               child: const Text('Arrive Page'),
             ),
