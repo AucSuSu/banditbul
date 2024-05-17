@@ -67,6 +67,11 @@ class BeaconController extends GetxController {
                   beaconId.value == routeController.route2.last['beaconId'])) {
             clovaTTSManager.getTTS(text);
             Future.delayed(const Duration(seconds: 10), () {
+              WebsocketManager().sendMessage(MessageDto(
+                  type: "CLOSE",
+                  beaconId: id,
+                  sessionId: Get.find<SessionController>().sessionId.value,
+                  uuId: Get.find<MainController>().uuId.value.toString()));
               Get.to(() => const ArrivePage()); // TTS 재생 후 10초 기다린 다음 페이지 이동
             });
           } else {
