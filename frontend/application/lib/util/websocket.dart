@@ -90,7 +90,7 @@ class WebsocketManager {
   }
 
   // 메세지 보내는 함수
-  void sendMessage(MessageDto dto) {
+  Future<void> sendMessage(MessageDto dto) async {
     if (_channel == null) {
       throw Exception("WebSocket Channle 없음");
     } else {
