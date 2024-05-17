@@ -33,13 +33,17 @@ class BeaconController extends GetxController {
 
   void setBeaconId(String id) async {
     beaconId.value = id;
+
+    print("UUID");
+    print(Get.find<MainController>().uuId.value);
+    // print(Get.find<MainController>().uuId.value.toString());
     Get.find<MainController>().getSessionId(id);
     WebsocketManager().connect();
     WebsocketManager().sendMessage(MessageDto(
         type: "BEACON",
         beaconId: id,
         sessionId: Get.find<SessionController>().sessionId.value,
-        uuId: Get.find<MainController>().uuId.value.toString()));
+        uuId: Get.find<MainController>().uuId.value));
 
     if (routeController.checkBeacon(beaconId.value)) {
       routeController.nextBeacon(); // 일치할 경우 다음 비콘으로 이동

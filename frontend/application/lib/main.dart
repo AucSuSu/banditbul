@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
 
       if (state == BluetoothAdapterState.on) {
         // Bluetooth is turned on, proceed to the main page
-        Get.offAll(() => const MainPage());
+        Get.offAll(() => const TestNavigatePage());
       } else if (state == BluetoothAdapterState.off) {
         // Bluetooth is turned off, open the Bluetooth settings
         _openBluetoothSettings();
