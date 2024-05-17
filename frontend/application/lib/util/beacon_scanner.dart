@@ -38,7 +38,7 @@ class BeaconScanner {
           // }
         }
       });
-      FlutterBluePlus.startScan(timeout: const Duration(seconds: 3));
+      FlutterBluePlus.startScan(timeout: const Duration(seconds: 5));
       isScanning = true;
       stopTimer();
     }
@@ -46,7 +46,7 @@ class BeaconScanner {
 
   void stopTimer() {
     restartScanTimer?.cancel(); // Cancel existing timer
-    restartScanTimer = Timer(const Duration(seconds: 3, milliseconds: 200), () {
+    restartScanTimer = Timer(const Duration(seconds: 5, milliseconds: 200), () {
       stopScan();
       String? macAddress = getHighestRssiAdminBeaconMacAddress();
       if (macAddress != null) {

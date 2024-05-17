@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/test_navigate_page.dart';
 import 'package:frontend/screens/main_page/main_page.dart';
+import 'package:frontend/test_navigate_page.dart';
 import 'package:frontend/store/BeaconController.dart';
 import 'package:frontend/store/RouteController.dart';
 import 'package:frontend/store/SessionController.dart';
@@ -19,10 +19,12 @@ void main() async {
   Get.put(BeaconController());
   Get.put(SessionController());
   Get.put(MainController());
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -44,7 +46,7 @@ class _MyAppState extends State<MyApp> {
 
       if (state == BluetoothAdapterState.on) {
         // Bluetooth is turned on, proceed to the main page
-        Get.offAll(() => TestNavigatePage());
+        Get.offAll(() => const MainPage());
       } else if (state == BluetoothAdapterState.off) {
         // Bluetooth is turned off, open the Bluetooth settings
         _openBluetoothSettings();
@@ -53,7 +55,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _openBluetoothSettings() async {
-    final intent = const AndroidIntent(
+    const intent = AndroidIntent(
       action: 'android.settings.BLUETOOTH_SETTINGS',
     );
     await intent.launch();
@@ -65,10 +67,10 @@ class _MyAppState extends State<MyApp> {
     final state = await FlutterBluePlus.adapterState.first;
     if (state == BluetoothAdapterState.off) {
       // If Bluetooth is still off, show the prompt again
-      Get.offAll(() => BluetoothOffPage());
+      Get.offAll(() => const BluetoothOffPage());
     } else {
       // If Bluetooth is on, navigate to the main page
-      Get.offAll(() => TestNavigatePage());
+      Get.offAll(() => const TestNavigatePage());
     }
   }
 
@@ -78,24 +80,27 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: 'SBaggro',
       ),
-      home: _isBluetoothOn ? TestNavigatePage() : BluetoothOffPage(),
+      home:
+          _isBluetoothOn ? const TestNavigatePage() : const BluetoothOffPage(),
     );
   }
 }
 
 class BluetoothOffPage extends StatelessWidget {
+  const BluetoothOffPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         // Open Bluetooth settings when the user tries to pop the screen
-        final intent = const AndroidIntent(
+        const intent = AndroidIntent(
           action: 'android.settings.BLUETOOTH_SETTINGS',
         );
         await intent.launch();
         return false;
       },
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: Colors.black,
         appBar: TitleBar(),
         body: Center(
