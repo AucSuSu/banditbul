@@ -47,21 +47,11 @@ class _SosPageWaitState extends State<SosPageWait> {
     String sessionId = Get.find<SessionController>().sessionId.value;
 
     sendMessage(MessageDto(
-      type: "ENTER",
-      beaconId: beaconId,
-      sessionId: sessionId,
-      uuId: "1234",
-      // count:
-    ));
-
-    sendMessage(MessageDto(
       type: "SOS",
       beaconId: beaconId,
       sessionId: sessionId,
-      uuId: "1234",
-      // count: 1
+      uuId: Get.find<MainController>().uuId.value.toString(),
     ));
-    // manager.listenToMessage((onData));
   }
 
   void startConnection() async {}
