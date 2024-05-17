@@ -12,10 +12,10 @@ const FlaxBox = styled.div`
 `;
 
 const OutRound = styled(FlaxBox)`
-    height: 13vh;
-    width: 19.5vw;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
+    height: 12.5%;
+    width: 70%;
+    margin-top: 7.5%;
+    margin-bottom: 12.5%;
     margin-left: auto;
     margin-right: auto;
     border-radius: 100px;

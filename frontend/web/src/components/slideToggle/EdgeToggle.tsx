@@ -33,6 +33,7 @@ export default ToggleButton;
 const StyledCheckbox = styled.div`
     position: relative;
     display: inline-block;
+    margin-right: auto;
 `;
 
 const InputCheckbox = styled.input`
@@ -47,22 +48,23 @@ const InputCheckbox = styled.input`
 `;
 
 const SwitchLabel = styled.label<SwitchLabelProps>`
-    width: 150px;
-    height: 50px;
+    width: 100px;
+    height: 40px;
     background: #ffffff;
     position: relative;
     display: inline-block;
     border-radius: 50px;
     transition: background-color 0.4s;
-    border: solid 3px #c2bbbb;
+    border: solid 3px #9f6db6;
+    color : black;
 
     &:after {
         content: "${({ isChecked }) => (isChecked ? "비콘" : "경로")}";
         position: absolute;
-        width: 80px;
-        height: 40px;
+        width: 60px;
+        height: 30px;
         border-radius: 50px;
-        background: #c2bbbb;
+        background: #fff;
         top: 2.5px;
         left: 5px;
         z-index: 2;
@@ -74,10 +76,10 @@ const SwitchLabel = styled.label<SwitchLabelProps>`
     }
 
     ${InputCheckbox}:checked + & {
-        border: solid 3px #487751;
+        border: solid 3px #9f6db6;
         &:after {
-            left: calc(100% - 85px);
-            background: #487751;
+            left: calc(100% - 65px);
+            background: #af4597;
         }
     }
 `;
