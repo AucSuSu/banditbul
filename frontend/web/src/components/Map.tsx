@@ -395,26 +395,6 @@ const Map: React.FC = () => {
         console.log("수락");
     };
 
-    const sendNoMessage = (beaconId: string) => {
-        if (ws.current?.OPEN) {
-            const data = {
-                sessionId: loginId,
-                type: "SOS_FAIL",
-                beaconId: beaconId,
-                uuId: "test",
-            };
-            ws.current.send(JSON.stringify(data));
-        } else {
-            ws.current = new WebSocket("wss://banditbul.co.kr/socket");
-        }
-
-        const newSosBeaconIdList = new Set(sosBeaconIdList); // 기존 Set 객체를 복사하여 새로운 Set 객체 생성
-        newSosBeaconIdList.delete(beaconId); // 새로운 Set 객체에 새로운 beaconId 삭제
-        console.log(newSosBeaconIdList);
-        setSosBeaconIdList(newSosBeaconIdList);
-        console.log("삭제");
-    };
-
     // 저장이 완료 되었거나 완료하지 않고 닫은 경우
     const closeAddModal = () => {
         // 리스트 새로 받아오기 ===
