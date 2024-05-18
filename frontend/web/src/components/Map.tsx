@@ -1050,10 +1050,10 @@ const Map: React.FC = () => {
                                     return (
                                         <line
                                             key={index}
-                                            x1={startPoint.x + 37.5}
-                                            y1={startPoint.y + 50}
-                                            x2={endPoint.x + 37.5}
-                                            y2={endPoint.y + 50}
+                                            x1={startPoint.x * 1.17 + 37.5}
+                                            y1={startPoint.y + 125 + 50}
+                                            x2={endPoint.x * 1.17 + 37.5}
+                                            y2={endPoint.y + 125 +  50}
                                             style={{
                                                 height: "1px",
                                                 stroke:
@@ -1081,8 +1081,8 @@ const Map: React.FC = () => {
                                         }
                                         className={styles.beaconItem}
                                         style={{
-                                            left: `${point.x}px`,
-                                            top: `${point.y}px`,
+                                            left: `${point.x * 1.17 }px`,
+                                            top: `${point.y + 125}px`,
                                         }}
                                     />
                                 </div>
