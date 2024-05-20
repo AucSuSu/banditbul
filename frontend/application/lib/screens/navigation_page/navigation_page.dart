@@ -32,7 +32,7 @@ class _NavigationPageState extends State<NavigationPage> {
   final ClovaTTSManager clovaTTSManager = ClovaTTSManager();
   final RouteController _routeController = Get.find<RouteController>();
   final BeaconController _beaconController = Get.find<BeaconController>();
-  String currentRouteText = '';
+  var currentRouteText = ''.obs;
 
   // 메모리 관리를 위한 dispose
   @override
@@ -52,7 +52,7 @@ class _NavigationPageState extends State<NavigationPage> {
   // 경로에 따른 text 설정
   String getTextFromRoute(bool isTalkBackMode) {
     if (_routeController.currentRoute.isEmpty) {
-      return _beaconController.beaconId.value;
+      return '좌회전 후 \n8m 이동하세요';
     }
     var curRoute = _routeController.currentRoute;
     var curIdx = _routeController.currentRouteIndex.value;
@@ -111,10 +111,8 @@ class _NavigationPageState extends State<NavigationPage> {
       body: Obx(
         () {
           String newRouteText = getTextFromRoute(isTalkBackMode);
-          if (currentRouteText != newRouteText) {
-            setState(() {
-              currentRouteText = newRouteText;
-            });
+          if (currentRouteText.value != newRouteText) {
+            currentRouteText.value = newRouteText;
           }
           return Padding(
             padding: const EdgeInsets.fromLTRB(30, 50, 30, 50),
@@ -137,11 +135,11 @@ class _NavigationPageState extends State<NavigationPage> {
                   ),
                   child: Center(
                     child: Semantics(
-                      key: ValueKey(
-                          currentRouteText), // 변경된 텍스트마다 새로운 키를 설정하여 TalkBack이 인식하게 함
+                      key: ValueKey(currentRouteText
+                          .value), // 변경된 텍스트마다 새로운 키를 설정하여 TalkBack이 인식하게 함
                       liveRegion: true, // TalkBack이 텍스트 변경 사항을 읽도록 함
                       child: Text(
-                        currentRouteText,
+                        currentRouteText.value,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 27,
@@ -169,9 +167,8 @@ class _NavigationPageState extends State<NavigationPage> {
                         } else {
                           clovaTTSManager
                               .getTTS(getTextFromRoute(isTalkBackMode));
-                          setState(() {
-                            currentRouteText = getTextFromRoute(isTalkBackMode);
-                          });
+                          currentRouteText.value =
+                              getTextFromRoute(isTalkBackMode);
                         }
                       },
                     ),

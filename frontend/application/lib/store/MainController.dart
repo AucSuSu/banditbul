@@ -11,7 +11,7 @@ class MainController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    uuId.value = Uuid().v4();
+    uuId.value = const Uuid().v4();
     print('Generated UUID: ${uuId.value}');
   }
 
