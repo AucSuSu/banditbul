@@ -1,74 +1,115 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/screens/main_page/main_page.dart';
+import 'package:frontend/store/BeaconController.dart';
+import 'package:frontend/store/RouteController.dart';
+import 'package:frontend/store/SessionController.dart';
+import 'package:frontend/store/MainController.dart';
+import 'package:frontend/util/title_bar.dart';
+import 'package:get/get.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:android_intent_plus/android_intent.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    home: LocationApp(),
-  ));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
+  // 전역 관리를 위한 컨트롤러
+  Get.put(RouteController());
+  Get.put(BeaconController());
+  Get.put(SessionController());
+  Get.put(MainController());
+  runApp(const MyApp());
 }
 
-class LocationApp extends StatefulWidget {
-  const LocationApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  _LocationAppState createState() => _LocationAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _LocationAppState extends State<LocationApp> {
-  final Location location = Location();
-  LocationData? _locationData;
+class _MyAppState extends State<MyApp> {
+  bool _isBluetoothOn = false;
 
   @override
   void initState() {
     super.initState();
-    _getLocation();
+    _listenToBluetoothState();
   }
 
-  Future<void> _getLocation() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-
-    // 위치 서비스가 활성화되어 있는지 확인
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
-    }
-
-    // 위치 서비스 접근 권한 확인
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    // 현재 위치 데이터 가져오기
-    _locationData = await location.getLocation();
-    setState(() {});
-
-    // 위치 업데이트 리스닝
-    location.onLocationChanged.listen((LocationData currentLocation) {
+  void _listenToBluetoothState() {
+    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) {
       setState(() {
-        _locationData = currentLocation;
+        _isBluetoothOn = (state == BluetoothAdapterState.on);
       });
+
+      if (state == BluetoothAdapterState.on) {
+        // Bluetooth is turned on, proceed to the main page
+        Get.offAll(() => const MainPage());
+      } else if (state == BluetoothAdapterState.off) {
+        // Bluetooth is turned off, open the Bluetooth settings
+        _openBluetoothSettings();
+      }
     });
+  }
+
+  void _openBluetoothSettings() async {
+    const intent = AndroidIntent(
+      action: 'android.settings.BLUETOOTH_SETTINGS',
+    );
+    await intent.launch();
+    // Check Bluetooth state again after returning from settings
+    _checkBluetoothState();
+  }
+
+  void _checkBluetoothState() async {
+    final state = await FlutterBluePlus.adapterState.first;
+    if (state == BluetoothAdapterState.off) {
+      // If Bluetooth is still off, show the prompt again
+      Get.offAll(() => const BluetoothOffPage());
+    } else {
+      // If Bluetooth is on, navigate to the main page
+      Get.offAll(() => const MainPage());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('위치 안내'),
-        centerTitle: true,
+    return GetMaterialApp(
+      theme: ThemeData(
+        fontFamily: 'SBaggro',
       ),
-      body: Center(
-        child: Text(_locationData != null
-            ? '위도: ${_locationData!.latitude}, 경도: ${_locationData!.longitude}, 방위: ${_locationData!.heading}'
-            : '로딩중...'),
+      home: _isBluetoothOn ? const MainPage() : const BluetoothOffPage(),
+    );
+  }
+}
+
+class BluetoothOffPage extends StatelessWidget {
+  const BluetoothOffPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        // Open Bluetooth settings when the user tries to pop the screen
+        const intent = AndroidIntent(
+          action: 'android.settings.BLUETOOTH_SETTINGS',
+        );
+        await intent.launch();
+        return false;
+      },
+      child: const Scaffold(
+        backgroundColor: Colors.black,
+        appBar: TitleBar(),
+        body: Center(
+          child: Text(
+            '블루투스를 켜주세요',
+            style: TextStyle(
+              fontSize: 45,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
