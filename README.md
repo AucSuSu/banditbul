@@ -1,5 +1,5 @@
-E102# :house_with_garden: 반딧불이 - 시각장애인 길찾기 서비스
-![icon](./exec/icon.png)
+E102 반딧불이 - 시각장애인 길찾기 서비스
+![icon](./readme_files/icon.png)
 
 ## :link: 반딧불이 링크(웹 화면): [반딧불이로 이동](https://banditbul.co.kr)
 ## :cinema: 소개 영상 보기: [UCC](https://www.youtube.com/watch?v=SGRwzu0fXKk)
