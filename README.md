@@ -22,8 +22,8 @@ SSAFY 10기 2학기 자율 프로젝트 - 반딧불이 :house:
 <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"><br>
 <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
 <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-<img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white">
-
+<img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white"><br>
+<img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
 
 ### BE
 <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><br>
@@ -54,7 +54,7 @@ SSAFY 10기 2학기 자율 프로젝트 - 반딧불이 :house:
 
 
 ## :bar_chart: 아키텍처 구조
-![아키텍처구조](./readme_files/아키텍처 구조도.png)
+![아키텍처구조](./readme_files/아키텍처구조도.png)
 
 ## :file_folder: 프로젝트 파일 구조
 
@@ -88,31 +88,29 @@ SSAFY 10기 2학기 자율 프로젝트 - 반딧불이 :house:
 
 
 ## :sparkler: 반딧불이 주요 기능
-### 0. 입장 페이지
-![EntryPage](./exec/entrypage.gif)
+### 0. 메인 화면
+- 메인페이지에서 현재역에서 목적지 역, 화장실까지 가는 길찾기 기능과 SOS 기능을 사용할 수 있습니다.
+![EntryPage](./readme_files/메인페이지.jpg)
 
-### 1. 동네 추천 페이지
-![동네 추천 페이지](./exec/searchdong.gif)
-![동네 추천 페이지2](./exec/searchdong_polygon.gif)
+### 1. 길찾기 기능
+- 현재 위치에서 목표로하는 지하철역이나 화장실까지 길찾기가 가능합니다.
+![길찾기](./readme_files/길안내.gif)
 
-### 2. 매물 페이지
-![매물 페이지](./exec/houses.gif)
+### 2. SOS 기능
+![도움 요청](./readme_files/도움요청접수.gif)
 
-### 3. 동네 비교 페이지
-![동네 비교 페이지](./exec/compare.gif)
+### 3. 모니터링 페이지
+- 앱 사용자의 위치를 추적해서 어디에 몇명이 있는지 확인가능 합니다.
+- SOS 요청이 온 비콘 위치를 파악이 가능합니다.
+<br>
+![모니터링 페이지](./readme_files/sos.png)
 
-### 4. 동네 정보 페이지
-![동네 정보 페이지](./exec/info.gif)
-
-### 5. 마이페이지
-![마이 페이지](./exec/mypage.gif)
 
 ## :memo: 프로젝트 산출물
-- [프로토타입](https://www.figma.com/file/bBPcUcmCZg5fgGhJ1OfW6r/%EB%82%B4%EB%8F%88%EB%82%B4%EC%82%B0?type=design&node-id=0-1&mode=design&t=Usom68rZGy5AMPmq-0)
-- [요구사항 명세서](https://www.notion.so/f9f680e00c9a4bb384ed23b73671370d)
-- [API 명세서](https://www.notion.so/API-5ee34edf880f426bb3e901878e650d00)
-- [ERD](https://www.notion.so/DB-ERD-a3b7e487c42c4cf8a5835055831efa82)
-- [포팅 매뉴얼](https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22E204/-/blob/master/exec/%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.md?ref_type=heads)
+- [프로토타입](https://www.figma.com/design/1NuhYsXKYgQ7yBdlf5K6bw/%EB%B0%98%EB%94%A7%EB%B6%88%EC%9D%B4?node-id=0-1&t=0te8ipivObtRz7Pq-0)
+- [API 명세서](https://www.notion.so/ca30758094e2428d8c77a3b9a2d7967c?v=488b4874a45f42b7bc9de9bb810dc361)
+- [ERD](https://www.erdcloud.com/d/M6pxrgNRqzHRv6Sqa)
+- [포팅 매뉴얼](https://lab.ssafy.com/s10-final/S10P31E102/-/blob/master/exec/%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.md?ref_type=heads)
 
 
 ## :family: 팀원 소개
