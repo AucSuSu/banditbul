@@ -1,20 +1,22 @@
 E102# :house_with_garden: 반딧불이 - 시각장애인 길찾기 서비스
 ![icon](./exec/icon.png)
 
-## :link: 반딧불이 링크(웹 화면): [반딧불이 :banditbul: 으로 이동](https://banditbul.co.kr)
-## :cinema: 소개 영상 보기: [UCC](https://youtu.be/SHvd28duZ0A)
-## 소개 PPT: [내돈내산 PPT](https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22E204/-/blob/master/exec/10%EA%B8%B0_%ED%8A%B9%ED%99%94PJT_%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C_E204.pdf?ref_type=heads)
+## :link: 반딧불이 링크(웹 화면): [반딧불이로 이동](https://banditbul.co.kr)
+## :cinema: 소개 영상 보기: [UCC](https://www.youtube.com/watch?v=SGRwzu0fXKk)
+## 소개 PPT: [반딧불이 PPT](https://www.miricanvas.com/v/137htix)
 
 ## :date: 프로젝트 진행 기간
-**2024.04.08(월) ~ 2024.05.17(금)**: 6weeks
+**2024.04.08(월) ~ 2024.05.17(금)**: 6 weeks
 
-SSAFY 10기 2학기 자율 프로젝트 - 반딧불이 :house:
+SSAFY 10기 2학기 자율 프로젝트 - 반딧불이
 
 
-## :cherry_blossom: 내돈내산 기획 배경
-:bulb: 지방 거주자가 서울에 자취방을 구할 때 정보 부족으로 인한 어려움을 해결
-:heavy_check_mark: 집을 구할 때 인프라를 기준으로 동네를 정할 수 있도록 **인프라 기반 선호도** 조사
-:heavy_check_mark: 인프라 기반으로 동을 군집화하여 적절한 동네를 사용자에게 추천해준다!
+## :cherry_blossom: 반딧불이 기획 배경
+:bulb: 시각장애인의 지하철 역사 이용시 불편함을 해결 :heavy_check_mark:
+
+시각장애인들이 어려워하는 개찰구, 화장실까지의 이동을 도와줌 :heavy_check_mark:
+
+도움이 필요할땐 SOS 기능을 사용 :heavy_check_mark:
 
 ## :hammer: 개발 환경 및 기술 스택
 ### FE
@@ -30,7 +32,7 @@ SSAFY 10기 2학기 자율 프로젝트 - 반딧불이 :house:
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
 <img src="https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white">
 <img src="https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white"><br>
-<img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white">
+<img src="https://img.shields.io/badge/POSTGRESQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white">
 <img src="https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white">
 <img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white">
 
@@ -90,20 +92,23 @@ SSAFY 10기 2학기 자율 프로젝트 - 반딧불이 :house:
 ## :sparkler: 반딧불이 주요 기능
 ### 0. 메인 화면
 - 메인페이지에서 현재역에서 목적지 역, 화장실까지 가는 길찾기 기능과 SOS 기능을 사용할 수 있습니다.
-![EntryPage](./readme_files/메인페이지.jpg)
+<br>
+<img src="./readme_files/메인페이지.jpg" width="200px" height="400px">
 
 ### 1. 길찾기 기능
 - 현재 위치에서 목표로하는 지하철역이나 화장실까지 길찾기가 가능합니다.
-![길찾기](./readme_files/길안내.gif)
+<img src="./readme_files/길안내.gif" width="200px" height="400px">
 
 ### 2. SOS 기능
-![도움 요청](./readme_files/도움요청접수.gif)
+- 현재 위치에서 도움 요청하기 버튼으로 역무원에게 SOS를 요청할 수 있습니다.
+<br>
+<img src="./readme_files/도움요청접수.gif" width="200px" height="400px">
 
 ### 3. 모니터링 페이지
 - 앱 사용자의 위치를 추적해서 어디에 몇명이 있는지 확인가능 합니다.
 - SOS 요청이 온 비콘 위치를 파악이 가능합니다.
 <br>
-![모니터링 페이지](./readme_files/sos.png)
+<img src="./readme_files/sos.png">
 
 
 ## :memo: 프로젝트 산출물
