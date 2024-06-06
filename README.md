@@ -1,9 +1,9 @@
-E102 반딧불이 - 시각장애인 길찾기 서비스
+# :fire 반딧불이 - 시각장애인 길찾기 서비스
 ![icon](./readme_files/icon.png)
 
 ## :link: 반딧불이 링크(웹 화면): [반딧불이로 이동](https://banditbul.co.kr)
 ## :cinema: 소개 영상 보기: [UCC](https://www.youtube.com/watch?v=SGRwzu0fXKk)
-## 소개 PPT: [반딧불이 PPT](https://www.miricanvas.com/v/137htix)
+## 📓 소개 PPT: [반딧불이 PPT](https://www.miricanvas.com/v/137htix)
 
 ## :date: 프로젝트 진행 기간
 **2024.04.08(월) ~ 2024.05.17(금)**: 6 weeks
